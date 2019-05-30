@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import styles from './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import UserMap from './components/UserMap.js'
+
+
+class App extends Component {
+  constructor() {
+    super();
+    // set initial state
+    this.state = {
+      lat: 62.2416479,
+      lng: 25.7597186,
+      zoom: 13,
+    }
+  }
+  render(){
+  const initialPosition = [this.state.lat, this.state.lng];
+    return (
+      <UserMap position={initialPosition} zoom={this.state.zoom}/>
+    );
+  }
 }
 
 export default App;
