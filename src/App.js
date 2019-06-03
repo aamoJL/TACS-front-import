@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import styles from './App.css';
+import '../node_modules/leaflet-draw/dist/leaflet.draw.css'
+import './App.css';
 
 import UserMap from './components/UserMap.js'
 
@@ -17,7 +18,9 @@ class App extends Component {
   render(){
   const initialPosition = [this.state.lat, this.state.lng];
     return (
-      <UserMap position={initialPosition} zoom={this.state.zoom}/>
+		<div>
+			<UserMap position={initialPosition} zoom={this.state.zoom}/>
+		</div>
     );
   }
 }
