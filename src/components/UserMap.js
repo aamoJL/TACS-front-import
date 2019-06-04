@@ -2,6 +2,22 @@ import React, { Component } from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 
 class UserMap extends Component {
+
+  getCurrentPosition(){
+    if(!navigator.geolocation){
+      console.log("Can't get geolocation :/");
+      return null;
+    }
+    else{
+      navigator.geolocation.getCurrentPosition((position)=>{
+        return ({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        });
+      });
+    }
+  }
+
   render() {
     return (
       <Map className='map' center={this.props.position} zoom={this.props.zoom}>
