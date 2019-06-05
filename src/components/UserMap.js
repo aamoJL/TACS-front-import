@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {
 	GeoJSON,
 	Map,
-	TileLayer
+	TileLayer,
+	ZoomControl
 } from 'react-leaflet'
 import DrawTools from './DrawTools.js'
 
@@ -18,7 +19,8 @@ class UserMap extends Component {
 				<TileLayer
 					attribution='Maanmittauslaitoksen kartta'
 					url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
-				/>
+				/>'
+				<ZoomControl position='topright' />
 				<DrawTools position={this.props.position} />
 			</Map>
 		)

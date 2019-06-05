@@ -1,25 +1,28 @@
 import React, {Component} from 'react';
 import { EditControl } from "react-leaflet-draw"
+import L from 'leaflet';
 import {
 	FeatureGroup,
 	GeoJSON,
+	Marker
 } from 'react-leaflet'
 
 class DrawTools extends Component {
+	_onCreated = (e) => {
+		let type = e.layerType;
+		let layer = e.layer;		
+		let geoJSON = layer.toGeoJSON();
+		console.log(JSON.stringify(geoJSON, null, 4));
+		this._onChange();
+	}
+	
 	render() {
 		return (
 			// "It's important to wrap EditControl component into FeatureGroup component from react-leaflet. The elements you draw will be added to this FeatureGroup layer, when you hit edit button only items in this layer will be edited."
-			<FeatureGroup> 
+			<FeatureGroup ref={ (reactFGref) => {this._onFeatureGroupReady(reactFGref);} }> 
 				<EditControl
 					position='topright'
-					onEdited={this._onEdited}
 					onCreated={this._onCreated}
-					onDeleted={this._onDeleted}
-					onMounted={this._onMounted}
-					onEditStart={this._onEditStart}
-					onEditStop={this._onEditStop}
-					onDeleteStart={this._onDeleteStart}
-					onDeleteStop={this._onDeleteStop}
 					draw={{
 						circle: {
 							repeatMode: true // allows using the tool again after finishing the previous shape
@@ -43,11 +46,37 @@ class DrawTools extends Component {
 						},
 						marker: {
 							repeatMode: true
-						}
+						},
+						circlemarker: false
 					}}
 				/>
 			</FeatureGroup>
 		)
+	}
+	
+	_editableFG = null
+
+	_onFeatureGroupReady = (reactFGref) => {
+		// store the ref for future access to content
+		console.log("reactFGref:");
+		console.log(reactFGref);
+		this._editableFG = reactFGref;
+	}
+	
+	_onChange = () => {
+		// this._editableFG contains the edited geometry, which can be manipulated through the leaflet API
+
+		const { onChange } = this.props;
+		console.log("onChange: ");
+		console.log(onChange);
+		console.log("this.props: ");
+		console.log(this.props);
+		if (!this._editableFG || !onChange) {
+			return;
+		}
+
+		const geojsonData = this._editableFG.leafletElement.toGeoJSON();
+		onChange(geojsonData);
 	}
 }
 
