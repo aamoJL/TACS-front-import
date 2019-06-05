@@ -12,27 +12,33 @@ class UserMap extends Component {
 
   componentDidMount(){
     this.getCurrentPosition((position) => {
-      if(position != null){
-        this.setState({
-          ownLat: position.lat,
-          ownLng: position.lng,
-        });
-      }
+      this.setState({
+        ownLat: position.coords.latitude,
+        ownLng: position.coords.longitude,
+      });
     });
   }
 
   getCurrentPosition(callback){
     if(!navigator.geolocation){
       console.log("Can't get geolocation :/");
-      callback(null);
     }
     else{
-      navigator.geolocation.getCurrentPosition((position)=> {
-        callback({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        });
-      });
+      // Position tracking options
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 0
+      }
+
+      navigator.geolocation.getCurrentPosition((position) =>{
+        //success
+        if(position != null){
+          callback(position);
+        }
+      }, (error) =>{
+        console.log(error);
+      }, options);
     }
   }
 
@@ -48,7 +54,11 @@ class UserMap extends Component {
             Se on perjantai, my dudes <br />
           </Popup>
         </Marker>
-        {this.state.ownLat !== null && <Marker position={[this.state.ownLat, this.state.ownLng]}></Marker>}
+        {this.state.ownLat !== null && <Marker position={[this.state.ownLat, this.state.ownLng]}>
+        <Popup>
+            User's real position.<br />
+          </Popup>
+        </Marker>}
       </Map>
     );
   }
