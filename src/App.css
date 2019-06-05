@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .hidden {
@@ -48,7 +49,7 @@ div.header button:hover {
 
 /* Login&RegisterForm */
 div.fade-main {
-  position: absolute;
+  position: fixed;
   top: 0;
   z-index: 1000;
   height: 100vh;
@@ -70,7 +71,7 @@ div.sticky {
 .close {
     position: fixed;
     color: #f1f1f1;
-    height: 100px;
+    height: 85px;
     font-size: 100px;
     font-weight: bold;
     transition: transform 0.4s ease-in-out;
@@ -82,7 +83,7 @@ div.sticky {
   color: #bbb;
   text-decoration: none;
   cursor: pointer;
-  transform: rotateZ(90deg);
+  transform: rotate(90deg);
 }
 
 div.login {
