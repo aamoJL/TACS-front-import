@@ -25,8 +25,4 @@ class App extends Component {
   }
 }
 
-function onChange(geojson) {
-  console.log("geojson changed", geojson);
-}
-
 export default App;

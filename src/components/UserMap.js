@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-	GeoJSON,
 	Map,
 	TileLayer,
 	ZoomControl
@@ -18,7 +17,7 @@ class UserMap extends Component {
 			>
 				<TileLayer
 					attribution='Maanmittauslaitoksen kartta'
-					url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+					url=" https://tiles.kartat.kapsi.fi/peruskartta/{z}/{x}/{y}.png"
 				/>'
 				<ZoomControl position='topright' />
 				<DrawTools position={this.props.position} />

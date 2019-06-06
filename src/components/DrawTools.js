@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import { EditControl } from "react-leaflet-draw"
-import L from 'leaflet';
 import {
 	FeatureGroup,
-	GeoJSON,
-	Marker
 } from 'react-leaflet'
 
 class DrawTools extends Component {
@@ -12,7 +9,7 @@ class DrawTools extends Component {
 		let type = e.layerType;
 		let layer = e.layer;		
 		let geoJSON = layer.toGeoJSON();
-		console.log(JSON.stringify(geoJSON, null, 4));
+		console.log(JSON.stringify(geoJSON, null, 4)); // makes the output readable in the console
 		this._onChange();
 	}
 	
@@ -25,7 +22,11 @@ class DrawTools extends Component {
 					onCreated={this._onCreated}
 					draw={{
 						circle: {
-							repeatMode: true // allows using the tool again after finishing the previous shape
+							repeatMode: true, // allows using the tool again after finishing the previous shape
+							shapeOptions: {
+								color: '#f9f10c',
+								opacity: 100
+							}
 						},
 						rectangle: {
 							repeatMode: true
@@ -38,11 +39,16 @@ class DrawTools extends Component {
 								message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
 							},
 							shapeOptions: {
-								color: '#97009c'
+								color: '#ed2572',
+								opacity: 100
 							}
 						},
 						polyline: {
-							repeatMode: true
+							repeatMode: true,
+							shapeOptions: {
+								color: '#ed2572',
+								opacity: 100
+							}
 						},
 						marker: {
 							repeatMode: true
