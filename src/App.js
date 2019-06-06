@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import '../node_modules/leaflet-draw/dist/leaflet.draw.css'
 import './App.css';
-
-import UserMap from './components/UserMap.js'
-
-import styles from './App.css';
 import UserMap from './components/UserMap';
 import Header from './components/Header';
 

@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {
 	Map,
 	TileLayer,
-	ZoomControl
+  ZoomControl,
+  Marker,
+  Popup
 } from 'react-leaflet'
 import DrawTools from './DrawTools.js'
 
