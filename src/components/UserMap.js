@@ -8,7 +8,6 @@ import {
 } from 'react-leaflet'
 import DrawTools from './DrawTools.js'
 
-
 class UserMap extends Component {
   constructor(props){
     super(props);
@@ -17,28 +16,19 @@ class UserMap extends Component {
       ownLng: null,
     }
 
-    this.DeviceLocationUpdater = null;
-    this.updateDeviceLocation = this.updateDeviceLocation.bind(this);
+    this.watchPositionId = null;
   }
 
   componentDidMount(){
-    this.startDeviceLocationUpdater();
-  }
-
-  componentWillUnmount(){
-    if(this.DeviceLocationUpdater != null){
-      clearInterval(this.DeviceLocationUpdater);
-    }
-  }
-
-  startDeviceLocationUpdater(){
-    this.DeviceLocationUpdater = setInterval(this.updateDeviceLocation, 1000);
-  }
-
-  updateDeviceLocation(){
     this.getCurrentPosition((position) => {
       this.setCurrentPosition(position);
     });
+  }
+
+  componentWillUnmount(){
+    if(this.watchPositionId != null){
+      navigator.geolocation.clearWatch(this.watchPositionId);
+    }
   }
 
   setCurrentPosition(position){
@@ -60,7 +50,9 @@ class UserMap extends Component {
         maximumAge: 0
       }
 
-      navigator.geolocation.getCurrentPosition((position) =>{
+      if(this.watchPositionId != null){navigator.geolocation.clearWatch(this.watchPositionId);}
+      
+      this.watchPositionId = navigator.geolocation.watchPosition((position) =>{
         //success
         if(position != null){
           callback(position);
