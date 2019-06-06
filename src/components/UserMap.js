@@ -8,14 +8,35 @@ class UserMap extends Component {
       ownLat: null,
       ownLng: null,
     }
+
+    this.DeviceLocationUpdater = null;
+    this.updateDeviceLocation = this.updateDeviceLocation.bind(this);
   }
 
   componentDidMount(){
+    this.startDeviceLocationUpdater();
+  }
+
+  componentWillUnmount(){
+    if(this.DeviceLocationUpdater != null){
+      clearInterval(this.DeviceLocationUpdater);
+    }
+  }
+
+  startDeviceLocationUpdater(){
+    this.DeviceLocationUpdater = setInterval(this.updateDeviceLocation, 1000);
+  }
+
+  updateDeviceLocation(){
     this.getCurrentPosition((position) => {
-      this.setState({
-        ownLat: position.coords.latitude,
-        ownLng: position.coords.longitude,
-      });
+      this.setCurrentPosition(position);
+    });
+  }
+
+  setCurrentPosition(position){
+    this.setState({
+      ownLat: position.coords.latitude,
+      ownLng: position.coords.longitude,
     });
   }
 
