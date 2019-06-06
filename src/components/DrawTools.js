@@ -6,17 +6,16 @@ import {
 
 class DrawTools extends Component {
 	_onCreated = (e) => {
-		let type = e.layerType;
+		let type = e.layerType; // from the example; isn't used right now, but may be relevant in the future
 		let layer = e.layer;		
 		let geoJSON = layer.toGeoJSON();
 		console.log(JSON.stringify(geoJSON, null, 4)); // makes the output readable in the console
-		this._onChange();
 	}
 	
 	render() {
 		return (
 			// "It's important to wrap EditControl component into FeatureGroup component from react-leaflet. The elements you draw will be added to this FeatureGroup layer, when you hit edit button only items in this layer will be edited."
-			<FeatureGroup ref={ (reactFGref) => {this._onFeatureGroupReady(reactFGref);} }> 
+			<FeatureGroup> 
 				<EditControl
 					position='topright'
 					onCreated={this._onCreated}
@@ -58,31 +57,6 @@ class DrawTools extends Component {
 				/>
 			</FeatureGroup>
 		)
-	}
-	
-	_editableFG = null
-
-	_onFeatureGroupReady = (reactFGref) => {
-		// store the ref for future access to content
-		console.log("reactFGref:");
-		console.log(reactFGref);
-		this._editableFG = reactFGref;
-	}
-	
-	_onChange = () => {
-		// this._editableFG contains the edited geometry, which can be manipulated through the leaflet API
-
-		const { onChange } = this.props;
-		console.log("onChange: ");
-		console.log(onChange);
-		console.log("this.props: ");
-		console.log(this.props);
-		if (!this._editableFG || !onChange) {
-			return;
-		}
-
-		const geojsonData = this._editableFG.leafletElement.toGeoJSON();
-		onChange(geojsonData);
 	}
 }
 
