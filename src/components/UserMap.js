@@ -26,5 +26,4 @@ class UserMap extends Component {
 	}
 }
 
-
 export default UserMap;
