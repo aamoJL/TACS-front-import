@@ -1,5 +1,11 @@
-import React, { Component } from 'react';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, {Component} from 'react';
+import {
+	Map,
+	TileLayer,
+	ZoomControl
+} from 'react-leaflet'
+import DrawTools from './DrawTools.js'
+
 
 class UserMap extends Component {
   constructor(props){
@@ -70,6 +76,8 @@ class UserMap extends Component {
           attribution='Maanmittauslaitoksen kartta'
           url=' https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
         />
+        <ZoomControl position='topright' />
+		<DrawTools position={this.props.position} />
         <Marker position={this.props.position}>
           <Popup>
             Se on perjantai, my dudes <br />
