@@ -2,6 +2,7 @@ import React from 'react';
 
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import NewGameForm from './NewGameForm';
 
 class Header extends React.Component {
   state = {
@@ -71,7 +72,8 @@ class Header extends React.Component {
             </button>
           )}
           {!this.state.username && (
-            <button onClick={() => this.toggleView('login')}>login</button>
+            // <button onClick={() => this.toggleView('login')}>login</button>
+            <button onClick={() => this.toggleView('login')}>New Game</button>
           )}
           {this.state.username && (
             <button onClick={this.handleLogout}>logout</button>
@@ -85,8 +87,15 @@ class Header extends React.Component {
             toggleView={this.toggleView}
           />
         )}
-        {this.state.login && (
+        {/* {this.state.login && (
           <LoginForm
+            view='login'
+            handleState={this.handleState}
+            toggleView={this.toggleView}
+          />
+        )} */}
+        {this.state.login && (
+          <NewGameForm
             view='login'
             handleState={this.handleState}
             toggleView={this.toggleView}
