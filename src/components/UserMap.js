@@ -63,6 +63,19 @@ class UserMap extends Component {
     }
   }
 
+  positionToGeoJSON(position){
+    let geoJSON = {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Point",
+        coordinates: [position.coords.longitude, position.coords.latitude]
+      }
+    }
+
+    return JSON.stringify(geoJSON);
+  }
+
   render() {
     return (
       <Map className='map' center={this.props.position} zoom={this.props.zoom}>
