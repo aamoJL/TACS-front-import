@@ -67,7 +67,7 @@ class UserMap extends Component {
     return (
       <Map className='map' center={this.props.position} zoom={this.props.zoom}>
         <TileLayer
-          attribution='Maanmittauslaitoksen kartta'
+          attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
           url=' https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
         />
         <ZoomControl position='topright' />
