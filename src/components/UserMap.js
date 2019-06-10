@@ -14,6 +14,7 @@ class UserMap extends Component {
     this.state = {
       ownLat: null,
       ownLng: null,
+      mapUrl: 'https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
     }
 
     this.watchPositionId = null;
@@ -80,11 +81,11 @@ class UserMap extends Component {
     return (
       <Map className='map' center={this.props.position} zoom={this.props.zoom}>
         <TileLayer
-          attribution='Maanmittauslaitoksen kartta'
-          url=' https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
+          attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
+          url={this.props.mapUrl}
         />
         <ZoomControl position='topright' />
-		<DrawTools position={this.props.position} />
+		    <DrawTools position={this.props.position} />
         <Marker position={this.props.position}>
           <Popup>
             Se on perjantai, my dudes <br />
