@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 export class NewGameForm extends React.Component{
   constructor(props){
@@ -21,7 +22,6 @@ export class NewGameForm extends React.Component{
 
   handleChange = e => {
     const { name, value } = e.target;
-    console.log(value, name);
     this.setState({ [name]: value });
   };
 
@@ -43,34 +43,34 @@ export class NewGameForm extends React.Component{
     e.preventDefault();
 
     // Send Game info to the server
-    fetch('http://localhost:5000/user/login', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: name,
-        password: password
-      })
-    })
-      .then(res => res.json())
-      .then(
-        result => {
-          if (result.name) {
-            this.props.handleState(result);
-            this.handleView();
-          } else {
-            this.handleError(result.errorResponse.message);
-          }
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          console.log(error);
-        }
-      );
+    // fetch('http://localhost:5000/user/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     name: name,
+    //     password: password
+    //   })
+    // })
+    //   .then(res => res.json())
+    //   .then(
+    //     result => {
+    //       if (result.name) {
+    //         this.props.handleState(result);
+    //         this.handleView();
+    //       } else {
+    //         this.handleError(result.errorResponse.message);
+    //       }
+    //     },
+    //     // Note: it's important to handle errors here
+    //     // instead of a catch() block so that we don't swallow
+    //     // exceptions from actual bugs in components.
+    //     error => {
+    //       console.log(error);
+    //     }
+    //   );
   };
 
   componentDidMount() {
@@ -82,7 +82,7 @@ export class NewGameForm extends React.Component{
   }
 
   render() {
-    return (
+    return ReactDOM.createPortal (
       <div className='fade-main'>
         <div className='sticky'>
           <span className='close' onClick={this.handleView}>
@@ -110,22 +110,26 @@ export class NewGameForm extends React.Component{
               required
             />
             <br />
+            <label className='formDate'>Start:</label>
             <input
+              className='formDate'
               type='date'
               name='startDate'
               value={this.state.startDate}
               onChange={this.handleChange}
               required
             />
-            <br />
             <input
+              className='formTime'
               type='time'
               name='startTime'
               onChange={this.handleChange}
               required
             />
             <br />
+            <label className='formDate'>End:</label>
             <input
+              className='formDate'
               type='date'
               name='endDate'
               value={this.state.endDate}
@@ -133,8 +137,8 @@ export class NewGameForm extends React.Component{
               min={this.state.startDate}
               required
             />
-            <br />
             <input
+              className='formTime'
               type='time'
               name='endTime'
               onChange={this.handleChange}
@@ -145,7 +149,8 @@ export class NewGameForm extends React.Component{
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>
-      </div>
+      </div>,
+      document.getElementById('form')
     );
   }
 }
