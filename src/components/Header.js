@@ -77,6 +77,7 @@ class Header extends React.Component {
             <button onClick={this.handleLogout}>logout</button>
           )}
           {this.state.username && <button>{this.state.username}</button>}
+          <button onClick={this.props.handleLayerChange}>change layer</button>
         </div>
         {this.state.register && (
           <RegisterForm
@@ -92,6 +93,7 @@ class Header extends React.Component {
             toggleView={this.toggleView}
           />
         )}
+        
       </div>
     );
   }
