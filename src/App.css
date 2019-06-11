@@ -138,3 +138,9 @@ div.login button:hover {
   background-color: darkblue;
   cursor: pointer;
 }
+
+/* Editing text button in the toolbar */
+.leaflet-draw-toolbar .leaflet-draw-draw-textbox {
+  background-image: url('icons/button-textbox.png');
+  background-size: 30px 30px;
+}
