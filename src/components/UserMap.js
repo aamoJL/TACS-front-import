@@ -19,11 +19,11 @@ class UserMap extends Component {
     this.watchPositionId = null;
   }
 
-  componentDidMount(){
-    this.getCurrentPosition((position) => {
-      this.setCurrentPosition(position);
-    });
-  }
+  // componentDidMount(){
+  //   this.getCurrentPosition((position) => {
+  //     this.setCurrentPosition(position);
+  //   });
+  // }
 
   componentWillUnmount(){
     if(this.watchPositionId != null){
@@ -86,7 +86,7 @@ class UserMap extends Component {
 		    <DrawTools position={this.props.position} />
         <Marker position={this.props.position}>
           <Popup maxWidth="600px">
-          <iframe title="Esitys" src="https://jamkstudent-my.sharepoint.com/personal/l4074_student_jamk_fi/_layouts/15/Doc.aspx?sourcedoc={175bb4df-310a-4e1e-b805-e02e8dd4d6c5}&amp;action=embedview&amp;wdAr=1.7777777777777777" width="600px" height="400px" autoplay frameborder="0">Welcome to Wimma LAB<a href="https://office.com">Microsoft Office</a> presentation, powered by <a href="https://office.com/webapps">Office Online</a>.</iframe>
+          <iframe title="Esitys" src="http://avoin.wimmalab.org/" width="600px" height="400px" autoplay frameborder="0">Welcome to Wimma LAB<a href="https://office.com">Microsoft Office</a> presentation, powered by <a href="https://office.com/webapps">Office Online</a>.</iframe>
           </Popup>
         </Marker>
         {this.state.ownLat !== null && <Marker position={[this.state.ownLat, this.state.ownLng]}>
