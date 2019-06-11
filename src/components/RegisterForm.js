@@ -100,6 +100,7 @@ export class RegisterForm extends React.Component {
               name='username'
               value={this.state.username}
               onChange={this.handleChange}
+              autoFocus
               required
             />
             <br />

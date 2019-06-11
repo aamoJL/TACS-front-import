@@ -6,7 +6,7 @@ import {
 
 class DrawTools extends Component {
 	_onCreated = (e) => {
-		let type = e.layerType; // from the example; isn't used right now, but may be relevant in the future
+		//let type = e.layerType; // from the example; isn't used right now, but may be relevant in the future
 		let layer = e.layer;		
 		let geoJSON = layer.toGeoJSON();
 		console.log(JSON.stringify(geoJSON, null, 4)); // makes the output readable in the console
