@@ -35,7 +35,7 @@ class Header extends React.Component {
   componentDidMount() {
     let token = sessionStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:5000/user/verify', {
+      fetch('https://tacs-query.cf/user/verify', {
         headers: {
           Authorization: 'Bearer ' + token
         }

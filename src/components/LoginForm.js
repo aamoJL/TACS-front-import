@@ -38,7 +38,7 @@ export class LoginForm extends React.Component {
     e.preventDefault();
 
     // Send login info to the server
-    fetch('http://localhost:5000/user/login', {
+    fetch('https://tacs-query.cf/user/login', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
