@@ -86,7 +86,7 @@ class UserMap extends Component {
 		    <DrawTools position={this.props.position} />
         <Marker position={this.props.position}>
           <Popup maxWidth="600px">
-          <iframe title="Esitys" src="http://avoin.wimmalab.org/" width="600px" height="400px" frameborder="0">Welcome to Wimma LAB</iframe>
+           <img src="wimma.png" alt="Wimma Lab" width="600px"/>
           </Popup>
         </Marker>
         {this.state.ownLat !== null && <Marker position={[this.state.ownLat, this.state.ownLng]}>
