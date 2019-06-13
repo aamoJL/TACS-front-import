@@ -6,6 +6,7 @@ import {
   Marker,
   Popup
 } from 'react-leaflet'
+import L from 'leaflet'
 import DrawTools from './DrawTools.js'
 
 class UserMap extends Component {
@@ -14,7 +15,8 @@ class UserMap extends Component {
     this.state = {
       ownLat: null,
       ownLng: null,
-      mapUrl: 'https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
+      mapUrl: 'https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg',
+      bounds: L.latLngBounds(18.786621, 59.337183)
     }
 
     this.watchPositionId = null;
@@ -77,13 +79,27 @@ class UserMap extends Component {
     return JSON.stringify(geoJSON);
   }
 
+  testers = (asd) => {
+    console.log(asd.target.getZoom());
+  }
+
   render() {
     return (
-      <Map className='map' center={this.props.position} zoom={this.props.zoom}>
+      <Map 
+        className='map'
+        center={this.props.position}
+        zoom={this.props.zoom}
+        minZoom='7'
+        maxZoom='17'
+        // onzoomend={this.testers} // getting the zoom level
+        maxBounds={this.props.bounds}
+        maxBoundsViscosity='1'
+        zoomControl={false} /* remove the default zoom control button at the top left corner */>
         <TileLayer
           attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
           url={this.props.mapUrl}
         />
+        
         <ZoomControl position='topright' />
 		    <DrawTools position={this.props.position} />
         <Marker position={this.props.position}>
