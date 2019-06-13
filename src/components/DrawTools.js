@@ -11,30 +11,18 @@ let emptyicon = L.icon({
 	iconAnchor: [1, 1]
 });
 
-/*Class for new marker */
+// class for text field
 L.Draw.MarkerTextBox = L.Draw.Marker.extend({
 	options: {
 		icon: emptyicon,
-		repeatMode: true
+		repeatMode: false,
 	},
 	initialize: function (map, options) {
-		// important to have a unique type, so that it won't get mixed up with other elements
-		this.type = 'textbox';
+		this.type = 'textbox'; // important to have a unique type, so that it won't get mixed up with other elements
     this.featureTypeCode = 'textbox';
 		L.Draw.Feature.prototype.initialize.call(this, map, options);
   }
 });
-
-//Redefinitions d'éléments de DrawToolbar 
-L.DrawToolbar.prototype.options={
-	polyline: {},
-	polygon: {},
-	rectangle: {},
-	circle: {},
-	marker: {},
-	textbox: {},
-	uploadTrace: {}
-};
 
 L.DrawToolbar.include ({
 	getModeHandlers: function(map) {
@@ -72,10 +60,12 @@ class DrawTools extends Component {
 		if (e.layerType === 'polyline' && e.layer.getLatLngs().length === 1) {
 			e.layer.remove();
 			return;
-    }
-    if (e.layerType === 'textbox') {
-      e.layer.bindTooltip('say hello to mr. akers', {permanent: true});
-    }
+		}
+		// binding text field to textbox
+		if (e.layerType === 'textbox') {
+			e.layer.bindTooltip('<div class="editable" contenteditable="true" placeholder="Type here"></div>', {permanent: true});
+		}
+		// turning layer data to geoJSON
 		let layer = e.layer;
 		let geoJSON = layer.toGeoJSON();
 		console.log(JSON.stringify(geoJSON, null, 4)); // makes the output readable in the console
@@ -86,7 +76,7 @@ class DrawTools extends Component {
 			// "It's important to wrap EditControl component into FeatureGroup component from react-leaflet. The elements you draw will be added to this FeatureGroup layer, when you hit edit button only items in this layer will be edited."
 			<FeatureGroup> 
 				<EditControl
-					position='topright'
+          position='topright'
 					onCreated={this._onCreated}
 					draw={{
 						circle: {
@@ -119,7 +109,7 @@ class DrawTools extends Component {
 							}
 						},
 						marker: {
-							repeatMode: true
+							repeatMode: false
 						},
 						circlemarker: false
 					}}

@@ -144,3 +144,25 @@ div.login button:hover {
   background-image: url('icons/button-textbox.png');
   background-size: 30px 30px;
 }
+
+/* by default leaflet doesn't allow selecting content in tooltips; overriding */
+.leaflet-tooltip {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+	pointer-events: auto;
+}
+
+/* Editing editable tooltips */
+.editable {
+  cursor: text;
+  min-width: 120px;
+  min-height: 18px;
+}
+
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: #777;
+}
