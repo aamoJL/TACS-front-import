@@ -25,8 +25,8 @@ class UserMap extends Component {
           geometry: {
             type: "Point",
             coordinates: [
-              null,
-              null
+              62.2416479,
+              25.7597186
             ]
           }
         }]
@@ -37,10 +37,15 @@ class UserMap extends Component {
   }
 
   componentDidMount(){
+    console.log(JSON.stringify(this.state.marker))
     this.getCurrentPosition((position) => {
       this.setCurrentPosition(position);
     });
     console.log(JSON.stringify(this.state.marker))
+    //sendGeoJSON()
+  }
+  // Sends the players marker to the backend
+  sendGeoJSON(){
     fetch('http://localhost:5000/mapmarkers/insertLocation', {
       method: 'PUT',
       headers: {
@@ -53,6 +58,7 @@ class UserMap extends Component {
       .then(res => res.json())
       .then(result => console.log(result))
   }
+
 
   componentWillUnmount(){
     if(this.watchPositionId != null){
@@ -78,6 +84,7 @@ class UserMap extends Component {
           ]
       }
     });
+    console.log(this.state.marker)
   }
 
   getCurrentPosition(callback){
@@ -116,6 +123,26 @@ class UserMap extends Component {
     }
 
     return JSON.stringify(geoJSON);
+  }
+
+  mockGeoJSON(){
+    return (JSON.stringify({
+      type: "FeatureCollection",
+      latitude: "",
+      longitude: "",
+      timestamp: "",
+      features: [{
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Point",
+          coordinates: [
+            62.2416479,
+            25.7597186
+          ]
+        }
+      }]
+    }))
   }
 
   render() {
