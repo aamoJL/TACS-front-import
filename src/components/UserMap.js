@@ -13,17 +13,46 @@ class UserMap extends Component {
     this.state = {
       ownLat: null,
       ownLng: null,
-      mapUrl: 'https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
+      mapUrl: 'https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg',
+      marker: {
+        type: "FeatureCollection",
+        latitude: "",
+        longitude: "",
+        timestamp: "",
+        features: [{
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "Point",
+            coordinates: [
+              null,
+              null
+            ]
+          }
+        }]
+      }
     }
 
     this.watchPositionId = null;
   }
 
-  // componentDidMount(){
-  //   this.getCurrentPosition((position) => {
-  //     this.setCurrentPosition(position);
-  //   });
-  // }
+  componentDidMount(){
+    this.getCurrentPosition((position) => {
+      this.setCurrentPosition(position);
+    });
+    console.log(JSON.stringify(this.state.marker))
+    fetch('http://localhost:5000/mapmarkers/insertLocation', {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + sessionStorage.getItem('token'),
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.marker)
+    })
+      .then(res => res.json())
+      .then(result => console.log(result))
+  }
 
   componentWillUnmount(){
     if(this.watchPositionId != null){
@@ -35,6 +64,19 @@ class UserMap extends Component {
     this.setState({
       ownLat: position.coords.latitude,
       ownLng: position.coords.longitude,
+      marker: {
+        features: [
+            {
+              geometry: {
+                type: "Point",
+                coordinates: [
+                  position.coords.latitude,
+                  position.coords.longitude
+                ]
+              }
+            }
+          ]
+      }
     });
   }
 
