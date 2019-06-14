@@ -19,7 +19,7 @@ class App extends Component {
     const initialPosition = [this.state.lat, this.state.lng];
     return (
       <div>
-        <UserMap position={initialPosition} zoom={this.state.zoom} />,
+        <UserMap position={initialPosition} zoom={this.state.zoom} />
         <Header />
       </div>
     );
