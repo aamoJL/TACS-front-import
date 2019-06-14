@@ -1,5 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+	Map,
+	TileLayer,
+  ZoomControl,
+  Marker,
+  Popup
+} from 'react-leaflet'
 
 export class NewGameForm extends React.Component{
   constructor(props){
@@ -13,7 +20,14 @@ export class NewGameForm extends React.Component{
       endDate: "",
       endTime: "",
       passwords: [],
+      zoom: 13,
+      mapCenter: {
+        lat: 62.2416479,
+        lng: 25.7597186
+      }
     }
+
+    this.handleMapDrag = this.handleMapDrag.bind(this);
   }
 
   handleError = error => {
@@ -37,40 +51,48 @@ export class NewGameForm extends React.Component{
     }
   };
 
+  handleMapDrag = e => {
+    this.setState({
+      mapCenter: e.target.getCenter()
+    });
+  }
+
+  handleMapScroll = e => {
+    this.setState({
+      zoom: e.target.getZoom()
+    });
+  }
+
   handleGameCreation = e => {
-    const name = this.state.username;
-    const password = this.state.password;
+    let startDate = new Date(this.state.startDate + " " + this.state.startTime);
+    let endDate = new Date(this.state.endDate + " " + this.state.endTime);
+
+    const gameObject = {
+      name: this.state.gamename,
+      desc: this.state.description,
+      map: "", //TODO: map json
+      startdate: startDate.toISOString(),
+      enddate: endDate.toISOString(),
+      passwords: [this.state.password],
+      center: this.state.mapCenter
+    }
+
     e.preventDefault();
 
+    let token = sessionStorage.getItem('token');
+
     // Send Game info to the server
-    // fetch('http://localhost:5000/user/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     name: name,
-    //     password: password
-    //   })
-    // })
-    //   .then(res => res.json())
-    //   .then(
-    //     result => {
-    //       if (result.name) {
-    //         this.props.handleState(result);
-    //         this.handleView();
-    //       } else {
-    //         this.handleError(result.errorResponse.message);
-    //       }
-    //     },
-    //     // Note: it's important to handle errors here
-    //     // instead of a catch() block so that we don't swallow
-    //     // exceptions from actual bugs in components.
-    //     error => {
-    //       console.log(error);
-    //     }
-    //   );
+    fetch('http://172.20.2.143:5000/game/new', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(gameObject)
+    }).then(res => res.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('Error: ', error));
   };
 
   componentDidMount() {
@@ -89,8 +111,8 @@ export class NewGameForm extends React.Component{
             ×
           </span>
         </div>
-        <div className='login'>
-          <form onSubmit={this.handleLogin}>
+        <div className=''>
+          <form onSubmit={this.handleGameCreation}>
             <h1>Demo Game Creation</h1>
             <br />
             <input
@@ -110,7 +132,7 @@ export class NewGameForm extends React.Component{
               required
             />
             <br />
-            <label className='formDate'>Start:</label>
+            <label className=''>Start:</label>
             <input
               className='formDate'
               type='date'
@@ -127,7 +149,7 @@ export class NewGameForm extends React.Component{
               required
             />
             <br />
-            <label className='formDate'>End:</label>
+            <label className=''>End:</label>
             <input
               className='formDate'
               type='date'
@@ -145,12 +167,31 @@ export class NewGameForm extends React.Component{
               required
             />
             <br />
+            <br />
+            <input
+              className=''
+              placeholder='game password'
+              type='password'
+              name='password'
+              onChange={this.handleChange}
+              required
+            />
+            <br />
+            <label>Map things</label>
+            <br />
+            <Map className='' center={[this.state.mapCenter.lat, this.state.mapCenter.lng]} zoom={this.state.zoom} style={{height: '400px', width: '400px'} } onmoveend={this.handleMapDrag} onzoomend={this.handleMapScroll}>
+              <TileLayer
+                attribution='Maanmittauslaitoksen kartta'
+                url=' https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
+              />
+            </Map>
+            <br />
             <button type='submit'>Submit</button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>
-      </div>,
-      document.getElementById('form')
+      </div>
+      ,document.getElementById('form')
     );
   }
 }
