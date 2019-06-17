@@ -92,9 +92,9 @@ class UserMap extends Component {
         minZoom='7'
         maxZoom='17'
         // onzoomend={this.testers} // getting the zoom level
-        maxBounds={this.props.bounds}
+        maxBounds={this.props.bounds} // maxBounds settings don't work for now, for some reason
         maxBoundsViscosity='1'
-        zoomControl={false} /* remove the default zoom control button at the top left corner */>
+        zoomControl={false} /* remove the default zoom control button at the top left corner */ >
         <TileLayer
           attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
           url={this.props.mapUrl}

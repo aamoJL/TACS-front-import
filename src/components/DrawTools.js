@@ -16,12 +16,13 @@ L.Draw.MarkerTextBox = L.Draw.Marker.extend({
 	options: {
 		icon: emptyicon,
 		repeatMode: false,
+		interactive: true
 	},
 	initialize: function (map, options) {
 		this.type = 'textbox'; // important to have a unique type, so that it won't get mixed up with other elements
-    this.featureTypeCode = 'textbox';
+    	this.featureTypeCode = 'textbox';
 		L.Draw.Feature.prototype.initialize.call(this, map, options);
-  }
+  	}
 });
 
 L.DrawToolbar.include ({
@@ -47,7 +48,7 @@ L.DrawToolbar.include ({
 			handler: new L.Draw.Marker(map, this.options.marker),
 			title: L.drawLocal.draw.toolbar.buttons.marker
 		},{
-      enabled: this.options.marker,
+      		enabled: this.options.marker,
 			handler: new L.Draw.MarkerTextBox(map, this.options.marker),
 			title: 'Write text'
 		}];
@@ -55,6 +56,13 @@ L.DrawToolbar.include ({
 });
 
 class DrawTools extends Component {
+	constructor(props){
+	  super(props);
+	  this.state = {
+		  geoJSONAll: [] // property for all GeoJSON data in the map
+	  }
+	}
+
 	_onCreated = (e) => {
 		// check if a drawn polyline has just one point in it
 		if (e.layerType === 'polyline' && e.layer.getLatLngs().length === 1) {
@@ -62,13 +70,26 @@ class DrawTools extends Component {
 			return;
 		}
 		// binding text field to textbox
+		// clicking on tooltip fires the marker's click handler
 		if (e.layerType === 'textbox') {
-			e.layer.bindTooltip('<div class="editable" contenteditable="true" placeholder="Type here"></div>', {permanent: true});
+			e.layer.bindTooltip('<div class="editable" contenteditable="true" placeholder="Click here and type"></div>', {permanent: true, direction: 'center', interactive: true});
 		}
-		// turning layer data to geoJSON
+		// turning layer data to GeoJSON
 		let layer = e.layer;
-		let geoJSON = layer.toGeoJSON();
-		console.log(JSON.stringify(geoJSON, null, 4)); // makes the output readable in the console
+    this.makeGeoJSON(e.layer);
+    
+    /* Original GeoJSON code. Uncomment if needed
+    let geoJSON = layer.toGeoJSON();
+    console.log(JSON.stringify(geoJSON, null, 4)); // makes the output readable in the console
+    */
+	}
+
+	makeGeoJSON = (e) => {
+    let geoJSON = e.toGeoJSON();
+    let newAllGeoJSON = this.state.geoJSONAll;
+    newAllGeoJSON.push(geoJSON);
+    console.log(JSON.stringify(newAllGeoJSON, null, 4));
+    this.setState({geoJSONAll: newAllGeoJSON});
 	}
 
 	render() {

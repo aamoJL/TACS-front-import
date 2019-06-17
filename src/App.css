@@ -1,3 +1,8 @@
+/*
+  Do not touch classes with 'leaflet' in them!
+  They're Leaflet's own classes
+*/
+
 body {
   margin: 0;
   padding: 0;
@@ -151,16 +156,25 @@ div.login button:hover {
 	-moz-user-select: text;
 	-ms-user-select: text;
 	user-select: text;
-	pointer-events: auto;
+  pointer-events: auto;
+  cursor: auto;
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  pointer-events: auto;
 }
 
 /* Editing editable tooltips */
 .editable {
-  cursor: text;
+  cursor: text; /* the cursor icon doesn't change by default when hovering on top of the text; overriding */
   min-width: 120px;
   min-height: 18px;
 }
 
+/* placeholder text for tooltip */
 [contenteditable=true]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
