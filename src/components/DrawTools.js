@@ -5,11 +5,27 @@ import {
 } from 'react-leaflet'
 
 class DrawTools extends Component {
+	constructor(props){
+	  super(props);
+	  this.state = {
+		  geoJSONAll: [] // property for all GeoJSON data in the map
+	  }
+  }
+  
 	_onCreated = (e) => {
 		let type = e.layerType; // from the example; isn't used right now, but may be relevant in the future
-		let layer = e.layer;		
-		let geoJSON = layer.toGeoJSON();
-		console.log(JSON.stringify(geoJSON, null, 4)); // makes the output readable in the console
+		let layer = e.layer;
+    this.makeGeoJSON(e.layer);
+	}
+
+  // turn layer to GeoJSON data and add it to an array of all GeoJSON data of the current map
+	makeGeoJSON = (e) => {
+    let geoJSON = e.toGeoJSON();
+    let newGeoJSONAll = this.state.geoJSONAll;
+    newGeoJSONAll.push(geoJSON);
+    this.setState({geoJSONAll: newGeoJSONAll});
+    console.log(JSON.stringify(geoJSON, null, 4)); // printing GeoJSON data of the previous object create
+    console.log("newGeoJSONAll.length: " + newGeoJSONAll.length);
 	}
 	
 	render() {

@@ -83,7 +83,13 @@ class UserMap extends Component {
 
   render() {
     return (
-      <Map className='map' center={this.props.position} zoom={this.props.zoom}>
+      <Map
+        className='map'
+        center={this.props.position}
+        zoom={this.props.zoom}
+        minZoom='7'
+        maxZoom='17'
+        zoomControl={false}>
         <TileLayer
           attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
           url={this.props.mapUrl}
