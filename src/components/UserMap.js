@@ -60,6 +60,10 @@ class UserMap extends Component {
         }
       }, (error) =>{
         console.log(error);
+        // disable tracking
+        if(this.watchPositionId != null){
+          navigator.geolocation.clearWatch(this.watchPositionId);
+        }
       }, options);
     }
   }
