@@ -40,24 +40,24 @@ class Header extends React.Component {
           Authorization: 'Bearer ' + token
         }
       })
-        .then(res => res.json())
-        .then(
-          result => {
-            // if token is still valid, login user
-            if (result === true) {
-              this.setState({
-                username: sessionStorage.getItem('name'),
-                token: token
-              });
-              // logout user if token has expired / is invalid
-            } else {
-              this.handleLogout();
-            }
-          },
-          error => {
-            console.log(error);
+      .then(res => res.json())
+      .then(
+        result => {
+          // if token is still valid, login user
+          if (result === true) {
+            this.setState({
+              username: sessionStorage.getItem('name'),
+              token: token
+            });
+            // logout user if token has expired / is invalid
+          } else {
+            this.handleLogout();
           }
-        );
+        },
+        error => {
+          console.log(error);
+        }
+      );
     }
   }
 
@@ -78,6 +78,13 @@ class Header extends React.Component {
           )}
           {this.state.username && <button>{this.state.username}</button>}
           <button onClick={this.props.handleLayerChange}>change layer</button>
+          <label>Zoom: </label>
+          <select onChange={this.props.handleZoom}>
+            <option value="13">13</option>
+            <option value="10">10</option>
+            <option value="5">5</option>
+            <option value="15">15</option>
+          </select> 
         </div>
         {this.state.register && (
           <RegisterForm
@@ -93,7 +100,6 @@ class Header extends React.Component {
             toggleView={this.toggleView}
           />
         )}
-        
       </div>
     );
   }
