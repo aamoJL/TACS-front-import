@@ -10,6 +10,7 @@ class DrawTools extends Component {
 		let layer = e.layer;		
 		let geoJSON = layer.toGeoJSON();
 		console.log(JSON.stringify(geoJSON, null, 4)); // makes the output readable in the console
+		this.props.setCurrentPosition(geoJSON);
 	}
 	
 	render() {
