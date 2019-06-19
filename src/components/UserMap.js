@@ -35,7 +35,7 @@ class UserMap extends Component {
     });
     this.fetchGeoJSON();
   }
-  // Sends the players marker to the backend
+  // Sends the players drawings to the backend (and database)
   sendGeoJSON() {
     console.log(
       "Lähetettävät jutut: " + JSON.stringify(this.state.geoJSONLayer)
@@ -50,7 +50,7 @@ class UserMap extends Component {
       body: JSON.stringify(this.state.geoJSONLayer)
     });
   }
-  // Mikä vitum readablestream :(
+  // Get the drawings from the backend and add them to the state, so they can be drawn
   fetchGeoJSON() {
     fetch("http://localhost:5000/mapmarkers/getall", {
       method: "GET",
@@ -62,12 +62,10 @@ class UserMap extends Component {
     })
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         let newFeatures = [];
         data.map(item => {
-          item.features[0].map(feature => {
-            newFeatures.push(feature);
-          });
-          return newFeatures;
+          newFeatures.push(item.features);
         });
 
         this.setState({
@@ -132,10 +130,11 @@ class UserMap extends Component {
 
   // Function to be passed to DrawTools so it can add geojson data to this components state
   addToGeojsonLayer(layerToAdd) {
-    let oldFeatures = [];
-    oldFeatures.push(layerToAdd);
-    const newFeatures = oldFeatures;
-    this.setState({ geoJSONLayer: { features: newFeatures } });
+    this.setState({
+      geoJSONLayer: {
+        features: layerToAdd
+      }
+    });
     console.log(
       "Geojsonlayer state: " + JSON.stringify(this.state.geoJSONLayer)
     );

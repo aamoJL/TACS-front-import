@@ -19,12 +19,12 @@ class DrawTools extends Component {
   // turn layer to GeoJSON data and add it to an array of all GeoJSON data of the current map
   makeGeoJSON = e => {
     let geoJSON = e.toGeoJSON();
-    let newGeoJSONAll = this.state.geoJSONAll;
-    newGeoJSONAll.push(geoJSON);
-    this.setState({ geoJSONAll: newGeoJSONAll });
+    //let newGeoJSONAll = this.state.geoJSONAll;
+    //newGeoJSONAll.push(geoJSON);
+    //this.setState({ geoJSONAll: newGeoJSONAll });
     console.log(JSON.stringify(geoJSON, null, 4)); // printing GeoJSON data of the previous object create
-    console.log("newGeoJSONAll.length: " + newGeoJSONAll.length);
-    this.props.addToGeojsonLayer(this.state.geoJSONAll);
+    // console.log("newGeoJSONAll.length: " + newGeoJSONAll.length);
+    this.props.addToGeojsonLayer(geoJSON);
   };
 
   render() {
