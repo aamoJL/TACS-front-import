@@ -26,17 +26,21 @@ class UserMap extends Component {
 
     this.addToGeojsonLayer = this.addToGeojsonLayer.bind(this);
     this.setCurrentPosition = this.setCurrentPosition.bind(this);
+    //this.setCurrentGeojson = this.setCurrentGeojson.bind(this);
     this.watchPositionId = null;
   }
 
   componentDidMount() {
     this.getCurrentPosition(position => {
-      //this.setCurrentPosition(position);
+      this.setCurrentPosition(position);
     });
-    //sendGeoJSON()
+    this.fetchGeoJSON();
   }
   // Sends the players marker to the backend
   sendGeoJSON() {
+    console.log(
+      "Lähetettävät jutut: " + JSON.stringify(this.state.geoJSONLayer)
+    );
     fetch("http://localhost:5000/mapmarkers/insertLocation", {
       method: "PUT",
       headers: {
@@ -44,10 +48,38 @@ class UserMap extends Component {
         Accept: "application/json",
         "Content-Type": "application/json"
       },
-      body: this.state.geojsonLayer
+      body: JSON.stringify(this.state.geoJSONLayer)
+    });
+  }
+  // Mikä vitum readablestream :(
+  fetchGeoJSON() {
+    fetch("http://localhost:5000/mapmarkers/getall", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
     })
       .then(res => res.json())
-      .then(result => console.log(result));
+      .then(data => {
+        let newFeatures = [];
+        data.map(item => {
+          newFeatures.push(item.features[0][0]);
+          return newFeatures;
+        });
+
+        this.setState({
+          geoJSONLayer: {
+            type: "FeatureCollection",
+            features: newFeatures
+          }
+        });
+        console.log(
+          "Geojsonlayer state fetchin jälkeen: " +
+            JSON.stringify(this.state.geoJSONLayer)
+        );
+      });
   }
 
   componentWillUnmount() {
@@ -56,15 +88,11 @@ class UserMap extends Component {
     }
   }
 
-  setCurrentPosition(data) {
+  setCurrentPosition(position) {
     this.setState({
-      ...this.state,
-      geojsonLayer: data
+      ownLat: position.coords.latitude,
+      ownLng: position.coords.longitude
     });
-    console.log(
-      "User mapin statessa oleva geojson: " +
-        JSON.stringify(this.state.geoJSONLayer)
-    );
   }
 
   getCurrentPosition(callback) {
@@ -101,15 +129,16 @@ class UserMap extends Component {
     }
   }
 
+  // Function to be passed to DrawTools so it can add geojson data to this components state
   addToGeojsonLayer(layerToAdd) {
     let oldFeatures = [...this.state.geoJSONFeatures];
-    console.log(oldFeatures);
     oldFeatures.push(layerToAdd);
     const newFeatures = oldFeatures;
-    this.setState({ geoJSONlayer: { features: newFeatures } });
+    this.setState({ geoJSONLayer: { features: newFeatures } });
     console.log(
-      "Geojsonlayer state: " + JSON.stringify(this.state.geoJSONlayer)
+      "Geojsonlayer state: " + JSON.stringify(this.state.geoJSONLayer)
     );
+    this.sendGeoJSON();
   }
 
   render() {
@@ -131,11 +160,7 @@ class UserMap extends Component {
           position={this.props.position}
           addToGeojsonLayer={this.addToGeojsonLayer}
         />
-        <Marker position={this.props.position}>
-          <Popup>
-            Se on perjantai, my dudes <br />
-          </Popup>
-        </Marker>
+
         {this.state.ownLat !== null && (
           <Marker position={[this.state.ownLat, this.state.ownLng]}>
             <Popup>
@@ -144,9 +169,12 @@ class UserMap extends Component {
             </Popup>
           </Marker>
         )}
-        <GeoJSON data={this.state.geoJSONlayer} />
+        <GeoJSON
+          key={JSON.stringify(this.state.geoJSONLayer)}
+          data={this.state.geoJSONLayer}
+        />
       </Map>
-    ); // this.state.geojsonLayer
+    );
   }
 }
 
