@@ -17,7 +17,6 @@ class UserMap extends Component {
       ownLat: null,
       ownLng: null,
       mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg",
-      geoJSONFeatures: [],
       geoJSONLayer: {
         type: "FeatureCollection",
         features: []
@@ -65,7 +64,9 @@ class UserMap extends Component {
       .then(data => {
         let newFeatures = [];
         data.map(item => {
-          newFeatures.push(item.features[0][0]);
+          item.features[0].map(feature => {
+            newFeatures.push(feature);
+          });
           return newFeatures;
         });
 
@@ -131,7 +132,7 @@ class UserMap extends Component {
 
   // Function to be passed to DrawTools so it can add geojson data to this components state
   addToGeojsonLayer(layerToAdd) {
-    let oldFeatures = [...this.state.geoJSONFeatures];
+    let oldFeatures = [];
     oldFeatures.push(layerToAdd);
     const newFeatures = oldFeatures;
     this.setState({ geoJSONLayer: { features: newFeatures } });
