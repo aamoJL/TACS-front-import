@@ -148,13 +148,6 @@ div.login button:hover {
 /* Editing tooltips */
 .leaflet-tooltip {
   font-size: 18px;
-  /* by default leaflet doesn't allow selecting content in tooltips; overriding */
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
-  pointer-events: all;
-  cursor: auto;
   /* Overriding tooltip layout by making it invisible */
   background-color: transparent;
   box-shadow: none;
@@ -162,10 +155,7 @@ div.login button:hover {
   padding: 0;
 }
 
-.leaflet-clickable {
-  pointer-events: all;
-}
-
+/* remove the small triangle on tooltip */
 .leaflet-tooltip-bottom:before {
   border: 0;
 }

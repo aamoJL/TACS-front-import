@@ -8,7 +8,7 @@ import { FeatureGroup } from "react-leaflet";
 L.Draw.MarkerTextBox = L.Draw.Marker.extend({
   options: {
     icon: L.divIcon({
-      className: "dummy",
+      className: "", // empty class to override default styling
       iconSize: [20, 20],
       iconAnchor: [10, 20]
     }),
@@ -23,7 +23,7 @@ L.Draw.MarkerTextBox = L.Draw.Marker.extend({
 });
 
 // Overriding default toolbar
-// Just adding one new button, though, lol
+// Just adding one new button though lol
 L.DrawToolbar.include({
   getModeHandlers: function(map) {
     return [
@@ -88,10 +88,15 @@ class DrawTools extends Component {
         interactive: true
       });
 
-      // disable dragging when mousedown is active on top of marker (tooltip)
+      // disable dragging when cursor is over marker (tooltip)
       // clicking on tooltip fires the marker's click handler, hence e.layer.on
-      e.layer.on("mousedown", function() {
-        L.DomEvent.disableClickPropagation(tooltip);
+      e.layer.on("mouseover", function() {
+        e.layer._map.dragging.disable();
+      });
+
+      // enable dragging again when cursor is out of marker (tooltip)
+      e.layer.on("mouseout", function() {
+        e.layer._map.dragging.enable();
       });
 
       // show placeholder text again upon emptying textbox
@@ -107,33 +112,12 @@ class DrawTools extends Component {
           tooltip.innerHTML =
             '<div placeholder="Click here and type" contenteditable="true"></div>';
         }
-
-        console.log(tooltip.firstChild.childNodes.length);
-        let margintop = tooltip.firstChild.childNodes.length * 40;
-        console.log(e.layer);
-        //tooltip.style.marginTop = margintop.toString() + "px";
-
-        /*
-        let editable = document.querySelector(".editable");
-        let editableStyle = getComputedStyle(editable);
-        let horizontalLoc = parseInt(editableStyle.height.replace("px", ""));
-        let verticalLoc = parseInt(editableStyle.width.replace("px", ""));
-        let trueHorizontalLoc = horizontalLoc + 40;
-        let trueVerticalLoc = verticalLoc + 10;
-        tooltip.style.marginTop = horizontalLoc.toString() + "px";
-        */
-        /*
-        editable.firstChild.style.marginTop = toString(
-          trueHorizontalLoc + "px"
-        );
-        console.log("editable.firstChild.style: ");
-        console.log(editable.firstChild.style);
-        */
       });
-    }
+    } // end if (e.layerType === "textbox")
+
     // turning layer data to GeoJSON
     this.makeGeoJSON(e.layer);
-  };
+  }; // end _onCreated
 
   makeGeoJSON = e => {
     let geoJSON = e.toGeoJSON();
