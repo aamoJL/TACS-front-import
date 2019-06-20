@@ -82,7 +82,7 @@ export class NewGameForm extends React.Component{
     let token = sessionStorage.getItem('token');
 
     // Send Game info to the server
-    fetch('http://172.20.2.143:5000/game/new', {
+    fetch('http://localhost:5000/game/new', {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -163,16 +163,6 @@ export class NewGameForm extends React.Component{
               className='formTime'
               type='time'
               name='endTime'
-              onChange={this.handleChange}
-              required
-            />
-            <br />
-            <br />
-            <input
-              className=''
-              placeholder='game password'
-              type='password'
-              name='password'
               onChange={this.handleChange}
               required
             />
