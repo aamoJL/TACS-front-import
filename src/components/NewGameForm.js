@@ -91,7 +91,9 @@ export class NewGameForm extends React.Component{
       },
       body: JSON.stringify(gameObject)
     }).then(res => res.json())
-      .then(result => console.log(result))
+      .then(result => {
+        this.handleView();
+      })
       .catch(error => console.log('Error: ', error));
   };
 
