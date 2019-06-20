@@ -10,7 +10,7 @@ L.Draw.MarkerTextBox = L.Draw.Marker.extend({
     icon: L.divIcon({
       className: "dummy",
       iconSize: [20, 20],
-      iconAnchor: [10, 50]
+      iconAnchor: [10, 20]
     }),
     repeatMode: false,
     interactive: true
@@ -84,7 +84,7 @@ class DrawTools extends Component {
 
       e.layer.bindTooltip(tooltip, {
         permanent: true,
-        direction: "center",
+        direction: "bottom",
         interactive: true
       });
 
@@ -110,8 +110,6 @@ class DrawTools extends Component {
 
         console.log(tooltip.firstChild.childNodes.length);
         let margintop = tooltip.firstChild.childNodes.length * 40;
-        e.layer.options.icon.options.iconAnchor = [10, 1000];
-        //tooltip.style.backgroundColor = "#000";
         console.log(e.layer);
         //tooltip.style.marginTop = margintop.toString() + "px";
 

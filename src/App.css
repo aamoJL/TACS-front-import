@@ -166,12 +166,9 @@ div.login button:hover {
   pointer-events: all;
 }
 
-/* moving the tooltip so that the icon can be clicked */
-/*
-.leaflet-tooltip-center {
-  margin-top: 24px;
+.leaflet-tooltip-bottom:before {
+  border: 0;
 }
-*/
 
 /* Editing editable tooltips */
 .editable {
