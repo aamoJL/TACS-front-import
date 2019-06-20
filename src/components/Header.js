@@ -2,6 +2,7 @@ import React from 'react';
 
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import GameList from './GameList';
 
 class Header extends React.Component {
   state = {
@@ -78,13 +79,7 @@ class Header extends React.Component {
           )}
           {this.state.username && <button>{this.state.username}</button>}
           <button onClick={this.props.handleLayerChange}>change layer</button>
-          <label>Zoom: </label>
-          <select onChange={this.props.handleZoom}>
-            <option value="13">13</option>
-            <option value="10">10</option>
-            <option value="5">5</option>
-            <option value="15">15</option>
-          </select> 
+          <GameList />
         </div>
         {this.state.register && (
           <RegisterForm
