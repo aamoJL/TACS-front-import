@@ -2,6 +2,7 @@ import React from 'react';
 
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import TaskListButton from './TaskListButton';
 
 class Header extends React.Component {
   state = {
@@ -78,6 +79,7 @@ class Header extends React.Component {
           )}
           {this.state.username && <button>{this.state.username}</button>}
           <button onClick={this.props.handleLayerChange}>change layer</button>
+          <TaskListButton />
         </div>
         {this.state.register && (
           <RegisterForm
