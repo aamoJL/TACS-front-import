@@ -1,8 +1,3 @@
-/*
-  Do not touch classes with 'leaflet' in them!
-  They're Leaflet's own classes
-*/
-
 body {
   margin: 0;
   padding: 0;
@@ -65,22 +60,22 @@ div.fade-main {
 }
 
 div.sticky {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    height: 100px;
-    width: 100px;
-    margin-right: 150px;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  height: 100px;
+  width: 100px;
+  margin-right: 150px;
 }
 
 .close {
-    position: fixed;
-    color: #f1f1f1;
-    height: 85px;
-    font-size: 100px;
-    font-weight: bold;
-    transition: transform 0.4s ease-in-out;
-    line-height: 70%;
+  position: fixed;
+  color: #f1f1f1;
+  height: 85px;
+  font-size: 100px;
+  font-weight: bold;
+  transition: transform 0.4s ease-in-out;
+  line-height: 70%;
 }
 
 .close:hover,
@@ -146,37 +141,55 @@ div.login button:hover {
 
 /* Editing text button in the toolbar */
 .leaflet-draw-toolbar .leaflet-draw-draw-textbox {
-  background-image: url('icons/button-textbox.png');
+  background-image: url("icons/button-textbox.png");
   background-size: 30px 30px;
 }
 
-/* by default leaflet doesn't allow selecting content in tooltips; overriding */
+/* Editing tooltips */
 .leaflet-tooltip {
-	-webkit-user-select: text;
-	-moz-user-select: text;
-	-ms-user-select: text;
-	user-select: text;
-  pointer-events: auto;
+  font-size: 18px;
+  /* by default leaflet doesn't allow selecting content in tooltips; overriding */
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  pointer-events: all;
   cursor: auto;
+  /* Overriding tooltip layout by making it invisible */
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
 }
 
-.leaflet-tooltip-top:before,
-.leaflet-tooltip-bottom:before,
-.leaflet-tooltip-left:before,
-.leaflet-tooltip-right:before {
-  pointer-events: auto;
+.leaflet-clickable {
+  pointer-events: all;
 }
+
+/* moving the tooltip so that the icon can be clicked */
+/*
+.leaflet-tooltip-center {
+  margin-top: 24px;
+}
+*/
 
 /* Editing editable tooltips */
 .editable {
   cursor: text; /* the cursor icon doesn't change by default when hovering on top of the text; overriding */
-  min-width: 120px;
+  min-width: 154px;
   min-height: 18px;
+  color: #fff;
+  font-weight: bold;
+  /* text borders */
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 
 /* placeholder text for tooltip */
-[contenteditable=true]:empty:before {
+[contenteditable="true"]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
   color: #777;
+  text-shadow: none;
+  font-weight: normal;
 }

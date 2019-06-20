@@ -1,143 +1,196 @@
-import React, {Component} from 'react';
-import { EditControl } from 'react-leaflet-draw'
-import L from 'leaflet'
-import 'leaflet-draw'
-import { FeatureGroup } from 'react-leaflet'
-
-// empty icon for the text field
-let emptyicon = L.icon({
-	iconUrl: '../icons/nil.png',
-	iconSize: [1, 1],
-	iconAnchor: [1, 1]
-});
+import React, { Component } from "react";
+import { EditControl } from "react-leaflet-draw";
+import L from "leaflet";
+import "leaflet-draw";
+import { FeatureGroup } from "react-leaflet";
 
 // class for text field
 L.Draw.MarkerTextBox = L.Draw.Marker.extend({
-	options: {
-		icon: emptyicon,
-		repeatMode: false,
-		interactive: true
-	},
-	initialize: function (map, options) {
-		this.type = 'textbox'; // important to have a unique type, so that it won't get mixed up with other elements
-    	this.featureTypeCode = 'textbox';
-		L.Draw.Feature.prototype.initialize.call(this, map, options);
-  	}
+  options: {
+    icon: L.divIcon({
+      className: "dummy",
+      iconSize: [20, 20],
+      iconAnchor: [10, 50]
+    }),
+    repeatMode: false,
+    interactive: true
+  },
+  initialize: function(map, options) {
+    this.type = "textbox"; // important to have a unique type, so that it won't get mixed up with other elements
+    this.featureTypeCode = "textbox";
+    L.Draw.Feature.prototype.initialize.call(this, map, options);
+  }
 });
 
-L.DrawToolbar.include ({
-	getModeHandlers: function(map) {
-		return [{
-			enabled: this.options.polyline,
-			handler: new L.Draw.Polyline(map, this.options.polyline),
-			title: L.drawLocal.draw.toolbar.buttons.polyline
-		},{
-			enabled: this.options.polygon,
-			handler: new L.Draw.Polygon(map, this.options.polygon),
-			title: L.drawLocal.draw.toolbar.buttons.polygon
-		},{
-			enabled: this.options.rectangle,
-			handler: new L.Draw.Rectangle(map, this.options.rectangle),
-			title: L.drawLocal.draw.toolbar.buttons.rectangle
-		},{
-			enabled: this.options.circle,
-			handler: new L.Draw.Circle(map, this.options.circle),
-			title: L.drawLocal.draw.toolbar.buttons.circle
-		},{
-			enabled: this.options.marker,
-			handler: new L.Draw.Marker(map, this.options.marker),
-			title: L.drawLocal.draw.toolbar.buttons.marker
-		},{
-      		enabled: this.options.marker,
-			handler: new L.Draw.MarkerTextBox(map, this.options.marker),
-			title: 'Write text'
-		}];
-	}
+// Overriding default toolbar
+// Just adding one new button, though, lol
+L.DrawToolbar.include({
+  getModeHandlers: function(map) {
+    return [
+      {
+        enabled: this.options.polyline,
+        handler: new L.Draw.Polyline(map, this.options.polyline),
+        title: L.drawLocal.draw.toolbar.buttons.polyline
+      },
+      {
+        enabled: this.options.polygon,
+        handler: new L.Draw.Polygon(map, this.options.polygon),
+        title: L.drawLocal.draw.toolbar.buttons.polygon
+      },
+      {
+        enabled: this.options.rectangle,
+        handler: new L.Draw.Rectangle(map, this.options.rectangle),
+        title: L.drawLocal.draw.toolbar.buttons.rectangle
+      },
+      {
+        enabled: this.options.circle,
+        handler: new L.Draw.Circle(map, this.options.circle),
+        title: L.drawLocal.draw.toolbar.buttons.circle
+      },
+      {
+        enabled: this.options.marker,
+        handler: new L.Draw.Marker(map, this.options.marker),
+        title: L.drawLocal.draw.toolbar.buttons.marker
+      },
+      {
+        enabled: this.options.marker,
+        handler: new L.Draw.MarkerTextBox(map, this.options.marker),
+        title: "Write text"
+      }
+    ];
+  }
 });
 
 class DrawTools extends Component {
-	constructor(props){
-	  super(props);
-	  this.state = {
-		  geoJSONAll: [] // property for all GeoJSON data in the map
-	  }
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      geoJSONAll: [] // property for all GeoJSON data in the map
+    };
+  }
 
-	_onCreated = (e) => {
-		// check if a drawn polyline has just one point in it
-		if (e.layerType === 'polyline' && e.layer.getLatLngs().length === 1) {
-			e.layer.remove();
-			return;
-		}
-		// binding text field to textbox
-		// clicking on tooltip fires the marker's click handler
-		if (e.layerType === 'textbox') {
-			e.layer.bindTooltip('<div class="editable" contenteditable="true" placeholder="Click here and type"></div>', {permanent: true, direction: 'center', interactive: true});
-		}
-		// turning layer data to GeoJSON
-		let layer = e.layer;
+  _onCreated = e => {
+    // check if a drawn polyline has just one point in it
+    if (e.layerType === "polyline" && e.layer.getLatLngs().length === 1) {
+      e.layer.remove();
+      return;
+    }
+
+    if (e.layerType === "textbox") {
+      // have to create tooltip as a DOM element to allow text selecting. maybe
+      let tooltip = L.DomUtil.create("div", "editable");
+      tooltip.innerHTML =
+        '<div contenteditable="true" placeholder="Click here and type"></div>';
+
+      e.layer.bindTooltip(tooltip, {
+        permanent: true,
+        direction: "center",
+        interactive: true
+      });
+
+      // disable dragging when mousedown is active on top of marker (tooltip)
+      // clicking on tooltip fires the marker's click handler, hence e.layer.on
+      e.layer.on("mousedown", function() {
+        L.DomEvent.disableClickPropagation(tooltip);
+      });
+
+      // show placeholder text again upon emptying textbox
+      e.layer.on("keyup", function() {
+        // when the text area is emptied, a <br> appears
+        // manually removing it so that the placeholder text can show
+        if (
+          tooltip.innerHTML ===
+            '<div placeholder="Click here and type" contenteditable="true"><br></div>' ||
+          tooltip.innerHTML ===
+            '<div placeholder="Click here and type" contenteditable="true"><div><br></div></div>'
+        ) {
+          tooltip.innerHTML =
+            '<div placeholder="Click here and type" contenteditable="true"></div>';
+        }
+
+        console.log(tooltip.firstChild.childNodes.length);
+        let margintop = tooltip.firstChild.childNodes.length * 40;
+        e.layer.options.icon.options.iconAnchor = [10, 1000];
+        //tooltip.style.backgroundColor = "#000";
+        console.log(e.layer);
+        //tooltip.style.marginTop = margintop.toString() + "px";
+
+        /*
+        let editable = document.querySelector(".editable");
+        let editableStyle = getComputedStyle(editable);
+        let horizontalLoc = parseInt(editableStyle.height.replace("px", ""));
+        let verticalLoc = parseInt(editableStyle.width.replace("px", ""));
+        let trueHorizontalLoc = horizontalLoc + 40;
+        let trueVerticalLoc = verticalLoc + 10;
+        tooltip.style.marginTop = horizontalLoc.toString() + "px";
+        */
+        /*
+        editable.firstChild.style.marginTop = toString(
+          trueHorizontalLoc + "px"
+        );
+        console.log("editable.firstChild.style: ");
+        console.log(editable.firstChild.style);
+        */
+      });
+    }
+    // turning layer data to GeoJSON
     this.makeGeoJSON(e.layer);
-    
-    /* Original GeoJSON code. Uncomment if needed
-    let geoJSON = layer.toGeoJSON();
-    console.log(JSON.stringify(geoJSON, null, 4)); // makes the output readable in the console
-    */
-	}
+  };
 
-	makeGeoJSON = (e) => {
+  makeGeoJSON = e => {
     let geoJSON = e.toGeoJSON();
-    let newAllGeoJSON = this.state.geoJSONAll;
-    newAllGeoJSON.push(geoJSON);
-    console.log(JSON.stringify(newAllGeoJSON, null, 4));
-    this.setState({geoJSONAll: newAllGeoJSON});
-	}
+    let newGeoJSONAll = this.state.geoJSONAll;
+    newGeoJSONAll.push(geoJSON); // can't do +=, need to use push function
+    console.log(JSON.stringify(newGeoJSONAll, null, 4));
+    this.setState({ geoJSONAll: newGeoJSONAll });
+  };
 
-	render() {
-		return (
-			// "It's important to wrap EditControl component into FeatureGroup component from react-leaflet. The elements you draw will be added to this FeatureGroup layer, when you hit edit button only items in this layer will be edited."
-			<FeatureGroup> 
-				<EditControl
-          position='topright'
-					onCreated={this._onCreated}
-					draw={{
-						circle: {
-							repeatMode: true, // allows using the tool again after finishing the previous shape
-							shapeOptions: {
-								color: '#f9f10c',
-								opacity: 1 // affects the outline only. for some reason it wasn't at full opacity, so this is needed for more clarity
-							}
-						},
-						rectangle: {
-							repeatMode: true
-						},
-						polygon: {
-							repeatMode: true,
-							allowIntersection: false, // Restricts shapes to simple polygons
-							drawError: {
-								color: '#e1e100', // Color the shape will turn when intersects
-								message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
-							},
-							shapeOptions: {
-								color: '#ed2572',
-								opacity: 1
-							}
-						},
-						polyline: {
-							repeatMode: true,
-							shapeOptions: {
-								color: '#ed2572',
-								opacity: 1
-							}
-						},
-						marker: {
-							repeatMode: false
-						},
-						circlemarker: false
-					}}
-				/>
-			</FeatureGroup>
-		)
-	}
+  render() {
+    return (
+      // "It's important to wrap EditControl component into FeatureGroup component from react-leaflet. The elements you draw will be added to this FeatureGroup layer, when you hit edit button only items in this layer will be edited."
+      <FeatureGroup>
+        <EditControl
+          position="topright"
+          onCreated={this._onCreated}
+          draw={{
+            circle: {
+              repeatMode: true, // allows using the tool again after finishing the previous shape
+              shapeOptions: {
+                color: "#f9f10c",
+                opacity: 1 // affects the outline only. for some reason it wasn't at full opacity, so this is needed for more clarity
+              }
+            },
+            rectangle: {
+              repeatMode: true
+            },
+            polygon: {
+              repeatMode: true,
+              allowIntersection: false, // Restricts shapes to simple polygons
+              drawError: {
+                color: "#e1e100", // Color the shape will turn when intersects
+                message: "<strong>Oh snap!<strong> you can't draw that!" // Message that will show when intersect
+              },
+              shapeOptions: {
+                color: "#ed2572",
+                opacity: 1
+              }
+            },
+            polyline: {
+              repeatMode: true,
+              shapeOptions: {
+                color: "#ed2572",
+                opacity: 1
+              }
+            },
+            marker: {
+              repeatMode: false
+            },
+            circlemarker: false
+          }}
+        />
+      </FeatureGroup>
+    );
+  }
 }
 
 export default DrawTools;
