@@ -2,6 +2,7 @@ import React from 'react';
 
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
+import GameList from './GameList';
 import NewGameForm from './NewGameForm';
 
 class Header extends React.Component {
@@ -38,24 +39,24 @@ class Header extends React.Component {
           Authorization: 'Bearer ' + token
         }
       })
-        .then(res => res.json())
-        .then(
-          result => {
-            // if token is still valid, login user
-            if (result === true) {
-              this.setState({
-                username: sessionStorage.getItem('name'),
-                token: token
-              });
-              // logout user if token has expired / is invalid
-            } else {
-              this.handleLogout();
-            }
-          },
-          error => {
-            console.log(error);
+      .then(res => res.json())
+      .then(
+        result => {
+          // if token is still valid, login user
+          if (result === true) {
+            this.setState({
+              username: sessionStorage.getItem('name'),
+              token: token
+            });
+            // logout user if token has expired / is invalid
+          } else {
+            this.handleLogout();
           }
-        );
+        },
+        error => {
+          console.log(error);
+        }
+      );
     }
   }
 
@@ -78,6 +79,8 @@ class Header extends React.Component {
             <button onClick={this.handleLogout}>logout</button>
           )}
           {this.state.username && <button>{this.state.username}</button>}
+          <button onClick={this.props.handleLayerChange}>change layer</button>
+          <GameList />
         </div>
         {this.state.form === 'register' && (
           <RegisterForm
