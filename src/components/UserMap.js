@@ -49,18 +49,20 @@ class UserMap extends Component {
         navigator.geolocation.clearWatch(this.watchPositionId);
       }
 
-      this.watchPositionId = navigator.geolocation.watchPosition(
-        position => {
-          //success
-          if (position != null) {
-            callback(position);
-          }
-        },
-        error => {
-          console.log(error);
-        },
-        options
-      );
+      if(this.watchPositionId != null){navigator.geolocation.clearWatch(this.watchPositionId);}
+      
+      this.watchPositionId = navigator.geolocation.watchPosition((position) =>{
+        //success
+        if(position != null){
+          callback(position);
+        }
+      }, (error) =>{
+        console.log(error);
+        // disable tracking
+        if(this.watchPositionId != null){
+          navigator.geolocation.clearWatch(this.watchPositionId);
+        }
+      }, options);
     }
   }
 
@@ -84,16 +86,12 @@ class UserMap extends Component {
   render() {
     return (
       <Map
-        className="map"
+        className='map'
         center={this.props.position}
         zoom={this.props.zoom}
-        minZoom="7"
-        maxZoom="17"
-        // onzoomend={this.testers} // getting the zoom level
-        zoomControl={
-          false
-        } /* remove the default zoom control button at the top left corner */
-      >
+        minZoom='7'
+        maxZoom='17'
+        zoomControl={false}>
         <TileLayer
           attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
           url={this.props.mapUrl}
