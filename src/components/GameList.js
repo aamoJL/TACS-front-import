@@ -4,7 +4,8 @@ class GameList extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      games: []
+      games: [],
+      selectedGame: null
     }
   }
 
@@ -16,7 +17,19 @@ class GameList extends React.Component {
   }
 
   handleChange = (e) =>{
-    console.log(e.target.value);
+    this.setState({
+      selectedGame: e.target.value
+    });
+  }
+
+  handleEditClick = (e) => {
+    if(this.state.selectedGame === null){alert('No game selected');}
+    else{
+      fetch('http://localhost:5000/game/' + this.state.selectedGame)
+      .then(response => response.json())
+      .then(json => console.log(json))
+      .catch(error => console.log(error))
+    }
   }
 
   render() {
@@ -35,6 +48,7 @@ class GameList extends React.Component {
         <select onChange={this.handleChange}>
           {items}
         </select> 
+        <button onClick={this.handleEditClick}>Edit game</button>
       </Fragment>
     );
   }
