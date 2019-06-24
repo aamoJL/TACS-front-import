@@ -22,7 +22,9 @@ class DrawTools extends Component {
     //let newGeoJSONAll = this.state.geoJSONAll;
     //newGeoJSONAll.push(geoJSON);
     //this.setState({ geoJSONAll: newGeoJSONAll });
-    console.log(JSON.stringify(geoJSON, null, 4)); // printing GeoJSON data of the previous object create
+    console.log(
+      "UserMapille lähetettävä layeri: " + JSON.stringify(geoJSON, null, 4)
+    ); // printing GeoJSON data of the previous object create
     // console.log("newGeoJSONAll.length: " + newGeoJSONAll.length);
     this.props.addToGeojsonLayer(geoJSON);
   };

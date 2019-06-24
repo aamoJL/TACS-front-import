@@ -36,18 +36,21 @@ class UserMap extends Component {
     this.fetchGeoJSON();
   }
   // Sends the players drawings to the backend (and database)
-  sendGeoJSON() {
+  sendGeoJSON(layerToDatabase) {
     console.log(
       "Lähetettävät jutut: " + JSON.stringify(this.state.geoJSONLayer)
     );
-    fetch("http://localhost:5000/mapmarkers/insertLocation", {
+    fetch("http://localhost:5000/mapmarkers/insert-location", {
       method: "PUT",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
         Accept: "application/json",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(this.state.geoJSONLayer)
+      body: JSON.stringify({
+        type: "FeatureCollection",
+        features: layerToDatabase
+      })
     });
   }
   // Get the drawings from the backend and add them to the state, so they can be drawn
@@ -67,11 +70,12 @@ class UserMap extends Component {
         data.map(item => {
           newFeatures.push(item.features);
         });
+        console.log("Mapataan featureita: ", newFeatures);
 
         this.setState({
           geoJSONLayer: {
             type: "FeatureCollection",
-            features: newFeatures
+            features: [...newFeatures]
           }
         });
         console.log(
@@ -130,15 +134,16 @@ class UserMap extends Component {
 
   // Function to be passed to DrawTools so it can add geojson data to this components state
   addToGeojsonLayer(layerToAdd) {
-    this.setState({
+    this.setState(() => ({
       geoJSONLayer: {
-        features: layerToAdd
+        type: "FeatureCollection",
+        features: [...this.state.geoJSONLayer.features, layerToAdd]
       }
-    });
+    }));
     console.log(
       "Geojsonlayer state: " + JSON.stringify(this.state.geoJSONLayer)
     );
-    this.sendGeoJSON();
+    this.sendGeoJSON(layerToAdd);
   }
 
   render() {
