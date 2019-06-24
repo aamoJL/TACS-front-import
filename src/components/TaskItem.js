@@ -1,15 +1,18 @@
 import React from 'react';
 
 class TaskItem extends React.Component{
-    render(){
-        return(
-            <p>
-                <label>Name: {this.props.text}</label>
-                <br />
-                <label>Description: {this.props.description}</label>
-            </p>
-        );
-    }
+  render(){
+    return(
+      <div className='tasklist-item'>
+        <div>
+          <label>{this.props.text}</label>
+        </div>
+        <div>
+          <label>{this.props.description}</label>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default TaskItem;
