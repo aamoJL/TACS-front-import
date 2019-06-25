@@ -14,9 +14,18 @@ class GameList extends React.Component {
   }
 
   componentDidMount() {
+    this.getGames();
+  }
+
+  getGames(){
     fetch('http://localhost:5000/game/listgames')
     .then(response => response.json())
-    .then(games => this.setState({games}))
+    .then(games => {
+      this.setState({
+        games: games,
+        selectedGame: games !== null && games[0].id
+      });
+    })
     .catch(error => {console.log(error);})
   }
 

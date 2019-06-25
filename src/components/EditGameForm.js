@@ -34,7 +34,6 @@ export class EditGameForm extends React.Component{
   };
 
   handleChange = e => {
-    console.log(e.target.value);
     const { name, value } = e.target;
     this.setState({ [name]: value });
   };
@@ -63,39 +62,39 @@ export class EditGameForm extends React.Component{
     });
   }
 
-  // handleGameCreation = e => {
-  //   let startDate = new Date(this.state.startDate + " " + this.state.startTime);
-  //   let endDate = new Date(this.state.endDate + " " + this.state.endTime);
+  handleGameSave = e => {
+    let startDate = this.state.startDate + "T" + this.state.startTime + ":00.000Z";
+    let endDate = this.state.endDate + "T" + this.state.endTime + ":00.000Z";
 
-  //   const gameObject = {
-  //     name: this.state.gamename,
-  //     desc: this.state.description,
-  //     map: "", //TODO: map json
-  //     startdate: startDate.toISOString(),
-  //     enddate: endDate.toISOString(),
-  //     passwords: [this.state.password],
-  //     center: this.state.mapCenter
-  //   }
+    const gameObject = {
+      name: this.state.gamename,
+      desc: this.state.description,
+      map: "",
+      startdate: startDate,
+      enddate: endDate,
+      center: this.state.mapCenter
+    }
 
-  //   e.preventDefault();
+    e.preventDefault();
 
-  //   let token = sessionStorage.getItem('token');
+    let token = sessionStorage.getItem('token');
 
-  //   // Send Game info to the server
-  //   fetch('http://localhost:5000/game/new', {
-  //     method: 'POST',
-  //     headers: {
-  //       Authorization: 'Bearer ' + token,
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(gameObject)
-  //   }).then(res => res.json())
-  //     .then(result => {
-  //       this.handleView();
-  //     })
-  //     .catch(error => console.log('Error: ', error));
-  // };
+    // Send Game info to the server
+    fetch('http://localhost:5000/game/' + this.props.gameId, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(gameObject)
+    }).then(res => res.json())
+      .then(result => {
+        alert(result.message);
+        this.handleView();
+      })
+      .catch(error => console.log('Error: ', error));
+  };
 
   componentDidMount() {
     document.addEventListener('keyup', this.handleEsc);
@@ -114,9 +113,6 @@ export class EditGameForm extends React.Component{
   }
 
   handleGameInfo(json){
-    console.log(json.startdate);
-    console.log(json.startdate.substring(11,16));
-
     this.setState({
       gamename: json.name,
       description: json.desc,
@@ -141,7 +137,7 @@ export class EditGameForm extends React.Component{
           </span>
         </div>
         <div className=''>
-          <form onSubmit={this.handleGameCreation}>
+          <form onSubmit={this.handleGameSave}>
             <h1>Demo Game Creation</h1>
             <br />
             <input
