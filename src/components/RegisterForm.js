@@ -100,7 +100,6 @@ export class RegisterForm extends React.Component {
               name='username'
               value={this.state.username}
               onChange={this.handleChange}
-              required
             />
             <br />
             <input
@@ -109,7 +108,6 @@ export class RegisterForm extends React.Component {
               name='password'
               value={this.state.password}
               onChange={this.handleChange}
-              required
             />
             <br />
             <input
@@ -118,7 +116,6 @@ export class RegisterForm extends React.Component {
               name='password2'
               value={this.state.password2}
               onChange={this.handleChange}
-              required
             />
             <br />
             <button type='submit'>register</button>

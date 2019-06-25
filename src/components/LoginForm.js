@@ -93,7 +93,6 @@ export class LoginForm extends React.Component {
               name='username'
               value={this.state.username}
               onChange={this.handleChange}
-              required
             />
             <br />
             <input
@@ -102,7 +101,6 @@ export class LoginForm extends React.Component {
               name='password'
               value={this.state.password}
               onChange={this.handleChange}
-              required
             />
             <br />
             <button type='submit'>login</button>

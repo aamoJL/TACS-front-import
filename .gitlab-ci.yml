@@ -12,8 +12,11 @@ docker-push:
   before_script:
     - printf "REACT_APP_URL=%s\n" "$REACT_APP_URL" > .env
     - echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+    - docker stop front
+    - docker rm front
   script:
     - docker build -t overflow2019/frontend:test .
     - docker push overflow2019/frontend
+    - docker run --name front -p 80:80 -d overflow2019/frontend:test
   after_script:
     - docker logout
