@@ -10,9 +10,10 @@ docker-push:
   only:
     - testing
   before_script:
+    - printf "REACT_APP_URL=%s\n" "$REACT_APP_URL" > .env
     - echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
   script:
-    - docker build --build-arg REACT_APP_URL=${REACT_APP_URL} -t overflow2019/frontend:test .
+    - docker build -t overflow2019/frontend:test .
     - docker push overflow2019/frontend
   after_script:
     - docker logout
