@@ -66,18 +66,18 @@ class Header extends React.Component {
       <div>
         <div className='header'>
           {!this.state.username && (
-            <button onClick={() => this.toggleView('register')}>
+            <button id="registerButton" onClick={() => this.toggleView('register')}>
               register
             </button>
           )}
           {!this.state.username && (
-            <button onClick={() => this.toggleView('login')}>login</button>
+            <button id="loginButton" onClick={() => this.toggleView('login')}>login</button>
           )}
           {this.state.username && (
-            <button onClick={this.handleLogout}>logout</button>
+            <button id="logoutButton" onClick={this.handleLogout}>logout</button>
           )}
           {this.state.username && <button>{this.state.username}</button>}
-          <button onClick={this.props.handleLayerChange}>change layer</button>
+          <button id="changeLayerButton" onClick={this.props.handleLayerChange}>change layer</button>
         </div>
         {this.state.register && (
           <RegisterForm

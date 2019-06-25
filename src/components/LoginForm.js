@@ -80,7 +80,7 @@ export class LoginForm extends React.Component {
     return (
       <div className='fade-main'>
         <div className='sticky'>
-          <span className='close' onClick={this.handleView}>
+          <span id="closeLoginFormX" className='close' onClick={this.handleView}>
             ×
           </span>
         </div>
@@ -93,6 +93,7 @@ export class LoginForm extends React.Component {
               name='username'
               value={this.state.username}
               onChange={this.handleChange}
+              id="loginUsernameInput"
             />
             <br />
             <input
@@ -101,9 +102,10 @@ export class LoginForm extends React.Component {
               name='password'
               value={this.state.password}
               onChange={this.handleChange}
+              id="loginPasswordInput"
             />
             <br />
-            <button type='submit'>login</button>
+            <button id="submitLoginButton" type='submit'>login</button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>
