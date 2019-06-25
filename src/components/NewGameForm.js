@@ -2,10 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {
 	Map,
-	TileLayer,
-  ZoomControl,
-  Marker,
-  Popup
+	TileLayer
 } from 'react-leaflet'
 
 export class NewGameForm extends React.Component{

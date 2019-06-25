@@ -48,6 +48,7 @@ class GameList extends React.Component {
     this.setState({
       editForm: !this.state.editForm
     });
+    this.getGames();
   }
 
   render() {
