@@ -67,7 +67,8 @@ class GameList extends React.Component {
         <select onChange={this.handleChange}>
           {items}
         </select> 
-        <button onClick={this.handleEditClick}>Edit game</button>
+        {sessionStorage.getItem('token') 
+        && <button onClick={this.handleEditClick}>Edit game</button>}
         {(this.state.editForm && this.state.selectedGame !== null) 
           && <EditGameForm gameId={this.state.selectedGame} toggleView={this.toggleView}/>}
       </Fragment>
