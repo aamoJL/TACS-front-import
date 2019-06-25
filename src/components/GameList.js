@@ -1,12 +1,16 @@
 import React, { Fragment } from 'react';
+import EditGameForm from './EditGameForm';
 
 class GameList extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       games: [],
-      selectedGame: null
+      selectedGame: null,
+      editForm: false
     }
+
+    this.toggleView = this.toggleView.bind(this);
   }
 
   componentDidMount() {
@@ -25,11 +29,16 @@ class GameList extends React.Component {
   handleEditClick = (e) => {
     if(this.state.selectedGame === null){alert('No game selected');}
     else{
-      fetch('http://localhost:5000/game/' + this.state.selectedGame)
-      .then(response => response.json())
-      .then(json => console.log(json))
-      .catch(error => console.log(error))
+      this.setState({
+        editForm: true
+      });
     }
+  }
+
+  toggleView = (e) =>{
+    this.setState({
+      editForm: !this.state.editForm
+    });
   }
 
   render() {
@@ -49,6 +58,8 @@ class GameList extends React.Component {
           {items}
         </select> 
         <button onClick={this.handleEditClick}>Edit game</button>
+        {(this.state.editForm && this.state.selectedGame !== null) 
+          && <EditGameForm gameId={this.state.selectedGame} toggleView={this.toggleView}/>}
       </Fragment>
     );
   }

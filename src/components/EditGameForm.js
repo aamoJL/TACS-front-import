@@ -8,7 +8,7 @@ import {
   Popup
 } from 'react-leaflet'
 
-export class NewGameForm extends React.Component{
+export class EditGameForm extends React.Component{
   constructor(props){
     super(props);
 
@@ -19,7 +19,6 @@ export class NewGameForm extends React.Component{
       startTime: "",
       endDate: "",
       endTime: "",
-      passwords: [],
       zoom: 13,
       mapCenter: {
         lat: 62.2416479,
@@ -35,6 +34,7 @@ export class NewGameForm extends React.Component{
   };
 
   handleChange = e => {
+    console.log(e.target.value);
     const { name, value } = e.target;
     this.setState({ [name]: value });
   };
@@ -63,46 +63,73 @@ export class NewGameForm extends React.Component{
     });
   }
 
-  handleGameCreation = e => {
-    let startDate = this.state.startDate + "T" + this.state.startTime + ":00.000Z";
-    let endDate = this.state.endDate + "T" + this.state.endTime + ":00.000Z";
+  // handleGameCreation = e => {
+  //   let startDate = new Date(this.state.startDate + " " + this.state.startTime);
+  //   let endDate = new Date(this.state.endDate + " " + this.state.endTime);
 
-    const gameObject = {
-      name: this.state.gamename,
-      desc: this.state.description,
-      map: "",
-      startdate: startDate,
-      enddate: endDate,
-      passwords: [this.state.password],
-      center: this.state.mapCenter
-    }
+  //   const gameObject = {
+  //     name: this.state.gamename,
+  //     desc: this.state.description,
+  //     map: "", //TODO: map json
+  //     startdate: startDate.toISOString(),
+  //     enddate: endDate.toISOString(),
+  //     passwords: [this.state.password],
+  //     center: this.state.mapCenter
+  //   }
 
-    e.preventDefault();
+  //   e.preventDefault();
 
-    let token = sessionStorage.getItem('token');
+  //   let token = sessionStorage.getItem('token');
 
-    // Send Game info to the server
-    fetch('http://localhost:5000/game/new', {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer ' + token,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(gameObject)
-    }).then(res => res.json())
-      .then(result => {
-        this.handleView();
-      })
-      .catch(error => console.log('Error: ', error));
-  };
+  //   // Send Game info to the server
+  //   fetch('http://localhost:5000/game/new', {
+  //     method: 'POST',
+  //     headers: {
+  //       Authorization: 'Bearer ' + token,
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify(gameObject)
+  //   }).then(res => res.json())
+  //     .then(result => {
+  //       this.handleView();
+  //     })
+  //     .catch(error => console.log('Error: ', error));
+  // };
 
   componentDidMount() {
     document.addEventListener('keyup', this.handleEsc);
+    this.getGameInfo(this.props.gameId);
   }
 
   componentWillUnmount() {
     document.removeEventListener('keyup', this.handleEsc);
+  }
+
+  getGameInfo(gameId){
+    fetch('http://localhost:5000/game/' + gameId)
+      .then(response => response.json())
+      .then(json => this.handleGameInfo(json))
+      .catch(error => console.log(error));
+  }
+
+  handleGameInfo(json){
+    console.log(json.startdate);
+    console.log(json.startdate.substring(11,16));
+
+    this.setState({
+      gamename: json.name,
+      description: json.desc,
+      startDate: json.startdate.substring(0,10),
+      startTime: json.startdate.substring(11,16),
+      endDate: json.enddate.substring(0,10),
+      endTime: json.enddate.substring(11,16),
+      zoom: 13,
+      mapCenter: {
+        lat: json.center.lat,
+        lng: json.center.lng
+      }
+    })
   }
 
   render() {
@@ -147,6 +174,7 @@ export class NewGameForm extends React.Component{
               className='formTime'
               type='time'
               name='startTime'
+              value={this.state.startTime}
               onChange={this.handleChange}
               required
             />
@@ -165,6 +193,7 @@ export class NewGameForm extends React.Component{
               className='formTime'
               type='time'
               name='endTime'
+              value={this.state.endTime}
               onChange={this.handleChange}
               required
             />
@@ -178,7 +207,7 @@ export class NewGameForm extends React.Component{
               />
             </Map>
             <br />
-            <button type='submit'>Submit</button>
+            <button type='submit'>Save changes</button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>
@@ -188,4 +217,4 @@ export class NewGameForm extends React.Component{
   }
 }
 
-export default NewGameForm;
+export default EditGameForm;
