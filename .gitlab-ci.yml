@@ -14,6 +14,7 @@ docker-push:
     - echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
     - docker stop front
     - docker rm front
+  allow_failure: true
   script:
     - docker build -t overflow2019/frontend:test .
     - docker push overflow2019/frontend
