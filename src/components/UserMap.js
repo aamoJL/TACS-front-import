@@ -78,10 +78,8 @@ class UserMap extends Component {
             features: [...newFeatures]
           }
         });
-        console.log(
-          "Geojsonlayer state fetchin jälkeen: " +
-            JSON.stringify(this.state.geoJSONLayer)
-        );
+        console.log("Geojsonlayer state fetchin jälkeen: ");
+        console.log(this.state.geoJSONLayer);
       });
   }
 
@@ -164,8 +162,8 @@ class UserMap extends Component {
         <DrawTools
           position={this.props.position}
           addToGeojsonLayer={this.addToGeojsonLayer}
+          geoJSONLayer={this.state.geoJSONLayer}
         />
-
         {this.state.ownLat !== null && (
           <Marker position={[this.state.ownLat, this.state.ownLng]}>
             <Popup>
@@ -174,13 +172,14 @@ class UserMap extends Component {
             </Popup>
           </Marker>
         )}
-        <GeoJSON
-          key={JSON.stringify(this.state.geoJSONLayer)}
-          data={this.state.geoJSONLayer}
-        />
       </Map>
     );
   }
 }
-
+/*
+<GeoJSON
+key={JSON.stringify(this.state.geoJSONLayer)}
+data={this.state.geoJSONLayer}
+/>
+*/
 export default UserMap;

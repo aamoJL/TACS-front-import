@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import { EditControl } from "react-leaflet-draw";
-import { FeatureGroup } from "react-leaflet";
+import {
+  FeatureGroup,
+  GeoJSON,
+  Marker,
+  Polygon,
+  Polyline
+} from "react-leaflet";
+import L from "leaflet";
 
 class DrawTools extends Component {
   constructor(props) {
@@ -29,9 +36,34 @@ class DrawTools extends Component {
     this.props.addToGeojsonLayer(geoJSON);
   };
 
+  // generate random UUID for React Leaflet component keys
+  generateUUID() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return (
+      s4() +
+      s4() +
+      "-" +
+      s4() +
+      "-" +
+      s4() +
+      "-" +
+      s4() +
+      "-" +
+      s4() +
+      s4() +
+      s4()
+    );
+  }
+
   render() {
     return (
-      // "It's important to wrap EditControl component into FeatureGroup component from react-leaflet. The elements you draw will be added to this FeatureGroup layer, when you hit edit button only items in this layer will be edited."
+      // "It's important to wrap EditControl component into FeatureGroup component from react-leaflet.
+      // The elements you draw will be added to this FeatureGroup layer,
+      // when you hit edit button only items in this layer will be edited."
       <FeatureGroup>
         <EditControl
           position="topright"
@@ -41,7 +73,7 @@ class DrawTools extends Component {
               repeatMode: true, // allows using the tool again after finishing the previous shape
               shapeOptions: {
                 color: "#f9f10c",
-                opacity: 100
+                opacity: 1
               }
             },
             rectangle: {
@@ -56,14 +88,14 @@ class DrawTools extends Component {
               },
               shapeOptions: {
                 color: "#ed2572",
-                opacity: 100
+                opacity: 1
               }
             },
             polyline: {
               repeatMode: true,
               shapeOptions: {
                 color: "#ed2572",
-                opacity: 100
+                opacity: 1
               }
             },
             marker: {
@@ -71,7 +103,60 @@ class DrawTools extends Component {
             },
             circlemarker: false
           }}
+          edit={{
+            marker: true
+          }}
         />
+
+        {/* iterate through every element fetched from back-end */}
+        {this.props.geoJSONLayer.features.map((ind, val) => {
+          // first element is empty... for some reason.
+          // should investigate further what is it
+          if (val === 0) {
+          } else if (ind.geometry.type === "Point") {
+            // GeoJSON saves latitude first, not longitude like usual. swapping
+            let position = [
+              ind.geometry.coordinates[1],
+              ind.geometry.coordinates[0]
+            ];
+            // keys are required to be able to edit
+            return <Marker key={this.generateUUID()} position={position} />;
+          } else if (ind.geometry.type === "Polygon") {
+            // polygons have, for some reason, an extra single element array above other arrays. no other objects have this
+            let coords = ind.geometry.coordinates[0];
+            let positions = [];
+            let position = [];
+            for (let i = 0; i < coords.length; i++) {
+              position = [coords[i][1], coords[i][0]];
+              positions.push(position);
+            }
+            return <Polygon key={this.generateUUID()} positions={positions} />;
+          } else if (ind.geometry.type === "LineString") {
+            let coords = ind.geometry.coordinates;
+            let positions = [];
+            for (let i = 0; i < coords.length; i++) {
+              positions.push([coords[i][1], coords[i][0]]);
+            }
+            return <Polyline key={this.generateUUID()} positions={positions} />;
+          }
+        })}
+        {/*
+        <Polygon
+          key={this.generateUUID()}
+          positions={[
+            [62.25111, 25.804654],
+            [62.249894, 25.814211],
+            [62.24805, 25.811937],
+            [62.247963, 25.806458]
+          ]}
+        />
+        <Marker key={this.generateUUID()} position={[62.25111, 25.804654]} />
+        */}
+        {/*
+        <GeoJSON
+          key={JSON.stringify(this.props.geoJSONLayer)}
+          data={this.props.geoJSONLayer}
+        />*/}
       </FeatureGroup>
     );
   }
