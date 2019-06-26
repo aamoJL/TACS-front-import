@@ -40,7 +40,7 @@ class TaskList extends React.Component{
     let tasks = [];
     for (let i = 0; i < this.state.tasks.length; i++) {
       const task = this.state.tasks[i];
-      tasks.push(
+      tasks.unshift(
         <TaskItem key={i} text={task.name} description={task.description}/>
       );
     }

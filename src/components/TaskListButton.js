@@ -16,6 +16,7 @@ class TaskListButton extends React.Component{
     this.setState({
       open: !this.state.open
     },() =>{
+      // Set new task cout to zero when the tasklist opens
       if(this.state.open){
           this.setState({newTasks: '0'})
       }
@@ -25,7 +26,7 @@ class TaskListButton extends React.Component{
   render(){
     return(
       <Fragment>
-        <button onClick={this.handleClick}>Tasks({this.state.newTasks})</button>
+        <button onClick={this.handleClick}>Tasks ({this.state.newTasks})</button>
         {this.state.open && <TaskList />}
       </Fragment>
     );
