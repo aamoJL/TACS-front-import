@@ -2,29 +2,34 @@ import React, { Fragment } from 'react';
 import TaskList from './TaskList';
 
 class TaskListButton extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            open: false
-        }
-
-        this.handleClick = this.handleClick.bind(this);
+  constructor(props){
+    super(props);
+    this.state = {
+      open: false,
+      newTasks: '0'
     }
 
-    handleClick = (e) => {
-        this.setState({
-            open: !this.state.open
-        });
-    }
+    this.handleClick = this.handleClick.bind(this);
+  }
 
-    render(){
-        return(
-            <Fragment>
-                <button onClick={this.handleClick}>Tasks</button>
-                {this.state.open && <TaskList />}
-            </Fragment>
-        );
-    }
+  handleClick = (e) => {
+    this.setState({
+      open: !this.state.open
+    },() =>{
+      if(this.state.open){
+          this.setState({newTasks: '0'})
+      }
+    });
+  }
+
+  render(){
+    return(
+      <Fragment>
+        <button onClick={this.handleClick}>Tasks({this.state.newTasks})</button>
+        {this.state.open && <TaskList />}
+      </Fragment>
+    );
+  }
 }
 
 export default TaskListButton;

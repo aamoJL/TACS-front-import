@@ -3,21 +3,58 @@ import React from 'react';
 import TaskItem from './TaskItem';
 
 class TaskList extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      taskName: "",
+      taskDescription: "",
+      tasks: [{
+        name: "asd",
+        description: "qweqweqwsd a dasdsa dsada asda sdas  cverfer "
+      }]
+    }
+  }
+
+  handleTaskCreation = (e) => {
+    if(this.state.taskName !== ""){
+      console.log(`"${this.state.taskName}" task created :)`);
+      this.setState((state) => {
+        var tasks = state.tasks;
+        tasks.push({name: state.taskName, description: state.taskDescription});
+        var object = {
+          taskName: "",
+          taskDescription: "",
+          tasks: tasks
+        }
+        return object;
+      });
+    }
+    else{
+      console.log("Task needs a name!");
+    }
+  }
+  
   render(){
     let token = sessionStorage.getItem('token');
+
+    let tasks = [];
+    for (let i = 0; i < this.state.tasks.length; i++) {
+      const task = this.state.tasks[i];
+      tasks.push(
+        <TaskItem key={i} text={task.name} description={task.description}/>
+      );
+    }
 
     return ReactDOM.createPortal(
       <div className='tasklist'>
         {token && 
           <div className='task-form'>
-          <input type='text' placeholder='Task name'></input>
-          <textarea placeholder='Task description'></textarea>
-          <button>Add new task</button>
+          <input type='text' placeholder='Task name' value={this.state.taskName} onChange={(e) => this.setState({taskName: e.target.value})}></input>
+          <textarea placeholder='Task description' value={this.state.taskDescription} onChange={(e) => this.setState({taskDescription: e.target.value})}></textarea>
+          <button onClick={this.handleTaskCreation}>Add new task</button>
           </div>
         }
-        <TaskItem text='asd' description='asudhaiud'/>
-        <TaskItem text='asd2' description='q7213761923769821'/>
-        <TaskItem text='asd3' description='tehtävä3'/>
+        {tasks}
       </div>,
       document.getElementById('tasklist')
     );
