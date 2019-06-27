@@ -6,10 +6,20 @@ class TaskListButton extends React.Component{
     super(props);
     this.state = {
       open: false,
-      newTasks: '0'
+      newTasks: 0
     }
 
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount(){
+    this.getNewTask();
+  }
+
+  getNewTask(){
+    this.setState({
+      newTasks: this.state.open ? 0 : this.state.newTasks + 1
+    });
   }
 
   handleClick = (e) => {
@@ -18,7 +28,7 @@ class TaskListButton extends React.Component{
     },() =>{
       // Set new task cout to zero when the tasklist opens
       if(this.state.open){
-          this.setState({newTasks: '0'})
+          this.setState({newTasks: 0})
       }
     });
   }
