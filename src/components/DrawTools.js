@@ -1,19 +1,13 @@
 import React, { Component } from "react";
 import { EditControl } from "react-leaflet-draw";
-import {
-  FeatureGroup,
-  GeoJSON,
-  Marker,
-  Polygon,
-  Polyline
-} from "react-leaflet";
-import L from "leaflet";
+import { FeatureGroup, Marker, Polygon, Polyline } from "react-leaflet";
 
 class DrawTools extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      geoJSONAll: [] // property for all GeoJSON data in the map
+      geoJSONAll: [], // property for all GeoJSON data in the map
+      editModeActive: false
     };
   }
 
@@ -23,41 +17,71 @@ class DrawTools extends Component {
     this.makeGeoJSON(e.layer);
   };
 
+  _onEditMove = e => {
+    console.log("_onEditMove e:");
+    console.log(e);
+    // to be added once back-end has functionality to recognize ids
+    // this.props.sendGeoJSON(e.layer);
+  };
+
+  _onEditResize = e => {
+    console.log("_onEditResize e:");
+    console.log(e);
+  };
+
+  _onEditVertex = e => {
+    console.log("_onEditVertex e:");
+    console.log(e);
+    // to be added once back-end has functionality to recognize ids
+    // this.props.sendGeoJSON(e.poly);
+  };
+
+  _onEditStart = () => {
+    this.setState({ editModeActive: true });
+  };
+
+  _onEditStop = () => {
+    this.setState({ editModeActive: false });
+  };
+
+  shouldComponentUpdate() {
+    // disable re-rendering when edit mode is active
+    return !this.state.editModeActive;
+  }
+
   // turn layer to GeoJSON data and add it to an array of all GeoJSON data of the current map
   makeGeoJSON = e => {
     let geoJSON = e.toGeoJSON();
-    //let newGeoJSONAll = this.state.geoJSONAll;
-    //newGeoJSONAll.push(geoJSON);
-    //this.setState({ geoJSONAll: newGeoJSONAll });
     console.log(
       "UserMapille lähetettävä layeri: " + JSON.stringify(geoJSON, null, 4)
     ); // printing GeoJSON data of the previous object create
-    // console.log("newGeoJSONAll.length: " + newGeoJSONAll.length);
-    this.props.addToGeojsonLayer(geoJSON);
+    this.props.sendGeoJSON(geoJSON);
   };
 
-  // generate random UUID for React Leaflet component keys
-  generateUUID() {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
+  addFetchedLayerToMap = (id, feature) => {
+    if (feature.geometry.type === "Point") {
+      // GeoJSON saves latitude first, not longitude like usual. swapping
+      let position = [
+        feature.geometry.coordinates[1],
+        feature.geometry.coordinates[0]
+      ];
+      // keys are required to be able to edit
+      return <Marker key={Math.random()} position={position} id={id} />;
+    } else if (feature.geometry.type === "Polygon") {
+      // polygons have, for some reason, an extra single element array above other arrays. no other objects have this
+      let coords = feature.geometry.coordinates[0];
+      let positions = coords.map(item => {
+        return [item[1], item[0]];
+      });
+      return <Polygon key={Math.random()} positions={positions} id={id} />;
+    } else if (feature.geometry.type === "LineString") {
+      let coords = feature.geometry.coordinates;
+      let positions = coords.map(item => {
+        return [item[1], item[0]];
+      });
+      return <Polyline key={Math.random()} positions={positions} id={id} />;
     }
-    return (
-      s4() +
-      s4() +
-      "-" +
-      s4() +
-      "-" +
-      s4() +
-      "-" +
-      s4() +
-      "-" +
-      s4() +
-      s4() +
-      s4()
-    );
-  }
+  };
 
   render() {
     return (
@@ -68,6 +92,12 @@ class DrawTools extends Component {
         <EditControl
           position="topright"
           onCreated={this._onCreated}
+          onDrawStop={this._onDrawStop}
+          onEditStart={this._onEditStart}
+          onEditStop={this._onEditStop}
+          onEditMove={this._onEditMove}
+          onEditResize={this._onEditResize}
+          onEditVertex={this._onEditVertex}
           draw={{
             circle: {
               repeatMode: true, // allows using the tool again after finishing the previous shape
@@ -109,54 +139,14 @@ class DrawTools extends Component {
         />
 
         {/* iterate through every element fetched from back-end */}
-        {this.props.geoJSONLayer.features.map((ind, val) => {
-          // first element is empty... for some reason.
-          // should investigate further what is it
-          if (val === 0) {
-          } else if (ind.geometry.type === "Point") {
-            // GeoJSON saves latitude first, not longitude like usual. swapping
-            let position = [
-              ind.geometry.coordinates[1],
-              ind.geometry.coordinates[0]
-            ];
-            // keys are required to be able to edit
-            return <Marker key={this.generateUUID()} position={position} />;
-          } else if (ind.geometry.type === "Polygon") {
-            // polygons have, for some reason, an extra single element array above other arrays. no other objects have this
-            let coords = ind.geometry.coordinates[0];
-            let positions = [];
-            let position = [];
-            for (let i = 0; i < coords.length; i++) {
-              position = [coords[i][1], coords[i][0]];
-              positions.push(position);
-            }
-            return <Polygon key={this.generateUUID()} positions={positions} />;
-          } else if (ind.geometry.type === "LineString") {
-            let coords = ind.geometry.coordinates;
-            let positions = [];
-            for (let i = 0; i < coords.length; i++) {
-              positions.push([coords[i][1], coords[i][0]]);
-            }
-            return <Polyline key={this.generateUUID()} positions={positions} />;
+        {this.props.geoJSONLayer.features.map((feature, arrayIndex) => {
+          // first element in geoJSONLayer has an extra one element array for some reason
+          if (arrayIndex === 0) {
+            return this.addFetchedLayerToMap(feature[0], feature[1][0]);
+          } else {
+            return this.addFetchedLayerToMap(feature[0], feature[1]);
           }
         })}
-        {/*
-        <Polygon
-          key={this.generateUUID()}
-          positions={[
-            [62.25111, 25.804654],
-            [62.249894, 25.814211],
-            [62.24805, 25.811937],
-            [62.247963, 25.806458]
-          ]}
-        />
-        <Marker key={this.generateUUID()} position={[62.25111, 25.804654]} />
-        */}
-        {/*
-        <GeoJSON
-          key={JSON.stringify(this.props.geoJSONLayer)}
-          data={this.props.geoJSONLayer}
-        />*/}
       </FeatureGroup>
     );
   }

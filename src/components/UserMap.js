@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import {
-  Map,
-  TileLayer,
-  ZoomControl,
-  Marker,
-  Popup,
-  GeoJSON
-} from "react-leaflet";
+import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
 import DrawTools from "./DrawTools.js";
 
 class UserMap extends Component {
@@ -23,9 +16,8 @@ class UserMap extends Component {
       }
     };
 
-    this.addToGeojsonLayer = this.addToGeojsonLayer.bind(this);
+    this.sendGeoJSON = this.sendGeoJSON.bind(this);
     this.setCurrentPosition = this.setCurrentPosition.bind(this);
-    //this.setCurrentGeojson = this.setCurrentGeojson.bind(this);
     this.watchPositionId = null;
   }
 
@@ -37,9 +29,6 @@ class UserMap extends Component {
   }
   // Sends the players drawings to the backend (and database)
   sendGeoJSON(layerToDatabase) {
-    console.log(
-      "Lähetettävät jutut: " + JSON.stringify(this.state.geoJSONLayer)
-    );
     fetch("http://localhost:5000/mapmarkers/insert-location", {
       method: "PUT",
       headers: {
@@ -47,6 +36,7 @@ class UserMap extends Component {
         Accept: "application/json",
         "Content-Type": "application/json"
       },
+      // need to add id once back-end is ready for it
       body: JSON.stringify({
         type: "FeatureCollection",
         features: layerToDatabase
@@ -65,12 +55,10 @@ class UserMap extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         let newFeatures = [];
         data.map(item => {
-          newFeatures.push(item.features);
+          newFeatures.push([item.id, item.features]);
         });
-        console.log("Mapataan featureita: ", newFeatures);
 
         this.setState({
           geoJSONLayer: {
@@ -78,8 +66,6 @@ class UserMap extends Component {
             features: [...newFeatures]
           }
         });
-        console.log("Geojsonlayer state fetchin jälkeen: ");
-        console.log(this.state.geoJSONLayer);
       });
   }
 
@@ -130,20 +116,6 @@ class UserMap extends Component {
     }
   }
 
-  // Function to be passed to DrawTools so it can add geojson data to this components state
-  addToGeojsonLayer(layerToAdd) {
-    this.setState(() => ({
-      geoJSONLayer: {
-        type: "FeatureCollection",
-        features: [...this.state.geoJSONLayer.features, layerToAdd]
-      }
-    }));
-    console.log(
-      "Geojsonlayer state: " + JSON.stringify(this.state.geoJSONLayer)
-    );
-    this.sendGeoJSON(layerToAdd);
-  }
-
   render() {
     return (
       <Map
@@ -176,10 +148,4 @@ class UserMap extends Component {
     );
   }
 }
-/*
-<GeoJSON
-key={JSON.stringify(this.state.geoJSONLayer)}
-data={this.state.geoJSONLayer}
-/>
-*/
 export default UserMap;
