@@ -87,7 +87,11 @@ export class RegisterForm extends React.Component {
     return (
       <div className='fade-main'>
         <div className='sticky'>
-          <span id="closeLoginFormX" className='close' onClick={this.handleView}>
+          <span
+            id='closeRegisterFormX'
+            className='close'
+            onClick={this.handleView}
+          >
             ×
           </span>
         </div>
@@ -100,7 +104,7 @@ export class RegisterForm extends React.Component {
               name='username'
               value={this.state.username}
               onChange={this.handleChange}
-              id="registerUsernameInput"
+              id='registerUsernameInput'
             />
             <br />
             <input
@@ -109,7 +113,7 @@ export class RegisterForm extends React.Component {
               name='password'
               value={this.state.password}
               onChange={this.handleChange}
-              id="registerPasswordInput"
+              id='registerPasswordInput'
             />
             <br />
             <input
@@ -118,10 +122,12 @@ export class RegisterForm extends React.Component {
               name='password2'
               value={this.state.password2}
               onChange={this.handleChange}
-              id="registerPasswordVerifyInput"
+              id='registerPasswordVerifyInput'
             />
             <br />
-            <button id="submitRegisterButton" type='submit'>register</button>
+            <button id='submitRegisterButton' type='submit'>
+              register
+            </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>
