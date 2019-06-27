@@ -31,6 +31,7 @@ class App extends Component {
       <div>
         <UserMap position={initialPosition} zoom={this.state.zoom} mapUrl={this.state.mapUrl} />,
         <Header handleLayerChange={this.handleLayerChange} />       
+
       </div>
     );
   }
