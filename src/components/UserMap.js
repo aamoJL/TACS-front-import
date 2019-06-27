@@ -1,54 +1,52 @@
-import React, {Component} from 'react';
-import {
-	Map,
-	TileLayer,
-  ZoomControl,
-  Marker,
-  Popup
-} from 'react-leaflet'
-import DrawTools from './DrawTools.js'
+import React, { Component } from "react";
+import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import DrawTools from "./DrawTools.js";
 
 class UserMap extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       ownLat: null,
       ownLng: null,
-      mapUrl: 'https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
-    }
+      mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+    };
 
     this.watchPositionId = null;
   }
 
-  componentDidMount(){
-    this.getCurrentPosition((position) => {
+  componentDidMount() {
+    this.getCurrentPosition(position => {
       this.setCurrentPosition(position);
     });
   }
 
-  componentWillUnmount(){
-    if(this.watchPositionId != null){
+  componentWillUnmount() {
+    if (this.watchPositionId != null) {
       navigator.geolocation.clearWatch(this.watchPositionId);
     }
   }
 
-  setCurrentPosition(position){
+  setCurrentPosition(position) {
     this.setState({
       ownLat: position.coords.latitude,
-      ownLng: position.coords.longitude,
+      ownLng: position.coords.longitude
     });
   }
 
-  getCurrentPosition(callback){
-    if(!navigator.geolocation){
+  getCurrentPosition(callback) {
+    if (!navigator.geolocation) {
       console.log("Can't get geolocation :/");
-    }
-    else{
+    } else {
       // Position tracking options
       const options = {
         enableHighAccuracy: true,
         timeout: 30000,
         maximumAge: 0
+      };
+
+      if (this.watchPositionId != null) {
+        navigator.geolocation.clearWatch(this.watchPositionId);
       }
 
       if(this.watchPositionId != null){navigator.geolocation.clearWatch(this.watchPositionId);}
@@ -68,7 +66,7 @@ class UserMap extends Component {
     }
   }
 
-  positionToGeoJSON(position){
+  positionToGeoJSON(position) {
     let geoJSON = {
       type: "Feature",
       properties: {},
@@ -76,10 +74,14 @@ class UserMap extends Component {
         type: "Point",
         coordinates: [position.coords.longitude, position.coords.latitude]
       }
-    }
+    };
 
     return JSON.stringify(geoJSON);
   }
+
+  testers = asd => {
+    console.log(asd.target.getZoom());
+  };
 
   render() {
     return (
@@ -94,18 +96,22 @@ class UserMap extends Component {
           attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
           url={this.props.mapUrl}
         />
-        <ZoomControl position='topright' />
-		    <DrawTools position={this.props.position} />
+
+        <ZoomControl position="topright" />
+        <DrawTools position={this.props.position} />
         <Marker position={this.props.position}>
           <Popup>
             Se on perjantai, my dudes <br />
           </Popup>
         </Marker>
-        {this.state.ownLat !== null && <Marker position={[this.state.ownLat, this.state.ownLng]}>
-        <Popup>
-            User's real position.<br />
-          </Popup>
-        </Marker>}
+        {this.state.ownLat !== null && (
+          <Marker position={[this.state.ownLat, this.state.ownLng]}>
+            <Popup>
+              User's real position.
+              <br />
+            </Popup>
+          </Marker>
+        )}
       </Map>
     );
   }
