@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { EditControl } from "react-leaflet-draw";
+<<<<<<< src/components/DrawTools.js
+import { FeatureGroup } from "react-leaflet";
+=======
 import L from "leaflet";
 import "leaflet-draw";
 import { FeatureGroup } from "react-leaflet";
@@ -60,6 +63,7 @@ L.DrawToolbar.include({
     ];
   }
 });
+>>>>>>> src/components/DrawTools.js
 
 class DrawTools extends Component {
   constructor(props) {
@@ -70,6 +74,20 @@ class DrawTools extends Component {
   }
 
   _onCreated = e => {
+<<<<<<< src/components/DrawTools.js
+    let type = e.layerType; // from the example; isn't used right now, but may be relevant in the future
+    let layer = e.layer;
+    this.makeGeoJSON(e.layer);
+  };
+
+  // turn layer to GeoJSON data and add it to an array of all GeoJSON data of the current map
+  makeGeoJSON = e => {
+    let geoJSON = e.toGeoJSON();
+    let newGeoJSONAll = this.state.geoJSONAll;
+    newGeoJSONAll.push(geoJSON);
+    this.setState({ geoJSONAll: newGeoJSONAll });
+    console.log(JSON.stringify(geoJSON, null, 4)); // printing GeoJSON data of the previous object create
+=======
     // check if a drawn polyline has just one point in it
     if (e.layerType === "polyline" && e.layer.getLatLngs().length === 1) {
       e.layer.remove();
@@ -125,6 +143,7 @@ class DrawTools extends Component {
     newGeoJSONAll.push(geoJSON); // can't do +=, need to use push function
     console.log(JSON.stringify(newGeoJSONAll, null, 4));
     this.setState({ geoJSONAll: newGeoJSONAll });
+>>>>>>> src/components/DrawTools.js
   };
 
   render() {
@@ -136,6 +155,16 @@ class DrawTools extends Component {
           onCreated={this._onCreated}
           draw={{
             circle: {
+<<<<<<< src/components/DrawTools.js
+              repeatMode: false, // allows using the tool again after finishing the previous shape. turned off here
+              shapeOptions: {
+                color: "#f9f10c",
+                opacity: 100
+              }
+            },
+            rectangle: {
+              repeatMode: false
+=======
               repeatMode: true, // allows using the tool again after finishing the previous shape
               shapeOptions: {
                 color: "#f9f10c",
@@ -144,6 +173,7 @@ class DrawTools extends Component {
             },
             rectangle: {
               repeatMode: true
+>>>>>>> src/components/DrawTools.js
             },
             polygon: {
               repeatMode: true,
@@ -154,18 +184,30 @@ class DrawTools extends Component {
               },
               shapeOptions: {
                 color: "#ed2572",
+<<<<<<< src/components/DrawTools.js
+                opacity: 100
+=======
                 opacity: 1
+>>>>>>> src/components/DrawTools.js
               }
             },
             polyline: {
               repeatMode: true,
               shapeOptions: {
                 color: "#ed2572",
+<<<<<<< src/components/DrawTools.js
+                opacity: 100
+              }
+            },
+            marker: {
+              repeatMode: true
+=======
                 opacity: 1
               }
             },
             marker: {
               repeatMode: false
+>>>>>>> src/components/DrawTools.js
             },
             circlemarker: false
           }}
