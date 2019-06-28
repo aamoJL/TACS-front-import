@@ -29,7 +29,7 @@ class UserMap extends Component {
   }
   // Sends the players drawings to the backend (and database)
   sendGeoJSON(layerToDatabase) {
-    fetch("http://localhost:5000/mapmarkers/insert-location", {
+    fetch("http://localhost:5000/draw/mapdrawing/insert-location", {
       method: "PUT",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
@@ -45,7 +45,7 @@ class UserMap extends Component {
   }
   // Get the drawings from the backend and add them to the state, so they can be drawn
   fetchGeoJSON() {
-    fetch("http://localhost:5000/mapmarkers/getall", {
+    fetch("http://localhost:5000/draw/mapdrawing/insert-location", {
       method: "GET",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
@@ -55,6 +55,7 @@ class UserMap extends Component {
     })
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         let newFeatures = [];
         data.map(item => {
           newFeatures.push([item.id, item.features]);
