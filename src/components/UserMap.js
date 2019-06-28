@@ -133,7 +133,7 @@ class UserMap extends Component {
         <ZoomControl position="topright" />
         <DrawTools
           position={this.props.position}
-          addToGeojsonLayer={this.addToGeojsonLayer}
+          sendGeoJSON={this.sendGeoJSON}
           geoJSONLayer={this.state.geoJSONLayer}
         />
         {this.state.ownLat !== null && (

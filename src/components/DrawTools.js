@@ -36,12 +36,21 @@ class DrawTools extends Component {
     // this.props.sendGeoJSON(e.poly);
   };
 
-  _onEditStart = () => {
+  _onEditDeleteStart = () => {
     this.setState({ editModeActive: true });
   };
 
-  _onEditStop = () => {
+  _onEditDeleteStop = () => {
     this.setState({ editModeActive: false });
+  };
+
+  _onDeleted = e => {
+    console.log(e.layers._layers);
+    /* to be added once back-end functionality is available
+    for(layer in e.layers._layers) {
+      this.sendGeoJSON(layer.options.id);
+    }
+    */
   };
 
   shouldComponentUpdate() {
@@ -92,12 +101,14 @@ class DrawTools extends Component {
         <EditControl
           position="topright"
           onCreated={this._onCreated}
-          onDrawStop={this._onDrawStop}
-          onEditStart={this._onEditStart}
-          onEditStop={this._onEditStop}
+          onEditStart={this._onEditDeleteStart}
+          onEditStop={this._onEditDeleteStop}
           onEditMove={this._onEditMove}
           onEditResize={this._onEditResize}
           onEditVertex={this._onEditVertex}
+          onDeleted={this._onDeleted}
+          onDeleteStart={this._onEditDeleteStart}
+          onDeleteStop={this._onEditDeleteStop}
           draw={{
             circle: {
               repeatMode: true, // allows using the tool again after finishing the previous shape
