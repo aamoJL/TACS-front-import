@@ -1,5 +1,7 @@
 stages:
   - push-image
+  - rf-test
+  - push-results
 
 docker-push:
   image: docker
@@ -21,3 +23,27 @@ docker-push:
     - docker run --name front -p 80:80 -d overflow2019/frontend:test
   after_script:
     - docker logout
+
+rf-test:
+  image: gitlab.labranet.jamk.fi:4567/wimma-lab-2019/mysticons/devsecops/robot
+  stage: rf-test
+  tags: ['docker']
+  only:
+    - testing
+  script:
+    - export ROBOT_TESTS=./tests
+    - export OUTPUT_DIR=./results
+    - run.sh
+  artifacts:
+    when: always
+    untracked: true
+    expire_in: 24h
+
+push-results:
+  stage: push-results
+  tags: ['shell']
+  only:
+    - testing
+  when: always
+  script:
+    - docker cp ./results front:/usr/share/nginx/html
