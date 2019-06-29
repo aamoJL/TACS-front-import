@@ -1,61 +1,3 @@
-Message List
-
-Veera Laurikainen 
-This is the very beginning of your direct message history with @Veera Laurikainen
-
-Ronnie Friman [9:30 AM]
-//a[@class="leaflet-control-zoom-in"]
-
-Ronnie Friman [10:35 AM]
-http://172.20.2.143:8080/
-
-Ronnie Friman [2:16 PM]
-http://tacs-testing.cf/
-TEORIASSA aina ku tulee uutta testing branchii nii päivittyy tonne
-
-Veera Laurikainen [4:47 PM]
-4 files 
-resource.robot
-5 kB Plain Text — Click to open
-invalid_login.robot
-1 kB Plain Text — Click to open
-valid_login.robot
-Plain TextClick to open
-valid_registration.robot
-Plain TextClick to open
-
-Ronnie Friman [8:17 AM]
-tacs-testing.cf/results/report.html
-
-Veera Laurikainen [8:40 AM]
-2 files 
-valid_registration.robot
-Plain TextClick to open
-resource.robot
-5 kB Plain Text — Click to open
-
-Veera Laurikainen [1:00 PM]
-4 files 
-00_valid_registration.robot
-Plain TextClick to open
-01_valid_login.robot
-Plain TextClick to open
-02_invalid_registration.robot
-2 kB Plain Text — Click to open
-03_invalid_login.robot
-1 kB Plain Text — Click to open
-4 files 
-00_valid_registration.robot
-Plain TextClick to open
-01_valid_login.robot
-Plain TextClick to open
-02_invalid_registration.robot
-2 kB Plain Text — Click to open
-03_invalid_login.robot
-1 kB Plain Text — Click to open
-
-Veera Laurikainen [1:28 PM]
-resource.robot 
 *** Settings ***
 Documentation    A resource file with reusable keywords and variables.
 Library   SeleniumLibrary  run_on_failure=nothing
@@ -64,7 +6,6 @@ Library   String
 ${SERVER}    %{SITE_URL}
 ${BROWSER}   ff
 ${DELAY}    0.5
-#${VALID USER} =   ville
 ${VALID PASSWORD} =   koira
 ${LOGIN URL}    http://${SERVER}/
 ${WELCOME URL}   #You can use this if there's a different page after login page.
