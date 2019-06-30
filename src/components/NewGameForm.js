@@ -77,7 +77,7 @@ export class NewGameForm extends React.Component {
     let token = sessionStorage.getItem('token');
 
     // Send Game info to the server
-    fetch('http://localhost:5000/game/new', {
+    fetch(`${process.env.REACT_APP_URL}/game/new`, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -103,77 +103,77 @@ export class NewGameForm extends React.Component {
 
   render() {
     return ReactDOM.createPortal(
-      <div className="fade-main">
-        <div className="sticky">
+      <div className='fade-main'>
+        <div className='sticky'>
           <span
-            id="closeNewGameFormX"
-            className="close"
+            id='closeNewGameFormX'
+            className='close'
             onClick={this.handleView}
           >
             ×
           </span>
         </div>
-        <div className="">
+        <div className=''>
           <form onSubmit={this.handleGameCreation}>
             <h1>Demo Game Creation</h1>
             <br />
             <input
-              placeholder="Game name"
-              name="gamename"
+              placeholder='Game name'
+              name='gamename'
               value={this.state.gamename}
               onChange={this.handleChange}
-              id="newGameNameInput"
+              id='newGameNameInput'
             />
             <br />
             <input
-              placeholder="Description"
-              type="text"
-              name="description"
+              placeholder='Description'
+              type='text'
+              name='description'
               value={this.state.description}
               onChange={this.handleChange}
-              id="newGameDescriptionInput"
+              id='newGameDescriptionInput'
             />
             <br />
-            <label className="">Start:</label>
+            <label className=''>Start:</label>
             <input
-              className="formDate"
-              type="date"
-              name="startDate"
+              className='formDate'
+              type='date'
+              name='startDate'
               value={this.state.startDate}
               onChange={this.handleChange}
-              id="newGameDateStartInput"
+              id='newGameDateStartInput'
             />
             <input
-              className="formTime"
-              type="time"
-              name="startTime"
+              className='formTime'
+              type='time'
+              name='startTime'
               onChange={this.handleChange}
-              id="newGameTimeStartInput"
+              id='newGameTimeStartInput'
             />
             <br />
-            <label className="">End:</label>
+            <label className=''>End:</label>
             <input
-              className="formDate"
-              type="date"
-              name="endDate"
+              className='formDate'
+              type='date'
+              name='endDate'
               value={this.state.endDate}
               onChange={this.handleChange}
               min={this.state.startDate}
-              id="newGameDateEndInput"
+              id='newGameDateEndInput'
             />
             <input
-              className="formTime"
-              type="time"
-              name="endTime"
+              className='formTime'
+              type='time'
+              name='endTime'
               onChange={this.handleChange}
-              id="newGameTimeEndInput"
+              id='newGameTimeEndInput'
             />
             <br />
             <label>Map things</label>
             <br />
             <Map
-              id="newGameCenterMap"
-              className=""
+              id='newGameCenterMap'
+              className=''
               center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
               zoom={this.state.zoom}
               style={{ height: '400px', width: '400px' }}
@@ -181,12 +181,12 @@ export class NewGameForm extends React.Component {
               onzoomend={this.handleMapScroll}
             >
               <TileLayer
-                attribution="Maanmittauslaitoksen kartta"
-                url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+                attribution='Maanmittauslaitoksen kartta'
+                url=' https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
               />
             </Map>
             <br />
-            <button id="newGameSubmitButton" type="submit">
+            <button id='newGameSubmitButton' type='submit'>
               Submit
             </button>
             <h2>{this.state.errorMsg}</h2>

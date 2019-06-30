@@ -34,7 +34,7 @@ class Header extends React.Component {
   componentDidMount() {
     let token = sessionStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:5000/user/verify', {
+      fetch(`${process.env.REACT_APP_URL}/user/verify`, {
         headers: {
           Authorization: 'Bearer ' + token
         }

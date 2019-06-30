@@ -38,7 +38,7 @@ export class LoginForm extends React.Component {
     e.preventDefault();
 
     // Send login info to the server
-    fetch('http://localhost:5000/user/login', {
+    fetch(`${process.env.REACT_APP_URL}/user/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -80,7 +80,11 @@ export class LoginForm extends React.Component {
     return (
       <div className='fade-main'>
         <div className='sticky'>
-          <span id="closeLoginFormX" className='close' onClick={this.handleView}>
+          <span
+            id='closeLoginFormX'
+            className='close'
+            onClick={this.handleView}
+          >
             ×
           </span>
         </div>
@@ -93,7 +97,7 @@ export class LoginForm extends React.Component {
               name='username'
               value={this.state.username}
               onChange={this.handleChange}
-              id="loginUsernameInput"
+              id='loginUsernameInput'
             />
             <br />
             <input
@@ -102,15 +106,16 @@ export class LoginForm extends React.Component {
               name='password'
               value={this.state.password}
               onChange={this.handleChange}
-              id="loginPasswordInput"
+              id='loginPasswordInput'
             />
             <br />
-            <button id="submitLoginButton" type='submit'>login</button>
+            <button id='submitLoginButton' type='submit'>
+              login
+            </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>
       </div>
-
     );
   }
 }

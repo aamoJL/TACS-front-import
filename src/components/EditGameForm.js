@@ -75,7 +75,7 @@ export class EditGameForm extends React.Component {
     let token = sessionStorage.getItem('token');
 
     // Send Game info to the server
-    fetch('http://localhost:5000/game/edit/' + this.props.gameId, {
+    fetch(`${process.env.REACT_APP_URL}/game/edit/` + this.props.gameId, {
       method: 'PUT',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -102,7 +102,7 @@ export class EditGameForm extends React.Component {
   }
 
   getGameInfo(gameId) {
-    fetch('http://localhost:5000/game/' + gameId)
+    fetch(`${process.env.REACT_APP_URL}/game/` + gameId)
       .then(response => response.json())
       .then(json => this.handleGameInfo(json))
       .catch(error => console.log(error));
@@ -126,79 +126,79 @@ export class EditGameForm extends React.Component {
 
   render() {
     return ReactDOM.createPortal(
-      <div className="fade-main">
-        <div className="sticky">
+      <div className='fade-main'>
+        <div className='sticky'>
           <span
-            id="closeEditGameFormX"
-            className="close"
+            id='closeEditGameFormX'
+            className='close'
             onClick={this.handleView}
           >
             ×
           </span>
         </div>
-        <div className="">
+        <div className=''>
           <form onSubmit={this.handleGameSave}>
             <h1>Demo Game Creation</h1>
             <br />
             <input
-              placeholder="Game name"
-              name="gamename"
+              placeholder='Game name'
+              name='gamename'
               value={this.state.gamename}
               onChange={this.handleChange}
-              id="editGameNameInput"
+              id='editGameNameInput'
             />
             <br />
             <input
-              placeholder="Description"
-              type="text"
-              name="description"
+              placeholder='Description'
+              type='text'
+              name='description'
               value={this.state.description}
               onChange={this.handleChange}
-              id="editGameDescriptionInput"
+              id='editGameDescriptionInput'
             />
             <br />
-            <label className="">Start:</label>
+            <label className=''>Start:</label>
             <input
-              className="formDate"
-              type="date"
-              name="startDate"
+              className='formDate'
+              type='date'
+              name='startDate'
               value={this.state.startDate}
               onChange={this.handleChange}
-              id="editGameDateStartInput"
+              id='editGameDateStartInput'
             />
             <input
-              className="formTime"
-              type="time"
-              name="startTime"
+              className='formTime'
+              type='time'
+              name='startTime'
               value={this.state.startTime}
               onChange={this.handleChange}
-              rid="editGameTimeStartInput"
+              rid='editGameTimeStartInput'
             />
             <br />
-            <label className="">End:</label>
+            <label className=''>End:</label>
             <input
-              className="formDate"
-              type="date"
-              name="endDate"
+              className='formDate'
+              type='date'
+              name='endDate'
               value={this.state.endDate}
               onChange={this.handleChange}
               min={this.state.startDate}
-              id="editGameDateEndInput"
+              id='editGameDateEndInput'
             />
             <input
-              className="formTime"
-              type="time"
-              name="endTime"
+              className='formTime'
+              type='time'
+              name='endTime'
               value={this.state.endTime}
               onChange={this.handleChange}
-              id="editGameTimeEndInput"
+              id='editGameTimeEndInput'
             />
             <br />
             <label>Map things</label>
             <br />
             <Map
-              id="editGameCenterMap"
-              className=""
+              id='editGameCenterMap'
+              className=''
               center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
               zoom={this.state.zoom}
               style={{ height: '400px', width: '400px' }}
@@ -206,12 +206,12 @@ export class EditGameForm extends React.Component {
               onzoomend={this.handleMapScroll}
             >
               <TileLayer
-                attribution="Maanmittauslaitoksen kartta"
-                url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+                attribution='Maanmittauslaitoksen kartta'
+                url=' https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
               />
             </Map>
             <br />
-            <button id="editGameSubmitButton" type="submit">
+            <button id='editGameSubmitButton' type='submit'>
               Save changes
             </button>
             <h2>{this.state.errorMsg}</h2>
