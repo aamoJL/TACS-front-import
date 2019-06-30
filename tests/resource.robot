@@ -94,6 +94,3 @@ Zoom Out On Frontpage
 Move Around On The Map Frontpage      #en saanut toimimaan
   #Press Key    //*[@id="root"]/div/div[1]/div[1]    ARROW_LEFT
   Press Combination    Key.
-Collapse
-
-Message Input
