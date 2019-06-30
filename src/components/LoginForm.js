@@ -56,7 +56,7 @@ export class LoginForm extends React.Component {
             this.props.handleState(result);
             this.handleView();
           } else {
-            this.handleError(result.errorResponse.message);
+            this.handleError(result.message);
           }
         },
         // Note: it's important to handle errors here
