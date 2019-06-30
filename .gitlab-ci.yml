@@ -20,7 +20,7 @@ docker-push:
   script:
     - docker build -t overflow2019/frontend:test .
     - docker push overflow2019/frontend
-    - docker run --name front -p 80:80 -d overflow2019/frontend:test
+    - docker run --name front -p 8080:3000 -d overflow2019/frontend:test
   after_script:
     - docker logout
 
