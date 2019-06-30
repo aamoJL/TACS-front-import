@@ -77,7 +77,7 @@ export class EditGameForm extends React.Component{
     let token = sessionStorage.getItem('token');
 
     // Send Game info to the server
-    fetch('http://localhost:5000/game/' + this.props.gameId, {
+    fetch('http://localhost:5000/game/edit' + this.props.gameId, {
       method: 'PUT',
       headers: {
         Authorization: 'Bearer ' + token,
