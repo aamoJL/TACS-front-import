@@ -65,11 +65,12 @@ class DrawTools extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      geoJSONAll: [] // property for all GeoJSON data in the map
+      geoJSONAll: [], // property for all GeoJSON data in the map
+      editModeActive: false
     };
   }
 
-  _onCreated = e => {
+  _onCreated(e) {
     // check if a drawn polyline has just one point in it
     if (e.layerType === "polyline" && e.layer.getLatLngs().length === 1) {
       e.layer.remove();
@@ -117,23 +118,100 @@ class DrawTools extends Component {
 
     // turning layer data to GeoJSON
     this.makeGeoJSON(e.layer);
-  }; // end _onCreated
+  } // end _onCreated
 
-  makeGeoJSON = e => {
+  _onEditMove(e) {
+    console.log("_onEditMove e:");
+    console.log(e);
+    // to be added once back-end has functionality to recognize ids
+    // this.props.sendGeoJSON(e.layer);
+  }
+
+  _onEditResize(e) {
+    console.log("_onEditResize e:");
+    console.log(e);
+  }
+
+  _onEditVertex(e) {
+    console.log("_onEditVertex e:");
+    console.log(e);
+    // to be added once back-end has functionality to recognize ids
+    // this.props.sendGeoJSON(e.poly);
+  }
+
+  _onEditDeleteStart() {
+    this.setState({ editModeActive: true });
+  }
+
+  _onEditDeleteStop() {
+    this.setState({ editModeActive: false });
+  }
+
+  _onDeleted(e) {
+    console.log(e.layers._layers);
+    /* to be added once back-end functionality is available
+    for(layer in e.layers._layers) {
+      this.sendGeoJSON(layer.options.id);
+    }
+    */
+  }
+
+  shouldComponentUpdate() {
+    // disable re-rendering when edit mode is active
+    return !this.state.editModeActive;
+  }
+
+  // turn layer to GeoJSON data and add it to an array of all GeoJSON data of the current map
+  makeGeoJSON(e) {
     let geoJSON = e.toGeoJSON();
-    let newGeoJSONAll = this.state.geoJSONAll;
-    newGeoJSONAll.push(geoJSON); // can't do +=, need to use push function
-    console.log(JSON.stringify(newGeoJSONAll, null, 4));
-    this.setState({ geoJSONAll: newGeoJSONAll });
-  };
+    console.log(
+      "UserMapille lähetettävä layeri: " + JSON.stringify(geoJSON, null, 4)
+    ); // printing GeoJSON data of the previous object create
+    this.props.sendGeoJSON(geoJSON);
+  }
+
+  addFetchedLayerToMap(id, feature) {
+    if (feature.geometry.type === "Point") {
+      // GeoJSON saves latitude first, not longitude like usual. swapping
+      let position = [
+        feature.geometry.coordinates[1],
+        feature.geometry.coordinates[0]
+      ];
+      // keys are required to be able to edit
+      return <Marker key={Math.random()} position={position} id={id} />;
+    } else if (feature.geometry.type === "Polygon") {
+      // polygons have, for some reason, an extra single element array above other arrays. no other objects have this
+      let coords = feature.geometry.coordinates[0];
+      let positions = coords.map(item => {
+        return [item[1], item[0]];
+      });
+      return <Polygon key={Math.random()} positions={positions} id={id} />;
+    } else if (feature.geometry.type === "LineString") {
+      let coords = feature.geometry.coordinates;
+      let positions = coords.map(item => {
+        return [item[1], item[0]];
+      });
+      return <Polyline key={Math.random()} positions={positions} id={id} />;
+    }
+  }
 
   render() {
     return (
-      // "It's important to wrap EditControl component into FeatureGroup component from react-leaflet. The elements you draw will be added to this FeatureGroup layer, when you hit edit button only items in this layer will be edited."
+      // "It's important to wrap EditControl component into FeatureGroup component from react-leaflet.
+      // The elements you draw will be added to this FeatureGroup layer,
+      // when you hit edit button only items in this layer will be edited."
       <FeatureGroup>
         <EditControl
           position="topright"
           onCreated={this._onCreated}
+          onEditStart={this._onEditDeleteStart}
+          onEditStop={this._onEditDeleteStop}
+          onEditMove={this._onEditMove}
+          onEditResize={this._onEditResize}
+          onEditVertex={this._onEditVertex}
+          onDeleted={this._onDeleted}
+          onDeleteStart={this._onEditDeleteStart}
+          onDeleteStop={this._onEditDeleteStop}
           draw={{
             circle: {
               repeatMode: true, // allows using the tool again after finishing the previous shape
@@ -170,6 +248,16 @@ class DrawTools extends Component {
             circlemarker: false
           }}
         />
+
+        {/* iterate through every element fetched from back-end */}
+        {this.props.geoJSONLayer.features.map((feature, arrayIndex) => {
+          // first element in geoJSONLayer has an extra one element array for some reason
+          if (arrayIndex === 0) {
+            return this.addFetchedLayerToMap(feature[0], feature[1][0]);
+          } else {
+            return this.addFetchedLayerToMap(feature[0], feature[1]);
+          }
+        })}
       </FeatureGroup>
     );
   }

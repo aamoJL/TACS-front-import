@@ -90,14 +90,15 @@ export class LoginForm extends React.Component {
         </div>
         <div className='login'>
           <form onSubmit={this.handleLogin}>
-            <h1>demo login</h1>
+            <h1>login</h1>
             <br />
             <input
               placeholder='Enter Username'
               name='username'
               value={this.state.username}
               onChange={this.handleChange}
-              id='loginUsernameInput'
+              autoFocus
+              required
             />
             <br />
             <input
