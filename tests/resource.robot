@@ -9,7 +9,7 @@ ${BROWSER}      ff
 ${DELAY}        0.5
 #${VALID USER} =     ville
 ${VALID PASSWORD} =     koira
-${LOGIN URL}        http://${SERVER}/
+${LOGIN URL}        https://${SERVER}/
 ${WELCOME URL}      #You can use this if there's a different page after login page.
 ${LOC_USER}           id=registerUsernameInput            #Generated username.
 ${LOC_PASSWORD}       id=registerPasswordInput            #Generated password first time.
