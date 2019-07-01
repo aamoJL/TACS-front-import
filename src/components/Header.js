@@ -7,7 +7,7 @@ import NewGameForm from './NewGameForm';
 
 class Header extends React.Component {
   state = {
-    form: "", // Popup form (login, register etc.)
+    form: '', // Popup form (login, register etc.)
     username: null,
     token: null
   };
@@ -34,29 +34,29 @@ class Header extends React.Component {
   componentDidMount() {
     let token = sessionStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:5000/user/verify', {
+      fetch(`${process.env.REACT_APP_URL}/user/verify`, {
         headers: {
           Authorization: 'Bearer ' + token
         }
       })
-      .then(res => res.json())
-      .then(
-        result => {
-          // if token is still valid, login user
-          if (result === true) {
-            this.setState({
-              username: sessionStorage.getItem('name'),
-              token: token
-            });
-            // logout user if token has expired / is invalid
-          } else {
-            this.handleLogout();
+        .then(res => res.json())
+        .then(
+          result => {
+            // if token is still valid, login user
+            if (result === true) {
+              this.setState({
+                username: sessionStorage.getItem('name'),
+                token: token
+              });
+              // logout user if token has expired / is invalid
+            } else {
+              this.handleLogout();
+            }
+          },
+          error => {
+            console.log(error);
           }
-        },
-        error => {
-          console.log(error);
-        }
-      );
+        );
     }
   }
 
@@ -65,21 +65,35 @@ class Header extends React.Component {
       <div>
         <div className='header'>
           {!this.state.username && (
-            <button onClick={() => this.toggleView('register')}>
+            <button
+              id='registerButton'
+              onClick={() => this.toggleView('register')}
+            >
               register
             </button>
           )}
           {!this.state.username && (
-            <button onClick={() => this.toggleView('login')}>login</button>
+            <button id='loginButton' onClick={() => this.toggleView('login')}>
+              login
+            </button>
           )}
           {this.state.username && (
-            <button onClick={() => this.toggleView('newgame')}>New Game</button>
+            <button
+              id='newGameButton'
+              onClick={() => this.toggleView('newgame')}
+            >
+              New Game
+            </button>
           )}
           {this.state.username && (
-            <button onClick={this.handleLogout}>logout</button>
+            <button id='logoutButton' onClick={this.handleLogout}>
+              logout
+            </button>
           )}
           {this.state.username && <button>{this.state.username}</button>}
-          <button onClick={this.props.handleLayerChange}>change layer</button>
+          <button id='changeLayerButton' onClick={this.props.handleLayerChange}>
+            change layer
+          </button>
           <GameList />
         </div>
         {this.state.form === 'register' && (

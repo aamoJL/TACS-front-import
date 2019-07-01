@@ -1,28 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-	Map,
-	TileLayer
-} from 'react-leaflet'
+import { Map, TileLayer } from 'react-leaflet';
 
-export class NewGameForm extends React.Component{
-  constructor(props){
+export class NewGameForm extends React.Component {
+  constructor(props) {
     super(props);
 
     this.state = {
-      gamename: "",
-      description: "",
-      startDate: "",
-      startTime: "",
-      endDate: "",
-      endTime: "",
+      gamename: '',
+      description: '',
+      startDate: '',
+      startTime: '',
+      endDate: '',
+      endTime: '',
       passwords: [],
       zoom: 13,
       mapCenter: {
         lat: 62.2416479,
         lng: 25.7597186
       }
-    }
+    };
 
     this.handleMapDrag = this.handleMapDrag.bind(this);
   }
@@ -52,34 +49,35 @@ export class NewGameForm extends React.Component{
     this.setState({
       mapCenter: e.target.getCenter()
     });
-  }
+  };
 
   handleMapScroll = e => {
     this.setState({
       zoom: e.target.getZoom()
     });
-  }
+  };
 
   handleGameCreation = e => {
-    let startDate = this.state.startDate + "T" + this.state.startTime + ":00.000Z";
-    let endDate = this.state.endDate + "T" + this.state.endTime + ":00.000Z";
+    let startDate =
+      this.state.startDate + 'T' + this.state.startTime + ':00.000Z';
+    let endDate = this.state.endDate + 'T' + this.state.endTime + ':00.000Z';
 
     const gameObject = {
       name: this.state.gamename,
       desc: this.state.description,
-      map: "",
+      map: '',
       startdate: startDate,
       enddate: endDate,
       passwords: [this.state.password],
       center: this.state.mapCenter
-    }
+    };
 
     e.preventDefault();
 
     let token = sessionStorage.getItem('token');
 
     // Send Game info to the server
-    fetch('http://localhost:5000/game/new', {
+    fetch(`${process.env.REACT_APP_URL}/game/new`, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -87,7 +85,8 @@ export class NewGameForm extends React.Component{
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(gameObject)
-    }).then(res => res.json())
+    })
+      .then(res => res.json())
       .then(result => {
         this.handleView();
       })
@@ -103,10 +102,14 @@ export class NewGameForm extends React.Component{
   }
 
   render() {
-    return ReactDOM.createPortal (
+    return ReactDOM.createPortal(
       <div className='fade-main'>
         <div className='sticky'>
-          <span className='close' onClick={this.handleView}>
+          <span
+            id='closeNewGameFormX'
+            className='close'
+            onClick={this.handleView}
+          >
             ×
           </span>
         </div>
@@ -119,7 +122,7 @@ export class NewGameForm extends React.Component{
               name='gamename'
               value={this.state.gamename}
               onChange={this.handleChange}
-              required
+              id='newGameNameInput'
             />
             <br />
             <input
@@ -128,7 +131,7 @@ export class NewGameForm extends React.Component{
               name='description'
               value={this.state.description}
               onChange={this.handleChange}
-              required
+              id='newGameDescriptionInput'
             />
             <br />
             <label className=''>Start:</label>
@@ -138,14 +141,14 @@ export class NewGameForm extends React.Component{
               name='startDate'
               value={this.state.startDate}
               onChange={this.handleChange}
-              required
+              id='newGameDateStartInput'
             />
             <input
               className='formTime'
               type='time'
               name='startTime'
               onChange={this.handleChange}
-              required
+              id='newGameTimeStartInput'
             />
             <br />
             <label className=''>End:</label>
@@ -156,31 +159,41 @@ export class NewGameForm extends React.Component{
               value={this.state.endDate}
               onChange={this.handleChange}
               min={this.state.startDate}
-              required
+              id='newGameDateEndInput'
             />
             <input
               className='formTime'
               type='time'
               name='endTime'
               onChange={this.handleChange}
-              required
+              id='newGameTimeEndInput'
             />
             <br />
             <label>Map things</label>
             <br />
-            <Map className='' center={[this.state.mapCenter.lat, this.state.mapCenter.lng]} zoom={this.state.zoom} style={{height: '400px', width: '400px'} } onmoveend={this.handleMapDrag} onzoomend={this.handleMapScroll}>
+            <Map
+              id='newGameCenterMap'
+              className=''
+              center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
+              zoom={this.state.zoom}
+              style={{ height: '400px', width: '400px' }}
+              onmoveend={this.handleMapDrag}
+              onzoomend={this.handleMapScroll}
+            >
               <TileLayer
                 attribution='Maanmittauslaitoksen kartta'
                 url=' https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg'
               />
             </Map>
             <br />
-            <button type='submit'>Submit</button>
+            <button id='newGameSubmitButton' type='submit'>
+              Submit
+            </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>
-      </div>
-      ,document.getElementById('form')
+      </div>,
+      document.getElementById('form')
     );
   }
 }
