@@ -51,7 +51,7 @@ div.header button:hover {
 div.fade-main {
   position: fixed;
   top: 0;
-  z-index: 1000;
+  z-index: 1020;
   height: 100vh;
   width: 100vw;
   margin: auto;
@@ -60,22 +60,22 @@ div.fade-main {
 }
 
 div.sticky {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    height: 100px;
-    width: 100px;
-    margin-right: 150px;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  height: 100px;
+  width: 100px;
+  margin-right: 150px;
 }
 
 .close {
-    position: fixed;
-    color: #f1f1f1;
-    height: 85px;
-    font-size: 100px;
-    font-weight: bold;
-    transition: transform 0.4s ease-in-out;
-    line-height: 70%;
+  position: fixed;
+  color: #f1f1f1;
+  height: 85px;
+  font-size: 100px;
+  font-weight: bold;
+  transition: transform 0.4s ease-in-out;
+  line-height: 70%;
 }
 
 .close:hover,
@@ -137,4 +137,62 @@ div.login button {
 div.login button:hover {
   background-color: darkblue;
   cursor: pointer;
+}
+
+.login .formDate {
+  width: 30%;
+}
+
+.login label.formDate {
+  color: white;
+  width: 10%;
+  margin-left: 10%;
+  font-size: 180%;
+}
+
+.login .formTime {
+  width: 30%;
+  margin-right: 20%;
+}
+
+/* Editing text button in the toolbar */
+.leaflet-draw-toolbar .leaflet-draw-draw-textbox {
+  background-image: url("icons/button-textbox.png");
+  background-size: 30px 30px;
+}
+
+/* Editing tooltips */
+.leaflet-tooltip {
+  font-size: 18px;
+  /* Overriding tooltip layout by making it invisible */
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+}
+
+/* remove the small triangle on tooltip */
+.leaflet-tooltip-bottom:before {
+  border: 0;
+}
+
+/* Editing editable tooltips */
+.editable {
+  cursor: text; /* the cursor icon doesn't change by default when hovering on top of the text; overriding */
+  min-width: 154px;
+  min-height: 18px;
+  color: #fff;
+  font-weight: bold;
+  /* text borders */
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+/* placeholder text for tooltip */
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: #777;
+  text-shadow: none;
+  font-weight: normal;
 }
