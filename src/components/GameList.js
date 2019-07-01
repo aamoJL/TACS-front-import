@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import EditGameForm from './EditGameForm';
+import React, { Fragment } from "react";
+import EditGameForm from "./EditGameForm";
 
 class GameList extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ class GameList extends React.Component {
   }
 
   getGames() {
-    fetch('http://localhost:5000/game/listgames')
+    fetch("http://localhost:5000/game/listgames")
       .then(response => response.json())
       .then(games => {
         this.setState({
@@ -39,7 +39,7 @@ class GameList extends React.Component {
 
   handleEditClick = e => {
     if (this.state.selectedGame === null) {
-      alert('No game selected');
+      alert("No game selected");
     } else {
       this.setState({
         editForm: true
@@ -69,11 +69,11 @@ class GameList extends React.Component {
     return (
       <Fragment>
         <label>Game: </label>
-        <select id='changeActiveGameList' onChange={this.handleChange}>
+        <select id="changeActiveGameList" onChange={this.handleChange}>
           {items}
         </select>
-        {sessionStorage.getItem('token') && (
-          <button id='editGameButton' onClick={this.handleEditClick}>
+        {sessionStorage.getItem("token") && (
+          <button id="editGameButton" onClick={this.handleEditClick}>
             Edit game
           </button>
         )}

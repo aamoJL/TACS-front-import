@@ -62,7 +62,7 @@ export class RegisterForm extends React.Component {
               this.props.handleState(result);
               this.handleView();
             } else {
-              this.handleError(result.message);
+              this.handleError(result.errorResponse.message);
             }
           },
           // Note: it's important to handle errors here
@@ -87,11 +87,7 @@ export class RegisterForm extends React.Component {
     return (
       <div className='fade-main'>
         <div className='sticky'>
-          <span
-            id='closeRegisterFormX'
-            className='close'
-            onClick={this.handleView}
-          >
+          <span className='close' onClick={this.handleView}>
             ×
           </span>
         </div>
@@ -104,7 +100,8 @@ export class RegisterForm extends React.Component {
               name='username'
               value={this.state.username}
               onChange={this.handleChange}
-              id='registerUsernameInput'
+              autoFocus
+              required
             />
             <br />
             <input
@@ -113,7 +110,7 @@ export class RegisterForm extends React.Component {
               name='password'
               value={this.state.password}
               onChange={this.handleChange}
-              id='registerPasswordInput'
+              required
             />
             <br />
             <input
@@ -122,12 +119,10 @@ export class RegisterForm extends React.Component {
               name='password2'
               value={this.state.password2}
               onChange={this.handleChange}
-              id='registerPasswordVerifyInput'
+              required
             />
             <br />
-            <button id='submitRegisterButton' type='submit'>
-              register
-            </button>
+            <button type='submit'>register</button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>

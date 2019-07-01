@@ -1,18 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Map, TileLayer } from 'react-leaflet';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Map, TileLayer } from "react-leaflet";
 
 export class EditGameForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      gamename: '',
-      description: '',
-      startDate: '',
-      startTime: '',
-      endDate: '',
-      endTime: '',
+      gamename: "",
+      description: "",
+      startDate: "",
+      startTime: "",
+      endDate: "",
+      endTime: "",
       zoom: 13,
       mapCenter: {
         lat: 62.2416479,
@@ -58,13 +58,13 @@ export class EditGameForm extends React.Component {
 
   handleGameSave = e => {
     let startDate =
-      this.state.startDate + 'T' + this.state.startTime + ':00.000Z';
-    let endDate = this.state.endDate + 'T' + this.state.endTime + ':00.000Z';
+      this.state.startDate + "T" + this.state.startTime + ":00.000Z";
+    let endDate = this.state.endDate + "T" + this.state.endTime + ":00.000Z";
 
     const gameObject = {
       name: this.state.gamename,
       desc: this.state.description,
-      map: '',
+      map: "",
       startdate: startDate,
       enddate: endDate,
       center: this.state.mapCenter
@@ -72,15 +72,15 @@ export class EditGameForm extends React.Component {
 
     e.preventDefault();
 
-    let token = sessionStorage.getItem('token');
+    let token = sessionStorage.getItem("token");
 
     // Send Game info to the server
-    fetch('http://localhost:5000/game/edit/' + this.props.gameId, {
-      method: 'PUT',
+    fetch("http://localhost:5000/game/edit/" + this.props.gameId, {
+      method: "PUT",
       headers: {
-        Authorization: 'Bearer ' + token,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+        Authorization: "Bearer " + token,
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(gameObject)
     })
@@ -89,20 +89,20 @@ export class EditGameForm extends React.Component {
         alert(result.message);
         this.handleView();
       })
-      .catch(error => console.log('Error: ', error));
+      .catch(error => console.log("Error: ", error));
   };
 
   componentDidMount() {
-    document.addEventListener('keyup', this.handleEsc);
+    document.addEventListener("keyup", this.handleEsc);
     this.getGameInfo(this.props.gameId);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keyup', this.handleEsc);
+    document.removeEventListener("keyup", this.handleEsc);
   }
 
   getGameInfo(gameId) {
-    fetch('http://localhost:5000/game/' + gameId)
+    fetch("http://localhost:5000/game/" + gameId)
       .then(response => response.json())
       .then(json => this.handleGameInfo(json))
       .catch(error => console.log(error));
@@ -201,7 +201,7 @@ export class EditGameForm extends React.Component {
               className=""
               center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
               zoom={this.state.zoom}
-              style={{ height: '400px', width: '400px' }}
+              style={{ height: "400px", width: "400px" }}
               onmoveend={this.handleMapDrag}
               onzoomend={this.handleMapScroll}
             >
@@ -218,7 +218,7 @@ export class EditGameForm extends React.Component {
           </form>
         </div>
       </div>,
-      document.getElementById('form')
+      document.getElementById("form")
     );
   }
 }
