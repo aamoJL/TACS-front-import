@@ -44,7 +44,7 @@ export class RegisterForm extends React.Component {
       this.handleError('Passwords do not match');
     } else {
       // Send register info to the server
-      fetch('http://localhost:5000/user/register', {
+      fetch(`${process.env.REACT_APP_URL}/user/register`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -62,7 +62,7 @@ export class RegisterForm extends React.Component {
               this.props.handleState(result);
               this.handleView();
             } else {
-              this.handleError(result.errorResponse.message);
+              this.handleError(result.message);
             }
           },
           // Note: it's important to handle errors here
@@ -87,7 +87,11 @@ export class RegisterForm extends React.Component {
     return (
       <div className='fade-main'>
         <div className='sticky'>
-          <span className='close' onClick={this.handleView}>
+          <span
+            id='closeRegisterFormX'
+            className='close'
+            onClick={this.handleView}
+          >
             ×
           </span>
         </div>
@@ -110,7 +114,7 @@ export class RegisterForm extends React.Component {
               name='password'
               value={this.state.password}
               onChange={this.handleChange}
-              required
+              id='registerPasswordInput'
             />
             <br />
             <input
@@ -119,10 +123,12 @@ export class RegisterForm extends React.Component {
               name='password2'
               value={this.state.password2}
               onChange={this.handleChange}
-              required
+              id='registerPasswordVerifyInput'
             />
             <br />
-            <button type='submit'>register</button>
+            <button id='submitRegisterButton' type='submit'>
+              register
+            </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>

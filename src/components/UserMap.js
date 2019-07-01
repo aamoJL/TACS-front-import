@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
 import DrawTools from "./DrawTools.js";
 
 class UserMap extends Component {
@@ -117,6 +118,10 @@ class UserMap extends Component {
     }
   }
 
+  testers = asd => {
+    console.log(asd.target.getZoom());
+  };
+
   render() {
     return (
       <Map
@@ -149,4 +154,5 @@ class UserMap extends Component {
     );
   }
 }
+
 export default UserMap;
