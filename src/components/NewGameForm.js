@@ -13,7 +13,6 @@ export class NewGameForm extends React.Component {
       startTime: "",
       endDate: "",
       endTime: "",
-      passwords: [],
       zoom: 13,
       mapCenter: {
         lat: 62.2416479,
@@ -68,7 +67,6 @@ export class NewGameForm extends React.Component {
       map: "",
       startdate: startDate,
       enddate: endDate,
-      passwords: [this.state.password],
       center: this.state.mapCenter
     };
 
@@ -108,89 +106,99 @@ export class NewGameForm extends React.Component {
           <span
             id="closeNewGameFormX"
             className="close"
-            onClick={this.handleView}
-          >
+            onClick={this.handleView}>
             ×
           </span>
         </div>
         <div className="">
-          <form onSubmit={this.handleGameCreation}>
-            <h1>Demo Game Creation</h1>
-            <br />
-            <input
-              placeholder="Game name"
-              name="gamename"
-              value={this.state.gamename}
-              onChange={this.handleChange}
-              id="newGameNameInput"
-            />
-            <br />
-            <input
-              placeholder="Description"
-              type="text"
-              name="description"
-              value={this.state.description}
-              onChange={this.handleChange}
-              id="newGameDescriptionInput"
-            />
-            <br />
-            <label className="">Start:</label>
-            <input
-              className="formDate"
-              type="date"
-              name="startDate"
-              value={this.state.startDate}
-              onChange={this.handleChange}
-              id="newGameDateStartInput"
-            />
-            <input
-              className="formTime"
-              type="time"
-              name="startTime"
-              onChange={this.handleChange}
-              id="newGameTimeStartInput"
-            />
-            <br />
-            <label className="">End:</label>
-            <input
-              className="formDate"
-              type="date"
-              name="endDate"
-              value={this.state.endDate}
-              onChange={this.handleChange}
-              min={this.state.startDate}
-              id="newGameDateEndInput"
-            />
-            <input
-              className="formTime"
-              type="time"
-              name="endTime"
-              onChange={this.handleChange}
-              id="newGameTimeEndInput"
-            />
-            <br />
-            <label>Map things</label>
-            <br />
-            <Map
-              id="newGameCenterMap"
-              className=""
-              center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
-              zoom={this.state.zoom}
-              style={{ height: "400px", width: "400px" }}
-              onmoveend={this.handleMapDrag}
-              onzoomend={this.handleMapScroll}
-            >
-              <TileLayer
-                attribution="Maanmittauslaitoksen kartta"
-                url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
-              />
-            </Map>
-            <br />
-            <button id="newGameSubmitButton" type="submit">
-              Submit
-            </button>
-            <h2>{this.state.errorMsg}</h2>
-          </form>
+          <form id="gameCreationForm" onSubmit={this.handleGameCreation}></form>
+          <h1>Demo Game Creation</h1>
+          <br />
+          <input
+            placeholder="Game name"
+            name="gamename"
+            value={this.state.gamename}
+            onChange={this.handleChange}
+            id="newGameNameInput"
+            form="gameCreationForm"
+            required
+          />
+          <br />
+          <input
+            placeholder="Description"
+            type="text"
+            name="description"
+            value={this.state.description}
+            onChange={this.handleChange}
+            id="newGameDescriptionInput"
+            form="gameCreationForm"
+            required
+          />
+          <br />
+          <label className="">Start:</label>
+          <input
+            className="formDate"
+            type="date"
+            name="startDate"
+            value={this.state.startDate}
+            onChange={this.handleChange}
+            id="newGameDateStartInput"
+            form="gameCreationForm"
+            required
+          />
+          <input
+            className="formTime"
+            type="time"
+            name="startTime"
+            onChange={this.handleChange}
+            id="newGameTimeStartInput"
+            form="gameCreationForm"
+            required
+          />
+          <br />
+          <label className="">End:</label>
+          <input
+            className="formDate"
+            type="date"
+            name="endDate"
+            value={this.state.endDate}
+            onChange={this.handleChange}
+            min={this.state.startDate}
+            id="newGameDateEndInput"
+            form="gameCreationForm"
+            required
+          />
+          <input
+            className="formTime"
+            type="time"
+            name="endTime"
+            onChange={this.handleChange}
+            id="newGameTimeEndInput"
+            form="gameCreationForm"
+            required
+          />
+          <br />
+          <label>Map things</label>
+          <br />
+          <Map
+            id="newGameCenterMap"
+            className=""
+            center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
+            zoom={this.state.zoom}
+            style={{ height: "400px", width: "400px" }}
+            onmoveend={this.handleMapDrag}
+            onzoomend={this.handleMapScroll}
+          >
+          <TileLayer
+            attribution="Maanmittauslaitoksen kartta"
+            url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+          />
+          </Map>
+          <br />
+          <button id="newGameSubmitButton" type="submit" form="gameCreationForm">
+            Submit
+          </button>
+          <h2>{this.state.errorMsg}</h2>
         </div>
       </div>,
       document.getElementById("form")

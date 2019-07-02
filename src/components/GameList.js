@@ -1,13 +1,15 @@
 import React, { Fragment } from "react";
 import EditGameForm from "./EditGameForm";
+import JoinGameForm from "./JoinGameForm";
 
 class GameList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       games: [],
-      selectedGame: null,
-      editForm: false
+      selectedGame: undefined,
+      editForm: false,
+      joinForm: false
     };
 
     this.toggleView = this.toggleView.bind(this);
@@ -18,12 +20,12 @@ class GameList extends React.Component {
   }
 
   getGames() {
-    fetch("http://localhost:5000/game/listgames")
+    fetch(`${process.env.REACT_APP_URL}/game/listgames`)
       .then(response => response.json())
       .then(games => {
         this.setState({
           games: games,
-          selectedGame: games !== null && games[0].id
+          selectedGame: games !== undefined && games[0].id
         });
       })
       .catch(error => {
@@ -38,7 +40,7 @@ class GameList extends React.Component {
   };
 
   handleEditClick = e => {
-    if (this.state.selectedGame === null) {
+    if (this.state.selectedGame === undefined) {
       alert("No game selected");
     } else {
       this.setState({
@@ -46,6 +48,18 @@ class GameList extends React.Component {
       });
     }
   };
+
+  handleJoinClick = e => {
+    if (this.state.selectedGame === undefined) {
+      alert("No game selected");
+    }
+    else{
+      this.setState({
+        joinForm: true,
+        editForm: false
+      });
+    }
+  }
 
   toggleView = e => {
     this.setState({
@@ -73,12 +87,23 @@ class GameList extends React.Component {
           {items}
         </select>
         {sessionStorage.getItem("token") && (
-          <button id="editGameButton" onClick={this.handleEditClick}>
-            Edit game
-          </button>
+          <Fragment>
+            <button id="editGameButton" onClick={this.handleEditClick}>
+              Edit game
+            </button>
+            <button id="editGameButton" onClick={this.handleJoinClick}>
+            Join Game
+            </button>
+          </Fragment>
         )}
-        {this.state.editForm && this.state.selectedGame !== null && (
+        {this.state.editForm && this.state.selectedGame !== undefined && (
           <EditGameForm
+            gameId={this.state.selectedGame}
+            toggleView={this.toggleView}
+          />
+        )}
+        {this.state.joinForm && this.state.selectedGame !== undefined && (
+          <JoinGameForm
             gameId={this.state.selectedGame}
             toggleView={this.toggleView}
           />
