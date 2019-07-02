@@ -13,17 +13,19 @@ export class EditGameForm extends React.Component {
       startTime: "",
       endDate: "",
       endTime: "",
-      zoom: 13,
+      map: "",
       mapCenter: {
         lat: 62.2416479,
         lng: 25.7597186
       },
       factionNameInput: "",
       factionPasswordInput: "",
-      factions: [{
-        name: "Overflow",
-        password: "Wimma"
-      }]
+      factions: [],
+      objectivePoints: []
+      //   {
+      //   objectivePointDescription: "",
+      //   objectivePointMultiplier: ""
+      // }
     };
 
     this.handleMapDrag = this.handleMapDrag.bind(this);
@@ -45,11 +47,16 @@ export class EditGameForm extends React.Component {
       return alert("Faction needs a name and password");
     }
 
+    if(this.state.factions.findIndex(faction => faction.factionName === this.state.factionNameInput) !== -1){
+      return alert("Faction " + this.state.factionNameInput + " already exists");
+    }
+
     this.setState(state => {
       let factions = state.factions;
       factions.push({
-        name: this.state.factionNameInput,
-        password: this.state.factionPasswordInput
+        factionName: this.state.factionNameInput,
+        factionPassword: this.state.factionPasswordInput,
+        multiplier: 1
       });
       return {
         factions: factions,
@@ -57,6 +64,31 @@ export class EditGameForm extends React.Component {
         factionPasswordInput: ""
       }
     })
+  }
+
+  handleGameDeletion = e =>{
+    e.preventDefault();
+
+    let token = sessionStorage.getItem("token");
+
+    if(window.confirm("Are you sure you want to delete this game")){
+      alert("Game deleted");
+
+      fetch(`${process.env.REACT_APP_URL}/game/${this.props.gameId}`,{
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token,
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+      })
+      .then(result => result.json())
+      .then(result =>  {
+        console.log(result);
+        this.handleView();
+      })
+      .catch(error => console.log(error));
+    }
   }
 
   // show/hide this form
@@ -84,8 +116,7 @@ export class EditGameForm extends React.Component {
   };
 
   handleGameSave = e => {
-    let startDate =
-      this.state.startDate + "T" + this.state.startTime + ":00.000Z";
+    let startDate = this.state.startDate + "T" + this.state.startTime + ":00.000Z";
     let endDate = this.state.endDate + "T" + this.state.endTime + ":00.000Z";
 
     const gameObject = {
@@ -94,7 +125,9 @@ export class EditGameForm extends React.Component {
       map: "",
       startdate: startDate,
       enddate: endDate,
-      center: this.state.mapCenter
+      center: this.state.mapCenter,
+      factions: this.state.factions,
+      objective_points: this.state.objectivePoints
     };
 
     e.preventDefault();
@@ -143,18 +176,26 @@ export class EditGameForm extends React.Component {
       startTime: json.startdate.substring(11, 16),
       endDate: json.enddate.substring(0, 10),
       endTime: json.enddate.substring(11, 16),
-      zoom: 13,
       mapCenter: {
         lat: json.center.lat,
         lng: json.center.lng
-      }
+      },
+      factions: json.factions,
+      objectivePoints: json.objective_points
     });
   }
 
-  removeFaction(index){
+  removeFaction(factionName){
     this.setState(state => {
       let factions = state.factions;
-      factions.splice(index,1);
+      const index = factions.findIndex(faction => faction.factionName === factionName);
+
+      if(index !== -1){
+        factions.splice(index,1);
+      }
+      else{
+        console.log("Faction is not in the faction list");
+      }
 
       return factions;
     });
@@ -167,8 +208,8 @@ export class EditGameForm extends React.Component {
       const faction = this.state.factions[i];
       factions.push(
         <Fragment>
-          <li key={i}>{faction.name} : {faction.password}</li>
-          <button onClick={() => this.removeFaction(i)}>Remove</button>
+          <li key={faction.factionName}>{faction.factionName} : {faction.factionPassword}</li>
+          <button type="button" onClick={() => this.removeFaction(faction.factionName)}>Remove</button>
         </Fragment>
       );
     }
@@ -186,8 +227,9 @@ export class EditGameForm extends React.Component {
         </div>
         <div className="">
           
-          <form id="gameCreationForm" onSubmit={this.handleGameCreation}></form>
+          <form id="gameEditForm" onSubmit={this.handleGameSave}></form>
           <form id="factionAddFrom" onSubmit={this.handleFactionAdd}></form>
+          <form id="gameDeletionForm" onSubmit={this.handleGameDeletion}></form>
           
           <form onSubmit={this.handleGameSave}>
             <h1>Demo Game Editor</h1>
@@ -198,7 +240,7 @@ export class EditGameForm extends React.Component {
               value={this.state.gamename}
               onChange={this.handleChange}
               id="editGameNameInput"
-              form="gameCreationForm"
+              form="gameEditForm"
               required
             />
             <br />
@@ -209,7 +251,7 @@ export class EditGameForm extends React.Component {
               value={this.state.description}
               onChange={this.handleChange}
               id="editGameDescriptionInput"
-              form="gameCreationForm"
+              form="gameEditForm"
               required
             />
             <br />
@@ -221,7 +263,7 @@ export class EditGameForm extends React.Component {
               value={this.state.startDate}
               onChange={this.handleChange}
               id="editGameDateStartInput"
-              form="gameCreationForm"
+              form="gameEditForm"
               required
             />
             <input
@@ -231,7 +273,7 @@ export class EditGameForm extends React.Component {
               value={this.state.startTime}
               onChange={this.handleChange}
               sid="editGameTimeStartInput"
-              form="gameCreationForm"
+              form="gameEditForm"
               required
             />
             <br />
@@ -244,7 +286,7 @@ export class EditGameForm extends React.Component {
               onChange={this.handleChange}
               min={this.state.startDate}
               id="editGameDateEndInput"
-              form="gameCreationForm"
+              form="gameEditForm"
               required
             />
             <input
@@ -254,7 +296,7 @@ export class EditGameForm extends React.Component {
               value={this.state.endTime}
               onChange={this.handleChange}
               id="editGameTimeEndInput"
-              form="gameCreationForm"
+              form="gameEditForm"
               required
             />
             <br />
@@ -275,10 +317,10 @@ export class EditGameForm extends React.Component {
               id="editGameCenterMap"
               className=""
               center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
-              zoom={this.state.zoom}
+              zoom="13"
               style={{ height: "400px", width: "400px" }}
               onmoveend={this.handleMapDrag}
-              onzoomend={this.handleMapScroll}
+              // onzoomend={this.handleMapScroll}
             >
               <TileLayer
                 attribution="Maanmittauslaitoksen kartta"
@@ -286,7 +328,10 @@ export class EditGameForm extends React.Component {
               />
             </Map>
             <br />
-            <button id="editGameSubmitButton" type="submit" form="gameCreationForm">
+            <button style={{backgroundColor: "red"}} type="submit" form="gameDeletionForm">
+              Delete
+            </button>
+            <button id="editGameSubmitButton" type="submit" form="gameEditForm">
               Save changes
             </button>
             <h2>{this.state.errorMsg}</h2>
