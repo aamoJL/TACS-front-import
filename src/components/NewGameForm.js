@@ -86,7 +86,13 @@ export class NewGameForm extends React.Component {
     })
       .then(res => res.json())
       .then(result => {
-        this.handleView();
+        if(result.code){
+          alert(result.message);
+        }
+        else{
+          alert(`Game ${this.state.gamename} added`);
+          this.handleView();
+        }
       })
       .catch(error => console.log("Error: ", error));
   };
