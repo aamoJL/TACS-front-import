@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import EditGameForm from './EditGameForm';
+import React, { Fragment } from "react";
+import EditGameForm from "./EditGameForm";
 
 class GameList extends React.Component {
   constructor(props) {
@@ -23,8 +23,10 @@ class GameList extends React.Component {
       .then(games => {
         this.setState({
           games: games,
-          selectedGame: games !== null && games[0].id
+          selectedGame: games !== undefined && games[0].id
         });
+        // taking the initialized gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
+        this.props.handleGameChange(games[0].id);
       })
       .catch(error => {
         console.log(error);
@@ -32,14 +34,22 @@ class GameList extends React.Component {
   }
 
   handleChange = e => {
-    this.setState({
-      selectedGame: e.target.value
-    });
+    this.setState(
+      {
+        selectedGame: e.target.value
+      },
+      () => {
+        this.props.handleGameChange(this.state.selectedGame);
+      }
+    );
+
+    // taking the initialized gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
+    // this.state.selectedGame gives belated response, for some reason
   };
 
   handleEditClick = e => {
     if (this.state.selectedGame === null) {
-      alert('No game selected');
+      alert("No game selected");
     } else {
       this.setState({
         editForm: true
@@ -69,11 +79,11 @@ class GameList extends React.Component {
     return (
       <Fragment>
         <label>Game: </label>
-        <select id='changeActiveGameList' onChange={this.handleChange}>
+        <select id="changeActiveGameList" onChange={this.handleChange}>
           {items}
         </select>
-        {sessionStorage.getItem('token') && (
-          <button id='editGameButton' onClick={this.handleEditClick}>
+        {sessionStorage.getItem("token") && (
+          <button id="editGameButton" onClick={this.handleEditClick}>
             Edit game
           </button>
         )}

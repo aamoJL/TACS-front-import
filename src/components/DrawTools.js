@@ -2,7 +2,15 @@ import React, { Component } from "react";
 import { EditControl } from "react-leaflet-draw";
 import L from "leaflet";
 import "leaflet-draw";
-import { FeatureGroup } from "react-leaflet";
+import {
+  FeatureGroup,
+  Circle,
+  Marker,
+  Polygon,
+  Polyline,
+  Rectangle
+} from "react-leaflet";
+import TextBox from "./TextBox.js";
 
 // class for text field
 L.Draw.MarkerTextBox = L.Draw.Marker.extend({
@@ -70,7 +78,7 @@ class DrawTools extends Component {
     };
   }
 
-  _onCreated(e) {
+  _onCreated = e => {
     // check if a drawn polyline has just one point in it
     if (e.layerType === "polyline" && e.layer.getLatLngs().length === 1) {
       e.layer.remove();
@@ -80,8 +88,12 @@ class DrawTools extends Component {
     if (e.layerType === "textbox") {
       // have to create tooltip as a DOM element to allow text selecting. maybe
       let tooltip = L.DomUtil.create("div", "editable");
+
+      // need ids for tooltips to be able to add a blur event to them
       tooltip.innerHTML =
-        '<div contenteditable="true" placeholder="Click here and type"></div>';
+        '<div contenteditable="true" placeholder="Click out to save" id="' +
+        e.layer._leaflet_id +
+        '"></div>';
 
       e.layer.bindTooltip(tooltip, {
         permanent: true,
@@ -106,93 +118,94 @@ class DrawTools extends Component {
         // manually removing it so that the placeholder text can show
         if (
           tooltip.innerHTML ===
-            '<div placeholder="Click here and type" contenteditable="true"><br></div>' ||
+            '<div placeholder="Click out to save" contenteditable="true"><br></div>' ||
           tooltip.innerHTML ===
-            '<div placeholder="Click here and type" contenteditable="true"><div><br></div></div>'
+            '<div placeholder="Click out to save" contenteditable="true"><div><br></div></div>'
         ) {
           tooltip.innerHTML =
-            '<div placeholder="Click here and type" contenteditable="true"></div>';
+            '<div placeholder="Click out to save" contenteditable="true"></div>';
         }
       });
+
+      // blur event listener can't be given straight to a layer
+      // getting element by ID and adding an event listener to the element
+      document
+        .getElementById(e.layer._leaflet_id)
+        .addEventListener("blur", this.makeGeoJSON.bind(this, e)); // can't put this.makeGeoJSON(e) straight, as it calls the function
+      document.getElementById(e.layer._leaflet_id).focus();
+
+      console.log(e.layer);
+
+      return;
     } // end if (e.layerType === "textbox")
 
     // turning layer data to GeoJSON
-    this.makeGeoJSON(e.layer);
-  } // end _onCreated
+    this.makeGeoJSON(e);
+  }; // end _onCreated
 
-  _onEditMove(e) {
+  // turn layer to GeoJSON data and add it to an array of all GeoJSON data of the current map
+  makeGeoJSON = e => {
+    let geoJSON = e.layer.toGeoJSON();
+
+    if (e.layerType === "textbox") {
+      if (e.layer._tooltip._content.innerText) {
+        geoJSON.properties.text = e.layer._tooltip._content.innerText;
+      } else {
+        return;
+      }
+    } else if (e.layerType === "circle") {
+      geoJSON.properties.radius = e.layer.options.radius;
+    } else if (e.layerType === "rectangle") {
+      geoJSON.properties.rectangle = true;
+    }
+
+    geoJSON.properties.color = e.layer.options.color;
+
+    console.log(
+      "UserMapille lähetettävä layeri: " + JSON.stringify(geoJSON, null, 4)
+    ); // printing GeoJSON data of the previous object create
+    e.layer.options.id = this.props.sendGeoJSON(geoJSON);
+  };
+
+  _onEditMove = e => {
     console.log("_onEditMove e:");
     console.log(e);
     // to be added once back-end has functionality to recognize ids
     // this.props.sendGeoJSON(e.layer);
-  }
+  };
 
-  _onEditResize(e) {
+  _onEditResize = e => {
     console.log("_onEditResize e:");
     console.log(e);
-  }
+  };
 
-  _onEditVertex(e) {
+  _onEditVertex = e => {
     console.log("_onEditVertex e:");
     console.log(e);
     // to be added once back-end has functionality to recognize ids
     // this.props.sendGeoJSON(e.poly);
-  }
+  };
 
-  _onEditDeleteStart() {
+  _onEditDeleteStart = () => {
     this.setState({ editModeActive: true });
-  }
+  };
 
-  _onEditDeleteStop() {
+  _onEditDeleteStop = () => {
     this.setState({ editModeActive: false });
-  }
+  };
 
-  _onDeleted(e) {
+  _onDeleted = e => {
     console.log(e.layers._layers);
     /* to be added once back-end functionality is available
     for(layer in e.layers._layers) {
       this.sendGeoJSON(layer.options.id);
     }
     */
-  }
+  };
 
   shouldComponentUpdate() {
     // disable re-rendering when edit mode is active
     return !this.state.editModeActive;
-  }
-
-  // turn layer to GeoJSON data and add it to an array of all GeoJSON data of the current map
-  makeGeoJSON(e) {
-    let geoJSON = e.toGeoJSON();
-    console.log(
-      "UserMapille lähetettävä layeri: " + JSON.stringify(geoJSON, null, 4)
-    ); // printing GeoJSON data of the previous object create
-    this.props.sendGeoJSON(geoJSON);
-  }
-
-  addFetchedLayerToMap(id, feature) {
-    if (feature.geometry.type === "Point") {
-      // GeoJSON saves latitude first, not longitude like usual. swapping
-      let position = [
-        feature.geometry.coordinates[1],
-        feature.geometry.coordinates[0]
-      ];
-      // keys are required to be able to edit
-      return <Marker key={Math.random()} position={position} id={id} />;
-    } else if (feature.geometry.type === "Polygon") {
-      // polygons have, for some reason, an extra single element array above other arrays. no other objects have this
-      let coords = feature.geometry.coordinates[0];
-      let positions = coords.map(item => {
-        return [item[1], item[0]];
-      });
-      return <Polygon key={Math.random()} positions={positions} id={id} />;
-    } else if (feature.geometry.type === "LineString") {
-      let coords = feature.geometry.coordinates;
-      let positions = coords.map(item => {
-        return [item[1], item[0]];
-      });
-      return <Polyline key={Math.random()} positions={positions} id={id} />;
-    }
   }
 
   render() {
@@ -249,13 +262,78 @@ class DrawTools extends Component {
           }}
         />
 
+        <TextBox position={[62.238722, 25.75575]} />
+
         {/* iterate through every element fetched from back-end */}
-        {this.props.geoJSONLayer.features.map((feature, arrayIndex) => {
-          // first element in geoJSONLayer has an extra one element array for some reason
-          if (arrayIndex === 0) {
-            return this.addFetchedLayerToMap(feature[0], feature[1][0]);
+        {this.props.geoJSONLayer.features.map(feature => {
+          let id = feature.mapDrawingId;
+          let coords = feature.data.geometry.coordinates;
+          let type = feature.data.geometry.type;
+          let color = feature.data.properties.color;
+          let radius = feature.data.properties.radius;
+          let text = feature.data.properties.text;
+          let rectangle = feature.data.properties.rectangle;
+
+          if (type === "Point") {
+            // GeoJSON saves latitude first, not longitude like usual. swapping
+            let position = [coords[1], coords[0]];
+            if (radius) {
+              return (
+                // keys are required to be able to edit
+                <Circle
+                  key={Math.random()}
+                  center={position}
+                  id={id}
+                  radius={radius}
+                  color={color}
+                />
+              );
+            } else if (text) {
+            } else {
+              return (
+                <Marker
+                  key={Math.random()}
+                  position={position}
+                  id={id}
+                  color={color}
+                />
+              );
+            }
+          } else if (rectangle) {
+            let bounds = coords[0].map(coord => {
+              return [coord[1], coord[0]];
+            });
+            return (
+              <Rectangle
+                key={Math.random()}
+                bounds={bounds}
+                id={id}
+                color={color}
+              />
+            );
           } else {
-            return this.addFetchedLayerToMap(feature[0], feature[1]);
+            let positions = coords[0].map(coord => {
+              return [coord[1], coord[0]];
+            });
+            if (type === "Polygon") {
+              return (
+                <Polygon
+                  key={Math.random()}
+                  positions={positions}
+                  id={id}
+                  color={color}
+                />
+              );
+            } else {
+              return (
+                <Polyline
+                  key={Math.random()}
+                  positions={positions}
+                  id={id}
+                  color={color}
+                />
+              );
+            }
           }
         })}
       </FeatureGroup>
