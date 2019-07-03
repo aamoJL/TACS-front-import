@@ -23,9 +23,10 @@ class GameList extends React.Component {
     fetch(`${process.env.REACT_APP_URL}/game/listgames`)
       .then(response => response.json())
       .then(games => {
+        let selectedGame = this.state.selectedGame !== undefined ? this.state.selectedGame : undefined;
         this.setState({
           games: games,
-          selectedGame: games !== undefined && games[0].id
+          selectedGame: selectedGame !== undefined ? selectedGame : games !== undefined ? games[0].id : undefined
         });
       })
       .catch(error => {
