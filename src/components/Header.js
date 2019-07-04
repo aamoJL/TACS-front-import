@@ -79,7 +79,9 @@ class Header extends React.Component {
           )}
           {this.state.username && <button>{this.state.username}</button>}
           <button onClick={this.props.handleLayerChange}>change layer</button>
-          <TaskListButton />
+          {this.state.username && 
+            <TaskListButton />
+          }
         </div>
         {this.state.register && (
           <RegisterForm
