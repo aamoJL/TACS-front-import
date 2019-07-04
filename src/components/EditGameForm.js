@@ -7,6 +7,7 @@ export class EditGameForm extends React.Component {
     super(props);
 
     this.state = {
+      zoom: 13,
       gamename: "",
       description: "",
       startDate: "",
@@ -18,18 +19,14 @@ export class EditGameForm extends React.Component {
         lat: 62.2416479,
         lng: 25.7597186
       },
-      factionNameInput: "",
-      factionPasswordInput: "",
+      factionNameInput: "",     // >= 2 chars
+      factionPasswordInput: "", // >= 3 chars
       factions: [],
-      objectivePointDescriptionInput: "",
-      objectivePointMultiplierInput: "",
+      objectivePointDescriptionInput: "", // >= 7
+      objectivePointMultiplierInput: "",  // number
       objectivePoints: [],
       capture_time: 300,
       confirmation_time: 60,
-      owner: 1,
-      capture: 0,
-      buttons_available: 16,
-      heartbeat_interval: 60,
     };
 
     this.handleMapDrag = this.handleMapDrag.bind(this);
@@ -101,7 +98,7 @@ export class EditGameForm extends React.Component {
       let objectivePoints = state.objectivePoints;
       objectivePoints.push({
         objectivePointDescription: this.state.objectivePointDescriptionInput,
-        objectivePointMultiplier: this.state.objectivePointMultiplierInput
+        objectivePointMultiplier: parseFloat(this.state.objectivePointMultiplierInput)
       });
 
       return{
@@ -178,10 +175,20 @@ export class EditGameForm extends React.Component {
   };
 
   handleGameSave = e => {
+    e.preventDefault();
+
     let startDate = this.state.startDate + "T" + this.state.startTime + ":00.000Z";
     let endDate = this.state.endDate + "T" + this.state.endTime + ":00.000Z";
 
-    const gameObject = {
+    let objectivePoints = this.state.objectivePoints;
+
+    // objective points are not allowed if the game has no factions
+    if(this.state.factions.length === 0){
+      objectivePoints = [];
+    }
+
+    // Object the form sends to server
+    let gameObject = {
       name: this.state.gamename,
       desc: this.state.description,
       map: "",
@@ -189,10 +196,23 @@ export class EditGameForm extends React.Component {
       enddate: endDate,
       center: this.state.mapCenter,
       factions: this.state.factions,
-      objective_points: this.state.objectivePoints
+      objective_points: objectivePoints
     };
 
-    e.preventDefault();
+
+    // Add node settings to the game if the game has objective points
+    if(objectivePoints.length > 0){
+      gameObject.nodesettings = {
+        node_settings:{
+          capture_time: this.state.capture_time,
+          confirmation_time: this.state.confirmation_time,
+          owner: 0,
+          capture: 0,
+          buttons_available: 16,
+          heartbeat_interval: 60,
+        }
+      }
+    }
 
     let token = sessionStorage.getItem("token");
 
@@ -209,7 +229,9 @@ export class EditGameForm extends React.Component {
       .then(res => res.json())
       .then(result => {
         alert(result.message);
-        this.handleView();
+        if(result.code === 200){  
+          this.handleView();
+        }
       })
       .catch(error => console.log("Error: ", error));
   };
@@ -226,15 +248,14 @@ export class EditGameForm extends React.Component {
   getGameInfo(gameId) {
     fetch(`${process.env.REACT_APP_URL}/game/` + gameId)
       .then(response => response.json())
-      .then(json => this.handleGameInfo(json))
+      .then(json => this.setGameInfoToState(json))
       .catch(error => console.log(error));
   }
 
-  // Add selected game's data to state
-  handleGameInfo(json) {
+  setGameInfoToState(json) {
     let token = sessionStorage.getItem("token");
     
-    // Get factions
+    // Get factions and passwordds
     fetch(`${process.env.REACT_APP_URL}/game/get-factions/${this.props.gameId}`,{
       method: "GET",
       headers: {
@@ -243,14 +264,25 @@ export class EditGameForm extends React.Component {
     })
     .then(result => result.json())
     .then(result => {
-
       let factions = result.map(faction => {
         return {
           factionName: faction.factionName,
           factionPassword: faction.factionPassword,
           multiplier: 1
         }
+      });
+
+      // Remove objective point's id from the object
+      let objectivePoints = json.objective_points.map(point => {
+        return {
+          objectivePointDescription: point.objectivePointDescription,
+          objectivePointMultiplier: point.objectivePointMultiplier
+        }
       })
+
+      // get node settings if the settings exists in the game
+      let nodesettings = (json.nodesettings !== null && json.nodesettings.node_settings !== undefined) 
+        ? json.nodesettings.node_settings : undefined;
 
       this.setState({
         gamename: json.name,
@@ -264,7 +296,9 @@ export class EditGameForm extends React.Component {
           lng: json.center.lng
         },
         factions: factions,
-        objectivePoints: json.objective_points
+        objectivePoints: objectivePoints,
+        capture_time: nodesettings !== undefined ? json.nodesettings.node_settings.capture_time : this.state.capture_time,
+        confirmation_time: nodesettings !== undefined ? json.nodesettings.node_settings.confirmation_time : this.state.confirmation_time
       });
     })
     .catch(error => console.log(error));
@@ -384,8 +418,8 @@ export class EditGameForm extends React.Component {
 
           <label>Factions</label>
           <br />
-          <input name="factionNameInput" value={this.state.factionNameInput} onChange={this.handleChange} placeholder="Add new faction" form="factionAddFrom"></input>
-          <input name="factionPasswordInput" value={this.state.factionPasswordInput} onChange={this.handleChange} placeholder="Faction password" form="factionAddFrom"></input>
+          <input name="factionNameInput" value={this.state.factionNameInput} minLength="2" onChange={this.handleChange} placeholder="Add new faction" form="factionAddFrom"></input>
+          <input name="factionPasswordInput" value={this.state.factionPasswordInput} minLength="3" onChange={this.handleChange} placeholder="Faction password" form="factionAddFrom"></input>
           <button type="submit" form="factionAddFrom">Add</button>
           <ul>
             {factions}
@@ -394,7 +428,7 @@ export class EditGameForm extends React.Component {
           <br />
           <label>Objective points</label>
           <br />
-          <input name="objectivePointDescriptionInput" type="number" value={this.state.objectivePointDescriptionInput} onChange={this.handleChange} placeholder="Objective point id" form="objectivePointAddFrom"></input>
+          <input name="objectivePointDescriptionInput" type="number" value={this.state.objectivePointDescriptionInput} onChange={this.handleChange} placeholder="Objective point id" min="1000000" form="objectivePointAddFrom"></input>
           <input name="objectivePointMultiplierInput" type="number" value={this.state.objectivePointMultiplierInput} onChange={this.handleChange} placeholder="Objective point multiplier" form="objectivePointAddFrom"></input>
           <button type="submit" form="objectivePointAddFrom">Add</button>
           <ul>
@@ -402,19 +436,13 @@ export class EditGameForm extends React.Component {
           </ul>
           <br />
           <br />
-          <label>Node things</label>
+          <label>Node things (set if objective points are in the game)</label>
           <br />
           <br />
           <label className="" form="gameEditForm">Capture time:</label>
           <input name="capture_time" type="number" value={this.state.capture_time} form="gameEditForm" onChange={this.handleChange}></input>
           <label className="">Confimation time:</label>
           <input name="confirmation_time" type="number" value={this.state.confirmation_time} form="gameEditForm" onChange={this.handleChange}></input>
-          <label className="">Owner:</label>
-          <input name="owner" type="number" value={this.state.owner} form="gameEditForm" onChange={this.handleChange}></input>
-          <label className="">Buttons available:</label>
-          <input name="buttons_available" type="number" value={this.state.buttons_available} form="gameEditForm" onChange={this.handleChange}></input>
-          <label className="">Heartbeat interval:</label>
-          <input name="heartbeat_interval" type="number" value={this.state.heartbeat_interval} form="gameEditForm" onChange={this.handleChange}></input>
           <br />
           <br />
           <label>Map things</label>
@@ -423,10 +451,11 @@ export class EditGameForm extends React.Component {
             id="editGameCenterMap"
             className=""
             center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
-            zoom="13"
+            zoom={this.state.zoom}
+            maxZoom="13"
             style={{ height: "400px", width: "400px" }}
             onmoveend={this.handleMapDrag}
-            // onzoomend={this.handleMapScroll}
+            onzoomend={this.handleMapScroll}
           >
           <TileLayer
             attribution="Maanmittauslaitoksen kartta"
