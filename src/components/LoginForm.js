@@ -38,7 +38,7 @@ export class LoginForm extends React.Component {
     e.preventDefault();
 
     // Send login info to the server
-    fetch(`${process.env.REACT_APP_URL}/user/login`, {
+    fetch(`${process.env.REACT_APP_API_URL}/user/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
