@@ -56,7 +56,7 @@ export class LoginForm extends React.Component {
             this.props.handleState(result);
             this.handleView();
           } else {
-            this.handleError(result.errorResponse.message);
+            this.handleError(result.message);
           }
         },
         // Note: it's important to handle errors here
@@ -80,7 +80,11 @@ export class LoginForm extends React.Component {
     return (
       <div className='fade-main'>
         <div className='sticky'>
-          <span id="closeLoginFormX" className='close' onClick={this.handleView}>
+          <span
+            id='closeLoginFormX'
+            className='close'
+            onClick={this.handleView}
+          >
             ×
           </span>
         </div>
@@ -93,7 +97,7 @@ export class LoginForm extends React.Component {
               name='username'
               value={this.state.username}
               onChange={this.handleChange}
-              id="loginUsernameInput"
+              id='loginUsernameInput'
             />
             <br />
             <input
@@ -102,10 +106,12 @@ export class LoginForm extends React.Component {
               name='password'
               value={this.state.password}
               onChange={this.handleChange}
-              id="loginPasswordInput"
+              id='loginPasswordInput'
             />
             <br />
-            <button id="submitLoginButton" type='submit'>login</button>
+            <button id='submitLoginButton' type='submit'>
+              login
+            </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>
