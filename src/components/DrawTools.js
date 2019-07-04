@@ -8,18 +8,20 @@ import {
   Marker,
   Polygon,
   Polyline,
-  Rectangle
+  Rectangle,
+  Tooltip
 } from "react-leaflet";
-import TextBox from "./TextBox.js";
+
+let noIcon = L.divIcon({
+  className: "",
+  iconSize: [20, 20],
+  iconAnchor: [10, 20]
+});
 
 // class for text field
 L.Draw.MarkerTextBox = L.Draw.Marker.extend({
   options: {
-    icon: L.divIcon({
-      className: "", // empty class to override default styling
-      iconSize: [20, 20],
-      iconAnchor: [10, 20]
-    }),
+    icon: noIcon,
     repeatMode: false,
     interactive: true
   },
@@ -79,6 +81,7 @@ class DrawTools extends Component {
   }
 
   _onCreated = e => {
+    console.log(e.layer);
     // check if a drawn polyline has just one point in it
     if (e.layerType === "polyline" && e.layer.getLatLngs().length === 1) {
       e.layer.remove();
@@ -262,8 +265,6 @@ class DrawTools extends Component {
           }}
         />
 
-        <TextBox position={[62.238722, 25.75575]} />
-
         {/* iterate through every element fetched from back-end */}
         {this.props.geoJSONLayer.features.map(feature => {
           let id = feature.mapDrawingId;
@@ -272,6 +273,8 @@ class DrawTools extends Component {
           let color = feature.data.properties.color;
           let radius = feature.data.properties.radius;
           let text = feature.data.properties.text;
+          // rectangle is a simple true/false property to recognize a rectangle
+          // so that Polygons with this property can be inserted into map with rectangle functionalities
           let rectangle = feature.data.properties.rectangle;
 
           if (type === "Point") {
@@ -289,6 +292,31 @@ class DrawTools extends Component {
                 />
               );
             } else if (text) {
+              return (
+                <Marker
+                  key={Math.random()}
+                  position={position}
+                  id={id}
+                  color={color}
+                  icon={noIcon}
+                >
+                  <Tooltip
+                    direction="bottom"
+                    permanent
+                    className="editable"
+                    interactive={true}
+                  >
+                    <div class="editable">
+                      <div
+                        contenteditable="true"
+                        placeholder="Click out to save"
+                      >
+                        {text}
+                      </div>
+                    </div>
+                  </Tooltip>
+                </Marker>
+              );
             } else {
               return (
                 <Marker
@@ -311,29 +339,32 @@ class DrawTools extends Component {
                 color={color}
               />
             );
-          } else {
+          } else if (type === "Polygon") {
+            // Polygon coordinates are wrapped under a one element array, for some reason
             let positions = coords[0].map(coord => {
               return [coord[1], coord[0]];
             });
-            if (type === "Polygon") {
-              return (
-                <Polygon
-                  key={Math.random()}
-                  positions={positions}
-                  id={id}
-                  color={color}
-                />
-              );
-            } else {
-              return (
-                <Polyline
-                  key={Math.random()}
-                  positions={positions}
-                  id={id}
-                  color={color}
-                />
-              );
-            }
+            return (
+              <Polygon
+                key={Math.random()}
+                positions={positions}
+                id={id}
+                color={color}
+              />
+            );
+          } else if (type === "LineString") {
+            // Polyline coordinates are a normal array, unlike Polygon
+            let positions = coords.map(coord => {
+              return [coord[1], coord[0]];
+            });
+            return (
+              <Polyline
+                key={Math.random()}
+                positions={positions}
+                id={id}
+                color={color}
+              />
+            );
           }
         })}
       </FeatureGroup>
