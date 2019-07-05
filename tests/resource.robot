@@ -33,7 +33,7 @@ ${P_NOMATCH}        Passwords do not match
 #Valid Login
 Open Browser To Login Page
     Open Browser        ${LOGIN URL}      ${BROWSER}
-    Maximize Browser Window
+    Set Window Size     1920        1080
     Set Selenium Speed      ${DELAY}
     Login Page Should be Open
 
