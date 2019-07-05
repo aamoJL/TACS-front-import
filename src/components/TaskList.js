@@ -8,12 +8,16 @@ class TaskList extends React.Component{
     this.state = {
       taskNameInput: "", // >= 3
       taskDescriptionInput: "", // no limits
-      tasks: []
+      tasks: [],
+      factionlist: [],
+      selectedFactionId: "",
+      gameId: "178cd342-9637-4481-ab81-d89585e9e006"  // TODO: add this with props
     }
   }
 
   componentDidMount(){
-    this.getTasks("178cd342-9637-4481-ab81-d89585e9e006");
+    this.getTasks(this.state.gameId);
+    this.getFactionlist(this.state.gameId) // TODO: remove if the user is not admin?
   }
 
   getTasks(gameId){
@@ -38,6 +42,24 @@ class TaskList extends React.Component{
     .catch(error => console.log(error));
   }
 
+  getFactionlist(gameId){
+    fetch(`${process.env.REACT_APP_URL}/game/${gameId}`, {
+      method: 'GET'
+    })
+    .then(result => result.json())
+    .then(result => {
+      if(result.code !== undefined){
+        console.log(result);
+      }
+      else{
+        this.setState({
+          factionlist: result.factions
+        });
+      }
+    })
+    .catch(error => console.log(error));
+  }
+
   handleTaskCreation = (e) => {
     e.preventDefault();
     if(this.state.taskNameInput === ""){
@@ -45,7 +67,7 @@ class TaskList extends React.Component{
     }
 
     let token = sessionStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_URL}/task/new-task/${"178cd342-9637-4481-ab81-d89585e9e006"}`,{
+    fetch(`${process.env.REACT_APP_URL}/task/new-task/${this.state.gameId}`,{
       method: "POST",
       headers:{
         Authorization: "Bearer " + token,
@@ -55,9 +77,9 @@ class TaskList extends React.Component{
         taskName: this.state.taskNameInput,
         taskDescription: this.state.taskDescriptionInput,
         taskIsActive: true,
-        faction: "ad5195d6-820c-4a17-8549-65ac0945fd3e",
+        faction: this.state.selectedFactionId === "" ? null : this.state.selectedFactionId,
         taskWinner: null,
-        taskGame: "178cd342-9637-4481-ab81-d89585e9e006"
+        taskGame: this.state.gameId
       })
     })
     .then(result => result.json())
@@ -69,20 +91,66 @@ class TaskList extends React.Component{
       else{
         // Success
         alert(result.message);
-        this.getTasks("178cd342-9637-4481-ab81-d89585e9e006");
+        this.setState({
+          taskDescriptionInput: "",
+          taskNameInput: ""
+        })
+        this.getTasks(this.state.gameId);
+      }
+    })
+    .catch(error => console.log(error));
+  }
+
+  handleFactionChange = e => {
+    this.setState({
+      selectedFactionId: e.target.value
+    });
+  }
+
+  onTaskSave = (task, winnerFaction) => {
+    let token = sessionStorage.getItem("token");
+    fetch(`${process.env.REACT_APP_URL}/task/edit-task/${this.state.gameId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: "Bearer " + token,
+        'Content-Type':"application/json"
+      },
+      body:JSON.stringify({
+        taskId: task.taskId,
+        taskWinner: winnerFaction.factionId,
+        taskGame: this.state.gameId
+      })
+    })
+    .then(result => result.json())
+    .then(result => {
+      if(result.code !== 201){
+        alert(result.message);
+      }
+      else{
+        alert(result.message);
+        this.getTasks(this.state.gameId);
       }
     })
     .catch(error => console.log(error));
   }
   
   render(){
-    let tasks = [];
+    let tasklistItems = [];
     for (let i = 0; i < this.state.tasks.length; i++) {
       const task = this.state.tasks[i];
-      tasks.push(
-        <TaskItem key={task.taskId} text={task.taskName} description={task.taskDescription}/>
+      tasklistItems.push(
+        <TaskItem key={task.taskId} task={task} gameId={this.state.gameId} onSave={this.onTaskSave}/>
       );
     }
+
+    let factionlistItems = this.state.factionlist.map(item => {
+      return <option key={item.factionId} value={item.factionId}>{item.factionName}</option>
+    })
+
+    // add all factions option to the faction list
+    factionlistItems.unshift(
+      <option key="all" value="">Every faction</option>
+    )
 
     return ReactDOM.createPortal(
       <div className='tasklist'>
@@ -91,9 +159,12 @@ class TaskList extends React.Component{
           <label>New task</label>
           <input id="taskNameInput" type='text' placeholder='Task name' minLength="3" value={this.state.taskNameInput} onChange={(e) => this.setState({taskNameInput: e.target.value})}></input>
           <textarea id="taskDescriptionInput" placeholder='Task description' value={this.state.taskDescriptionInput} onChange={(e) => this.setState({taskDescriptionInput: e.target.value})}></textarea>
+          <select id="taskFactionSelect" onChange={this.handleFactionChange}>
+            {factionlistItems}
+          </select>
           <button id="newTaskSubmitButton" type="submit">Add new task</button>
         </form>
-        {tasks}
+        {tasklistItems}
       </div>,
       document.getElementById('tasklist')
     );
