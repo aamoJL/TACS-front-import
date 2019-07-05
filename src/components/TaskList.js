@@ -89,9 +89,9 @@ class TaskList extends React.Component{
         <h1>Tasklist</h1>
         <form className='task-form' onSubmit={this.handleTaskCreation}>
           <label>New task</label>
-          <input type='text' placeholder='Task name' minLength="3" value={this.state.taskNameInput} onChange={(e) => this.setState({taskNameInput: e.target.value})}></input>
-          <textarea placeholder='Task description' value={this.state.taskDescriptionInput} onChange={(e) => this.setState({taskDescriptionInput: e.target.value})}></textarea>
-          <button type="submit">Add new task</button>
+          <input id="taskNameInput" type='text' placeholder='Task name' minLength="3" value={this.state.taskNameInput} onChange={(e) => this.setState({taskNameInput: e.target.value})}></input>
+          <textarea id="taskDescriptionInput" placeholder='Task description' value={this.state.taskDescriptionInput} onChange={(e) => this.setState({taskDescriptionInput: e.target.value})}></textarea>
+          <button id="newTaskSubmitButton" type="submit">Add new task</button>
         </form>
         {tasks}
       </div>,

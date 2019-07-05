@@ -36,7 +36,7 @@ class TaskListButton extends React.Component{
   render(){
     return(
       <Fragment>
-        <button onClick={this.handleClick}>Tasks ({this.state.newTasks})</button>
+        <button id="tasklistButton" onClick={this.handleClick}>Tasks ({this.state.newTasks})</button>
         {this.state.open && <TaskList />}
       </Fragment>
     );
