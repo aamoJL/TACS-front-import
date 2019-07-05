@@ -39,12 +39,10 @@ class GameList extends React.Component {
         selectedGame: e.target.value
       },
       () => {
+        // taking the changed gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
         this.props.handleGameChange(this.state.selectedGame);
       }
     );
-
-    // taking the initialized gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
-    // this.state.selectedGame gives belated response, for some reason
   };
 
   handleEditClick = e => {

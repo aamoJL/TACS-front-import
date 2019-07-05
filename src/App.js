@@ -35,6 +35,7 @@ class App extends Component {
     });
   };
 
+  // function to be sent to Header -> GameList to get changed game ID
   handleGameChange = gameId => {
     this.setState({
       currentGameId: gameId

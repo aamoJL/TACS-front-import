@@ -12,6 +12,7 @@ import {
   Tooltip
 } from "react-leaflet";
 
+// an empty icon for textboxes
 let noIcon = L.divIcon({
   className: "",
   iconSize: [20, 20],
@@ -81,7 +82,6 @@ class DrawTools extends Component {
   }
 
   _onCreated = e => {
-    console.log(e.layer);
     // check if a drawn polyline has just one point in it
     if (e.layerType === "polyline" && e.layer.getLatLngs().length === 1) {
       e.layer.remove();
@@ -121,12 +121,18 @@ class DrawTools extends Component {
         // manually removing it so that the placeholder text can show
         if (
           tooltip.innerHTML ===
-            '<div placeholder="Click out to save" contenteditable="true"><br></div>' ||
+            '<div placeholder="Click out to save" contenteditable="true" id ="' +
+              e.layer._leaflet_id +
+              "><br></div>" ||
           tooltip.innerHTML ===
-            '<div placeholder="Click out to save" contenteditable="true"><div><br></div></div>'
+            '<div placeholder="Click out to save" contenteditable="true" id ="' +
+              e.layer._leaflet_id +
+              "><div><br></div></div>"
         ) {
           tooltip.innerHTML =
-            '<div placeholder="Click out to save" contenteditable="true"></div>';
+            '<div placeholder="Click out to save" contenteditable="true" id ="' +
+            e.layer._leaflet_id +
+            "></div>";
         }
       });
 
@@ -134,59 +140,46 @@ class DrawTools extends Component {
       // getting element by ID and adding an event listener to the element
       document
         .getElementById(e.layer._leaflet_id)
-        .addEventListener("blur", this.makeGeoJSON.bind(this, e)); // can't put this.makeGeoJSON(e) straight, as it calls the function
+        .addEventListener(
+          "blur",
+          this.makeGeoJSON.bind(this, e.layerType, e.layer)
+        ); // can't put this.makeGeoJSON(e) straight, as it calls the function
       document.getElementById(e.layer._leaflet_id).focus();
 
       console.log(e.layer);
 
-      return;
+      return; // only sending the textbox to database until text has been written
     } // end if (e.layerType === "textbox")
 
-    // turning layer data to GeoJSON
-    this.makeGeoJSON(e);
+    this.makeGeoJSON(e.layerType, e.layer);
   }; // end _onCreated
 
-  // turn layer to GeoJSON data and add it to an array of all GeoJSON data of the current map
-  makeGeoJSON = e => {
-    let geoJSON = e.layer.toGeoJSON();
+  // turn layer to GeoJSON data
+  makeGeoJSON = (layerType, layer) => {
+    // setting the format in which the data will be sent
+    let geoJSON = {
+      data: layer.toGeoJSON(),
+      mapDrawingId: layer.options.id
+    };
 
-    if (e.layerType === "textbox") {
-      if (e.layer._tooltip._content.innerText) {
-        geoJSON.properties.text = e.layer._tooltip._content.innerText;
+    // setting properties
+    if (layerType === "textbox") {
+      if (layer._tooltip._content.innerText) {
+        geoJSON.data.properties.text = layer._tooltip._content.innerText;
       } else {
         return;
       }
-    } else if (e.layerType === "circle") {
-      geoJSON.properties.radius = e.layer.options.radius;
-    } else if (e.layerType === "rectangle") {
-      geoJSON.properties.rectangle = true;
+    } else if (layerType === "circle") {
+      geoJSON.data.properties.radius = layer._mRadius; // layer.options.radius doesn't update for some reason; need to use _mRadius instead
+    } else if (layerType === "rectangle") {
+      // rectangle is a simple true/false property to recognize a rectangle
+      // so that Polygons with this property can be inserted into map with rectangle functionalities instead of Polygon's
+      geoJSON.data.properties.rectangle = true;
     }
+    geoJSON.data.properties.color = layer.options.color;
 
-    geoJSON.properties.color = e.layer.options.color;
-
-    console.log(
-      "UserMapille lähetettävä layeri: " + JSON.stringify(geoJSON, null, 4)
-    ); // printing GeoJSON data of the previous object create
-    e.layer.options.id = this.props.sendGeoJSON(geoJSON);
-  };
-
-  _onEditMove = e => {
-    console.log("_onEditMove e:");
-    console.log(e);
-    // to be added once back-end has functionality to recognize ids
-    // this.props.sendGeoJSON(e.layer);
-  };
-
-  _onEditResize = e => {
-    console.log("_onEditResize e:");
-    console.log(e);
-  };
-
-  _onEditVertex = e => {
-    console.log("_onEditVertex e:");
-    console.log(e);
-    // to be added once back-end has functionality to recognize ids
-    // this.props.sendGeoJSON(e.poly);
+    // send item to database, and receive an ID for the layer
+    this.props.sendGeoJSON(geoJSON, false);
   };
 
   _onEditDeleteStart = () => {
@@ -197,13 +190,44 @@ class DrawTools extends Component {
     this.setState({ editModeActive: false });
   };
 
+  _onEdited = e => {
+    // layers are saved in a rather curious format. they're not in an array, so need to make an array first
+    let editedLayers = e.layers;
+    let idsToEdit = [];
+    editedLayers.eachLayer(function(layer) {
+      idsToEdit.push(layer);
+    });
+
+    idsToEdit.map(layer => {
+      // checking the contents of the layer to determine its type, as it's not explicitly stated
+      if (layer.options.bounds) {
+        this.makeGeoJSON("rectangle", layer);
+      } else if (layer.options.radius) {
+        this.makeGeoJSON("circle", layer);
+      } else if (layer.options.text) {
+        this.makeGeoJSON("textbox", layer);
+      } else {
+        this.makeGeoJSON(null, layer);
+      }
+    });
+  };
+
   _onDeleted = e => {
-    console.log(e.layers._layers);
-    /* to be added once back-end functionality is available
-    for(layer in e.layers._layers) {
-      this.sendGeoJSON(layer.options.id);
-    }
-    */
+    // layers are saved in a rather curious format. they're not in an array, so need to make an array first
+    let deletedLayers = e.layers;
+    let idsToDelete = [];
+    deletedLayers.eachLayer(function(layer) {
+      idsToDelete.push(layer);
+    });
+
+    idsToDelete.map(layer => {
+      let geoJSON = {
+        data: layer.toGeoJSON(),
+        mapDrawingId: layer.options.id
+      };
+
+      this.props.sendGeoJSON(geoJSON, true);
+    });
   };
 
   shouldComponentUpdate() {
@@ -220,11 +244,9 @@ class DrawTools extends Component {
         <EditControl
           position="topright"
           onCreated={this._onCreated}
+          onEdited={this._onEdited}
           onEditStart={this._onEditDeleteStart}
           onEditStop={this._onEditDeleteStop}
-          onEditMove={this._onEditMove}
-          onEditResize={this._onEditResize}
-          onEditVertex={this._onEditVertex}
           onDeleted={this._onDeleted}
           onDeleteStart={this._onEditDeleteStart}
           onDeleteStop={this._onEditDeleteStop}
@@ -273,8 +295,6 @@ class DrawTools extends Component {
           let color = feature.data.properties.color;
           let radius = feature.data.properties.radius;
           let text = feature.data.properties.text;
-          // rectangle is a simple true/false property to recognize a rectangle
-          // so that Polygons with this property can be inserted into map with rectangle functionalities
           let rectangle = feature.data.properties.rectangle;
 
           if (type === "Point") {
@@ -318,6 +338,7 @@ class DrawTools extends Component {
                 </Marker>
               );
             } else {
+              // unknown if color changes anything. need to test
               return (
                 <Marker
                   key={Math.random()}
@@ -328,6 +349,7 @@ class DrawTools extends Component {
               );
             }
           } else if (rectangle) {
+            // instead of an array of four coordinates, rectangles only have two corners
             let bounds = coords[0].map(coord => {
               return [coord[1], coord[0]];
             });

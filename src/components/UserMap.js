@@ -28,18 +28,8 @@ class UserMap extends Component {
     });
   }
 
-  /*
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.currentGameId !== this.props.currentGameId) {
-      // this.fetchGeoJSON();
-    }
-    this.fetchGeoJSON();
-    return true;
-  }
-  */
-
   componentDidUpdate() {
-    // console.log(this.props.currentGameId);
+    // check if game ID has changed and fetch that game's drawings
     if (this.state.currentGameId !== this.props.currentGameId) {
       this.setState({
         currentGameId: this.props.currentGameId
@@ -49,33 +39,49 @@ class UserMap extends Component {
   }
 
   // Sends the players drawings to the backend (and database)
-  sendGeoJSON(layerToDatabase) {
-    fetch("http://localhost:5000/draw/mapdrawing/" + this.props.currentGameId, {
-      method: "PUT",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        type: "FeatureCollection",
-        drawingIsActive: true,
-        data: layerToDatabase
-      })
-    })
-      .then(res => {
-        console.log(res);
-        res.json();
-      })
-      .then(data => {
-        console.log(data);
-        console.log(data.mapDrawingId);
-        return data.mapDrawingId;
-      })
-      .catch(error => {
-        console.log(error);
-        return;
-      });
+  sendGeoJSON(layerToDatabase, isDeleted) {
+    // isDeleted is used to determine the drawing's drawingIsActive status
+    // otherwise the fetch functions are the same in both if and else. any smarter way to do this?
+    if (isDeleted === true) {
+      fetch(
+        "http://localhost:5000/draw/mapdrawing/" + this.props.currentGameId,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            type: "FeatureCollection",
+            drawingIsActive: false,
+            mapDrawingId: layerToDatabase.mapDrawingId,
+            data: layerToDatabase.data
+          })
+        }
+      );
+    } else {
+      fetch(
+        "http://localhost:5000/draw/mapdrawing/" + this.props.currentGameId,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            type: "FeatureCollection",
+            drawingIsActive: true,
+            mapDrawingId: layerToDatabase.mapDrawingId,
+            data: layerToDatabase.data
+          })
+        }
+      );
+    }
+
+    // get the layers again to stop updating with old objects
+    this.fetchGeoJSON();
   }
 
   // Get the drawings from the backend and add them to the state, so they can be drawn
@@ -101,11 +107,11 @@ class UserMap extends Component {
             features: [...newFeatures]
           }
         });
-        console.log(this.state.geoJSONLayer);
       })
       .catch(error => {
         console.log(error);
       });
+    console.log(this.state.geoJSONLayer);
   }
 
   componentWillUnmount() {
