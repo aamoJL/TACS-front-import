@@ -204,7 +204,7 @@ Edit Layers
     Mouse Up        class:leaflet-tile-loaded:nth-child(3)              #Circle
     Mouse Down      class:leaflet-marker-icon:last-of-type              #Marker
     Mouse Up        class:leaflet-tile-loaded:nth-child(12)             #Marker
-    Click Leaflet Panel     Save
+    Click Element       css=a[title="Save changes"]
     Click Element   css=a[class=leaflet-draw-edit-edit]
     Mouse Down      class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
     Mouse Up        class:leaflet-tile-loaded:nth-child(3)              #Marker
@@ -214,12 +214,12 @@ Edit Layers
 Delete Layers
     Click Element   css=a[class=leaflet-draw-edit-remove]
     Click Element   class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
-    Click Leaflet Panel     Save
+    Click Element       css=a[title="Save changes"]
     Click Element       css=a[class=leaflet-draw-edit-remove]
     Drawing A Figure        50      300
     Click Element       css=a[title="Cancel editing, discards all changes"]
     Click Element       css=a[class=leaflet-draw-edit-remove]
-    Click Leaflet Panel     Clear All
+    Click Element       css=a[title="Clear all layers"]
     Log To Console      Deleting done
 
 Map Movement
