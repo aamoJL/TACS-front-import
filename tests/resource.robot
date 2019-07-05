@@ -6,7 +6,7 @@ Library     String
 *** Variables ***
 ${SERVER}       %{SITE_URL}
 ${BROWSER}      ff
-${DELAY}        0.5
+${DELAY}        0.2
 #${VALID USER} =     ville
 ${VALID PASSWORD} =     koira
 ${LOGIN URL}        https://${SERVER}/
@@ -14,8 +14,8 @@ ${WELCOME URL}      #You can use this if there's a different page after login pa
 ${LOC_USER}           id=registerUsernameInput            #Generated username.
 ${LOC_PASSWORD}       id=registerPasswordInput            #Generated password first time.
 ${LOC_PASSWORD2}      id=registerPasswordVerifyInput      #Generated password verify.
-${ZOOMIN}           //*[@id="root"]/div/div[1]/div[2]/div[2]/div[1]/a[1]        #Zoom in button location
-${ZOOMOUT}          //*[@id="root"]/div/div[1]/div[2]/div[2]/div[1]/a[2]       #Zoom out button location
+${ZOOMIN}           css=a[class=leaflet-control-zoom-in]        #Zoom in button location
+${ZOOMOUT}          css=a[class=leaflet-control-zoom-out]        #Zoom out button location
 ${INVALID_U}        User does not exist
 ${INVALID_P}        Invalid password
 ${SHORT_P}          Validation failed: password must be longer than or equal to 3 characters
@@ -112,8 +112,6 @@ Close Registration Screen
     Click Element       id=closeRegisterFormX
 
 #Zoom frontpage
-Wait For Zoom Button To Appear
-    Wait Until Page Contains Element        //*[@id="root"]/div/div[1]/div[2]/div[2]/div[1]/a[1]       1
 
 Zoom In On Frontpage
     Repeat Keyword          3 times         Click Element      ${ZOOMIN}
@@ -122,7 +120,119 @@ Zoom In On Frontpage
 Zoom Out On Frontpage
     Repeat Keyword          3 times         Click Element       ${ZOOMOUT}
 
-#TEST IDEAS
+#Drawing tools and map movement frontpage
+
+Drawing A Figure
+    [Arguments]     ${X}        ${Y}
+    Click Element At Coordinates    css=div[class=leaflet-control-container]        ${X}        ${Y}
+
+Click Leaflet Panel
+    [Arguments]     ${TARGET}
+    Click Element      xpath=//a[contains(.,'${TARGET}')]
+
+Draw A Polyline
+    Click Element       css=a[class=leaflet-draw-draw-polyline]
+    Drawing A Figure        500     500
+    Drawing A Figure        300     500
+    Drawing A Figure        300     300
+    Drawing A Figure        500     300
+    Drawing A Figure        500     500
+    Click Leaflet Panel     Delete last point
+    Drawing A Figure        500     500
+    Drawing A Figure        500     500
+    Drawing A Figure        550     300
+    Drawing A Figure        550     500
+    Click Leaflet Panel     Finish
+    Drawing A Figure        600     300
+    Drawing A Figure        600     500
+    Click Leaflet Panel     Cancel
+    Log To Console          \n.Polyline done
+
+Draw A Polygon
+    Click Element     css=a[class=leaflet-draw-draw-polygon]
+    Drawing A Figure        50      300
+    Drawing A Figure        -100    300
+    Drawing A Figure        -60     100
+    Click Leaflet Panel     Cancel
+    Click Element     css=a[class=leaflet-draw-draw-polygon]
+    Drawing A Figure        50      300
+    Drawing A Figure        -100    300
+    Drawing A Figure        -60     100
+    Click Leaflet Panel     Delete last point
+    Drawing A Figure        -60     100
+    Click Leaflet Panel     Finish
+    Drawing A Figure        -120    300
+    Drawing A Figure        -180    300
+    Drawing A Figure        -110    100
+    Drawing A Figure        -120    300
+    Log To Console          Polygon done
+
+Draw A Rectangle
+    Click Element       css=a[class=leaflet-draw-draw-rectangle]
+    Drawing A Figure        -200     100
+    Drawing A Figure        -0       500
+    Click Leaflet Panel     Cancel
+    Log To Console          Rectangle done
+
+Draw A Circle
+    Click Element       css=a[class=leaflet-draw-draw-circle]
+    Mouse Down      class:leaflet-tile-loaded:nth-child(2)
+    Mouse Up        class:leaflet-tile-loaded:nth-child(5)
+    Click Leaflet Panel     Cancel
+    Log To Console          Circle done
+
+Draw A Marker
+    Click Element       css=a[class=leaflet-draw-draw-marker]
+    Drawing A Figure        200     200
+    Drawing A Figure        300     300
+    Click Leaflet Panel     Cancel
+    Log To Console          Markers done
+
+Edit Layers
+    Click Element   css=a[class=leaflet-draw-edit-edit]
+    Mouse Down      class:leaflet-editing-icon:first-of-type            #Polyline
+    Mouse Up        class:leaflet-tile-loaded:nth-child(2)              #Polyline
+    Mouse Down      class:leaflet-editing-icon:nth-last-of-type(7)      #Rectangle
+    Mouse Up        class:leaflet-tile-loaded:nth-child(4)              #Rectangle
+    Mouse Down      class:leaflet-editing-icon:nth-last-of-type(6)      #Rectangle
+    Mouse Up        class:leaflet-tile-loaded:nth-child(5)              #Rectangle
+    Mouse Down      class:leaflet-editing-icon:nth-last-of-type(8)      #Polygon
+    Mouse Up        class:leaflet-tile-loaded:nth-child(2)              #Polygon
+    Mouse Down      class:leaflet-editing-icon:nth-last-of-type(3)      #Circle
+    Mouse Up        class:leaflet-tile-loaded:nth-child(4)              #Circle
+    Mouse Down      class:leaflet-editing-icon:nth-last-of-type(4)      #Circle
+    Mouse Up        class:leaflet-tile-loaded:nth-child(3)              #Circle
+    Mouse Down      class:leaflet-marker-icon:last-of-type              #Marker
+    Mouse Up        class:leaflet-tile-loaded:nth-child(12)             #Marker
+    Click Leaflet Panel     Save
+    Click Element   css=a[class=leaflet-draw-edit-edit]
+    Mouse Down      class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
+    Mouse Up        class:leaflet-tile-loaded:nth-child(3)              #Marker
+    Click Element       css=a[title="Cancel editing, discards all changes"]
+    Log To Console      Editing done
+
+Delete Layers
+    Click Element   css=a[class=leaflet-draw-edit-remove]
+    Click Element   class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
+    Click Leaflet Panel     Save
+    Click Element       css=a[class=leaflet-draw-edit-remove]
+    Drawing A Figure        50      300
+    Click Element       css=a[title="Cancel editing, discards all changes"]
+    Click Element       css=a[class=leaflet-draw-edit-remove]
+    Click Leaflet Panel     Clear All
+    Log To Console      Deleting done
+
+Map Movement
+    Drag And Drop By Offset    css=div[class=leaflet-control-container]     10     100
+    Drag And Drop By Offset    css=div[class=leaflet-control-container]     50     300
+    Drag And Drop By Offset    css=div[class=leaflet-control-container]     800     800
+    Drag And Drop By Offset    css=div[class=leaflet-control-container]     -50     -50
+    Log To Console      Map movement tested
+
+
+
+
+#Test
 
 Move Around On The Map Frontpage            #en saanut toimimaan
     #Press Key       //*[@id="root"]/div/div[1]/div[1]       ARROW_LEFT
