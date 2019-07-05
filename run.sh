@@ -4,7 +4,7 @@ set -e
 
 # Set the defaults
 DEFAULT_LOG_LEVEL="INFO" # Available levels: TRACE, DEBUG, INFO (default), WARN, NONE (no logging)
-DEFAULT_RES="1280x1024x24"
+DEFAULT_RES="1920x1080x24"
 DEFAULT_DISPLAY=":99"
 
 # Use default if none specified as env var
