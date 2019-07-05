@@ -128,7 +128,7 @@ Drawing A Figure
 
 Click Leaflet Panel
     [Arguments]     ${TARGET}
-    Click Element      xpath=//a[contains(.,'${TARGET}')]
+    Click Element      css=a[title="${TARGET}"]
 
 Draw A Polyline
     Click Element       css=a[class=leaflet-draw-draw-polyline]
@@ -137,15 +137,15 @@ Draw A Polyline
     Drawing A Figure        300     300
     Drawing A Figure        500     300
     Drawing A Figure        500     500
-    Click Leaflet Panel     Delete last point
+    Click Leaflet Panel     Delete last point drawn
     Drawing A Figure        500     500
     Drawing A Figure        500     500
     Drawing A Figure        550     300
     Drawing A Figure        550     500
-    Click Leaflet Panel     Finish
+    Click Leaflet Panel     Finish drawing
     Drawing A Figure        600     300
     Drawing A Figure        600     500
-    Click Leaflet Panel     Cancel
+    Click Leaflet Panel     Cancel drawing
     Log To Console          \n.Polyline done
 
 Draw A Polygon
@@ -153,14 +153,14 @@ Draw A Polygon
     Drawing A Figure        50      300
     Drawing A Figure        -100    300
     Drawing A Figure        -60     100
-    Click Leaflet Panel     Cancel
+    Click Leaflet Panel     Cancel drawing
     Click Element     css=a[class=leaflet-draw-draw-polygon]
     Drawing A Figure        50      300
     Drawing A Figure        -100    300
     Drawing A Figure        -60     100
-    Click Leaflet Panel     Delete last point
+    Click Leaflet Panel     Delete last point drawn
     Drawing A Figure        -60     100
-    Click Leaflet Panel     Finish
+    Click Leaflet Panel     Finish drawing
     Drawing A Figure        -120    300
     Drawing A Figure        -180    300
     Drawing A Figure        -110    100
@@ -171,21 +171,21 @@ Draw A Rectangle
     Click Element       css=a[class=leaflet-draw-draw-rectangle]
     Drawing A Figure        -200     100
     Drawing A Figure        -0       500
-    Click Leaflet Panel     Cancel
+    Click Leaflet Panel     Cancel drawing
     Log To Console          Rectangle done
 
 Draw A Circle
     Click Element       css=a[class=leaflet-draw-draw-circle]
     Mouse Down      class:leaflet-tile-loaded:nth-child(2)
     Mouse Up        class:leaflet-tile-loaded:nth-child(5)
-    Click Leaflet Panel     Cancel
+    Click Leaflet Panel     Cancel drawing
     Log To Console          Circle done
 
 Draw A Marker
     Click Element       css=a[class=leaflet-draw-draw-marker]
     Drawing A Figure        200     200
     Drawing A Figure        300     300
-    Click Leaflet Panel     Cancel
+    Click Leaflet Panel     Cancel drawing
     Log To Console          Markers done
 
 Edit Layers
@@ -204,20 +204,20 @@ Edit Layers
     Mouse Up        class:leaflet-tile-loaded:nth-child(3)              #Circle
     Mouse Down      class:leaflet-marker-icon:last-of-type              #Marker
     Mouse Up        class:leaflet-tile-loaded:nth-child(12)             #Marker
-    Click Element       css=a[title="Save changes"]
+    Click Leaflet Panel     Save changes
     Click Element   css=a[class=leaflet-draw-edit-edit]
     Mouse Down      class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
     Mouse Up        class:leaflet-tile-loaded:nth-child(3)              #Marker
-    Click Element       css=a[title="Cancel editing, discards all changes"]
+    Click Leaflet Panel     Cancel editing, discards all changes
     Log To Console      Editing done
 
 Delete Layers
     Click Element   css=a[class=leaflet-draw-edit-remove]
     Click Element   class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
-    Click Element       css=a[title="Save changes"]
+    Click Leaflet Panel     Save changes
     Click Element       css=a[class=leaflet-draw-edit-remove]
     Drawing A Figure        50      300
-    Click Element       css=a[title="Cancel editing, discards all changes"]
+    Click Leaflet Panel     Cancel editing, discards all changes
     Click Element       css=a[class=leaflet-draw-edit-remove]
     Click Element       css=a[title="Clear all layers"]
     Log To Console      Deleting done
