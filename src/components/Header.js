@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
-import GameList from "./GameList";
-import NewGameForm from "./NewGameForm";
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
+import GameList from './GameList';
+import NewGameForm from './NewGameForm';
 
 class Header extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ class Header extends React.Component {
   }
 
   state = {
-    form: "", // Popup form (login, register etc.)
+    form: '', // Popup form (login, register etc.)
     username: null,
     token: null
   };
@@ -24,23 +24,23 @@ class Header extends React.Component {
   };
 
   handleState = data => {
-    sessionStorage.setItem("name", data.name);
-    sessionStorage.setItem("token", data.token);
+    sessionStorage.setItem('name', data.name);
+    sessionStorage.setItem('token', data.token);
     this.setState({ username: data.name, token: data.token });
   };
 
   handleLogout = () => {
     this.setState({ username: null, token: null });
-    sessionStorage.removeItem("token");
+    sessionStorage.removeItem('token');
   };
 
   // verifies the token (if it exists) on element mount with backend server
   componentDidMount() {
-    let token = sessionStorage.getItem("token");
+    let token = sessionStorage.getItem('token');
     if (token) {
-      fetch(`${process.env.REACT_APP_URL}/user/verify`, {
+      fetch(`${process.env.REACT_APP_API_URL}/user/verify`, {
         headers: {
-          Authorization: "Bearer " + token
+          Authorization: 'Bearer ' + token
         }
       })
         .then(res => res.json())
@@ -49,7 +49,7 @@ class Header extends React.Component {
             // if token is still valid, login user
             if (result === true) {
               this.setState({
-                username: sessionStorage.getItem("name"),
+                username: sessionStorage.getItem('name'),
                 token: token
               });
               // logout user if token has expired / is invalid
@@ -67,56 +67,56 @@ class Header extends React.Component {
   render() {
     return (
       <div>
-        <div className="header">
+        <div className='header'>
           {!this.state.username && (
             <button
-              id="registerButton"
-              onClick={() => this.toggleView("register")}
+              id='registerButton'
+              onClick={() => this.toggleView('register')}
             >
               register
             </button>
           )}
           {!this.state.username && (
-            <button id="loginButton" onClick={() => this.toggleView("login")}>
+            <button id='loginButton' onClick={() => this.toggleView('login')}>
               login
             </button>
           )}
           {this.state.username && (
             <button
-              id="newGameButton"
-              onClick={() => this.toggleView("newgame")}
+              id='newGameButton'
+              onClick={() => this.toggleView('newgame')}
             >
               New Game
             </button>
           )}
           {this.state.username && (
-            <button id="logoutButton" onClick={this.handleLogout}>
+            <button id='logoutButton' onClick={this.handleLogout}>
               logout
             </button>
           )}
           {this.state.username && <button>{this.state.username}</button>}
-          <button id="changeLayerButton" onClick={this.props.handleLayerChange}>
+          <button id='changeLayerButton' onClick={this.props.handleLayerChange}>
             change layer
           </button>
           <GameList handleGameChange={this.props.handleGameChange} />
         </div>
-        {this.state.form === "register" && (
+        {this.state.form === 'register' && (
           <RegisterForm
-            view=""
+            view=''
             handleState={this.handleState}
             toggleView={this.toggleView}
           />
         )}
-        {this.state.form === "login" && (
+        {this.state.form === 'login' && (
           <LoginForm
-            view=""
+            view=''
             handleState={this.handleState}
             toggleView={this.toggleView}
           />
         )}
-        {this.state.form === "newgame" && (
+        {this.state.form === 'newgame' && (
           <NewGameForm
-            view=""
+            view=''
             handleState={this.handleState}
             toggleView={this.toggleView}
           />
