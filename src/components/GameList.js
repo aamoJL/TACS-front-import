@@ -23,8 +23,10 @@ class GameList extends React.Component {
       .then(games => {
         this.setState({
           games: games,
-          selectedGame: games !== null && games[0].id
+          selectedGame: games !== undefined && games[0].id
         });
+        // taking the initialized gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
+        this.props.handleGameChange(games[0].id);
       })
       .catch(error => {
         console.log(error);
@@ -32,9 +34,15 @@ class GameList extends React.Component {
   }
 
   handleChange = e => {
-    this.setState({
-      selectedGame: e.target.value
-    });
+    this.setState(
+      {
+        selectedGame: e.target.value
+      },
+      () => {
+        // taking the changed gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
+        this.props.handleGameChange(this.state.selectedGame);
+      }
+    );
   };
 
   handleEditClick = e => {

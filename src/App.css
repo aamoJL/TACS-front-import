@@ -178,6 +178,7 @@ div.login button:hover {
 
 /* Editing editable tooltips */
 .editable {
+  display: block;
   cursor: text; /* the cursor icon doesn't change by default when hovering on top of the text; overriding */
   min-width: 154px;
   min-height: 18px;

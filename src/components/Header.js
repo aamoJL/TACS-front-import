@@ -6,6 +6,10 @@ import GameList from "./GameList";
 import NewGameForm from "./NewGameForm";
 
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   state = {
     form: "", // Popup form (login, register etc.)
     username: null,
@@ -94,7 +98,7 @@ class Header extends React.Component {
           <button id="changeLayerButton" onClick={this.props.handleLayerChange}>
             change layer
           </button>
-          <GameList />
+          <GameList handleGameChange={this.props.handleGameChange} />
         </div>
         {this.state.form === "register" && (
           <RegisterForm

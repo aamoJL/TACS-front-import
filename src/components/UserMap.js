@@ -13,7 +13,8 @@ class UserMap extends Component {
       geoJSONLayer: {
         type: "FeatureCollection",
         features: []
-      }
+      },
+      currentGameId: null
     };
 
     this.sendGeoJSON = this.sendGeoJSON.bind(this);
@@ -25,27 +26,67 @@ class UserMap extends Component {
     this.getCurrentPosition(position => {
       this.setCurrentPosition(position);
     });
+  }
+
+  componentDidUpdate() {
+    // check if game ID has changed and fetch that game's drawings
+    if (this.state.currentGameId !== this.props.currentGameId) {
+      this.setState({
+        currentGameId: this.props.currentGameId
+      });
+      this.fetchGeoJSON();
+    }
+  }
+
+  // Sends the players drawings to the backend (and database)
+  sendGeoJSON(layerToDatabase, isDeleted) {
+    // isDeleted is used to determine the drawing's drawingIsActive status
+    // otherwise the fetch functions are the same in both if and else. any smarter way to do this?
+    if (isDeleted === true) {
+      fetch(
+        "http://localhost:5000/draw/mapdrawing/" + this.props.currentGameId,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            type: "FeatureCollection",
+            drawingIsActive: false,
+            mapDrawingId: layerToDatabase.mapDrawingId,
+            data: layerToDatabase.data
+          })
+        }
+      );
+    } else {
+      fetch(
+        "http://localhost:5000/draw/mapdrawing/" + this.props.currentGameId,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            type: "FeatureCollection",
+            drawingIsActive: true,
+            mapDrawingId: layerToDatabase.mapDrawingId,
+            data: layerToDatabase.data
+          })
+        }
+      );
+    }
+
+    // get the layers again to stop updating with old objects
     this.fetchGeoJSON();
   }
-  // Sends the players drawings to the backend (and database)
-  sendGeoJSON(layerToDatabase) {
-    fetch("http://localhost:5000/draw/mapdrawing/insert-location", {
-      method: "PUT",
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      // need to add id once back-end is ready for it
-      body: JSON.stringify({
-        type: "FeatureCollection",
-        features: layerToDatabase
-      })
-    });
-  }
+
   // Get the drawings from the backend and add them to the state, so they can be drawn
   fetchGeoJSON() {
-    fetch("http://localhost:5000/draw/mapdrawing/insert-location", {
+    fetch("http://localhost:5000/draw/map/" + this.props.currentGameId, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
@@ -55,10 +96,9 @@ class UserMap extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         let newFeatures = [];
         data.map(item => {
-          newFeatures.push([item.id, item.features]);
+          newFeatures.push(item);
         });
 
         this.setState({
@@ -67,7 +107,11 @@ class UserMap extends Component {
             features: [...newFeatures]
           }
         });
+      })
+      .catch(error => {
+        console.log(error);
       });
+    console.log(this.state.geoJSONLayer);
   }
 
   componentWillUnmount() {
@@ -136,6 +180,7 @@ class UserMap extends Component {
           position={this.props.position}
           sendGeoJSON={this.sendGeoJSON}
           geoJSONLayer={this.state.geoJSONLayer}
+          currentGameId={this.props.currentGameId}
         />
         {this.state.ownLat !== null && (
           <Marker position={[this.state.ownLat, this.state.ownLng]}>
