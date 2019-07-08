@@ -11,13 +11,12 @@ class TaskList extends React.Component{
       tasks: [],
       factionlist: [],
       selectedFactionId: "",
-      gameId: "178cd342-9637-4481-ab81-d89585e9e006"  // TODO: add this with props
     }
   }
 
   componentDidMount(){
-    this.getTasks(this.state.gameId);
-    this.getFactionlist(this.state.gameId) // TODO: remove if the user is not admin?
+    this.getTasks(this.props.gameId);
+    this.getFactionlist(this.props.gameId) // TODO: remove if the user is not admin?
   }
 
   getTasks(gameId){
@@ -67,7 +66,7 @@ class TaskList extends React.Component{
     }
 
     let token = sessionStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_URL}/task/new-task/${this.state.gameId}`,{
+    fetch(`${process.env.REACT_APP_URL}/task/new-task/${this.props.gameId}`,{
       method: "POST",
       headers:{
         Authorization: "Bearer " + token,
@@ -79,12 +78,12 @@ class TaskList extends React.Component{
         taskIsActive: true,
         faction: this.state.selectedFactionId === "" ? null : this.state.selectedFactionId,
         taskWinner: null,
-        taskGame: this.state.gameId
+        taskGame: this.props.gameId
       })
     })
     .then(result => result.json())
     .then(result => {
-      if(result.code){
+      if(result.code !== 201){
         console.log(result.message);
         alert(result.message);
       }
@@ -95,7 +94,7 @@ class TaskList extends React.Component{
           taskDescriptionInput: "",
           taskNameInput: ""
         })
-        this.getTasks(this.state.gameId);
+        this.getTasks(this.props.gameId);
       }
     })
     .catch(error => console.log(error));
@@ -107,9 +106,9 @@ class TaskList extends React.Component{
     });
   }
 
-  onTaskSave = (task, winnerFaction) => {
+  onTaskEditSave = (task, winnerFactionId) => {
     let token = sessionStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_URL}/task/edit-task/${this.state.gameId}`, {
+    fetch(`${process.env.REACT_APP_URL}/task/edit-task/${this.props.gameId}`, {
       method: 'POST',
       headers: {
         Authorization: "Bearer " + token,
@@ -117,8 +116,8 @@ class TaskList extends React.Component{
       },
       body:JSON.stringify({
         taskId: task.taskId,
-        taskWinner: winnerFaction.factionId,
-        taskGame: this.state.gameId
+        taskWinner: winnerFactionId,
+        taskGame: this.props.gameId
       })
     })
     .then(result => result.json())
@@ -128,19 +127,48 @@ class TaskList extends React.Component{
       }
       else{
         alert(result.message);
-        this.getTasks(this.state.gameId);
+        this.getTasks(this.props.gameId);
       }
+    })
+    .catch(error => console.log(error));
+  }
+
+  onTaskDeletion = (taskId) => {
+    if(taskId === (undefined || null)){return;}
+    let token = sessionStorage.getItem("token");
+    fetch(`${process.env.REACT_APP_URL}/task/delete-task/${this.props.gameId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: "Bearer " + token,
+        'Content-Type':"application/json"
+      },
+      body:JSON.stringify({
+        taskId: taskId
+      })
+    })
+    .then(result => result.json())
+    .then(result => {
+      alert(result.message);
+      this.getTasks(this.props.gameId);
     })
     .catch(error => console.log(error));
   }
   
   render(){
-    let tasklistItems = [];
+    let incompleteTasks = [];
+    let completedTasks = []
     for (let i = 0; i < this.state.tasks.length; i++) {
       const task = this.state.tasks[i];
-      tasklistItems.push(
-        <TaskItem key={task.taskId} task={task} gameId={this.state.gameId} onSave={this.onTaskSave}/>
-      );
+      if(task.taskWinner !== null){
+        completedTasks.push(
+          <TaskItem key={task.taskId} task={task} gameId={this.props.gameId} onSave={this.onTaskEditSave} onDelete={this.onTaskDeletion}/>
+        )
+      }
+      else{
+        incompleteTasks.push(
+          <TaskItem key={task.taskId} task={task} gameId={this.props.gameId} onSave={this.onTaskEditSave} onDelete={this.onTaskDeletion}/>
+        )
+      }
     }
 
     let factionlistItems = this.state.factionlist.map(item => {
@@ -164,7 +192,11 @@ class TaskList extends React.Component{
           </select>
           <button id="newTaskSubmitButton" type="submit">Add new task</button>
         </form>
-        {tasklistItems}
+        {incompleteTasks}
+        <br></br>
+        <label>Completed tasks</label>
+        {completedTasks}
+        <br></br>
       </div>,
       document.getElementById('tasklist')
     );

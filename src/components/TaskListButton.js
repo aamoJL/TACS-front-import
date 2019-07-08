@@ -37,7 +37,7 @@ class TaskListButton extends React.Component{
     return(
       <Fragment>
         <button id="tasklistButton" onClick={this.handleClick}>Tasks ({this.state.newTasks})</button>
-        {this.state.open && <TaskList />}
+        {this.state.open && <TaskList gameId="2c097e6a-591c-4a27-b7cb-38eb44e1f31c" />}
       </Fragment>
     );
   }

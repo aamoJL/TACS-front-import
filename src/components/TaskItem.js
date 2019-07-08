@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 class TaskItem extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       edit: false,
-      selectedFaction: "",
+      selectedFactionId: "",
       factions: []
     }
   }
@@ -32,7 +32,7 @@ class TaskItem extends React.Component{
       else{
         this.setState({
           factions: result.factions,
-          selectedFaction: result.factions[0]
+          selectedFactionId: result.factions[0].factionId
         });
       }
     })
@@ -41,7 +41,7 @@ class TaskItem extends React.Component{
 
   onSaveSubmit = e => {
     e.preventDefault();
-    this.props.onSave(this.props.task, this.state.selectedFaction);
+    this.props.onSave(this.props.task, this.state.selectedFactionId);
     this.setState({
       edit: false
     })
@@ -49,11 +49,27 @@ class TaskItem extends React.Component{
 
   handleFactionChange = e => {
     this.setState({
-      selectedFaction: e.target.value
+      selectedFactionId: e.target.value
     });
   }
 
+  onTaskDelete = e => {
+    e.preventDefault();
+    this.props.onDelete(this.props.task.taskId);
+    this.setState({
+      edit: false
+    })
+  }
+
   render(){
+    let factionlistItems = [];
+    for (let i = 0; i < this.state.factions.length; i++) {
+      const faction = this.state.factions[i];
+      factionlistItems.push(
+        <option key={faction.factionId} value={faction.factionId}>{faction.factionName}</option>
+      )
+    }
+
     return(
       <div className='tasklist-item'>
         <div>
@@ -62,18 +78,23 @@ class TaskItem extends React.Component{
         <div>
           <label>{this.props.task.taskDescription}</label><br />
           <label>Faction: {this.props.task.faction !== null ? this.props.task.faction.factionName : "Every faction"}</label>
+          <br></br>
+          {this.props.task.taskWinner !== null && 
+            <label>Winner: {this.props.task.taskWinner.factionName}</label>
+          }
         </div>
         {this.props.task.taskIsActive &&
           <button onClick={this.onEditClick}>Edit</button>
         }
-        {this.state.edit && 
+        {this.state.edit &&
           <form onSubmit={this.onSaveSubmit}>
-            <select value={this.state.selectedFaction} onChange={(e) => this.setState({selectedFaction: e.target.value})}>
-              {this.state.factions.map((item) => <option key={item.factionId} value={item.factionId}>{item.factionName}</option> )}
+            <select value={this.state.selectedFactionId.factionId} onChange={(e) => this.setState({selectedFaction: e.target.value})}>
+              {factionlistItems}
             </select>
             <button type="submit">Save</button>
           </form>
         }
+        <button onClick={this.onTaskDelete} style={{backgroundColor: "red"}}>Delete</button>
       </div>
     );
   }
