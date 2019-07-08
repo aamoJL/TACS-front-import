@@ -5,7 +5,8 @@ class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      players: null
+      players: null,
+      time: Date.now()
     };
   }
 
@@ -33,6 +34,14 @@ class Player extends Component {
       });
   }
 
+  componentDidMount() {
+    // update components every 10 seconds
+    this.interval = setInterval(
+      () => this.setState({ time: Date.now() }),
+      10000
+    );
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     // do not update component until players have been fetched and game ID is available
     if (this.state.players === null) {
@@ -52,6 +61,10 @@ class Player extends Component {
         currentGameId: this.props.currentGameId
       });
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {
