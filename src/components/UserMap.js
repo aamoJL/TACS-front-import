@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
 import DrawTools from "./DrawTools.js";
+import Player from "./Player.js";
 
 class UserMap extends Component {
   constructor(props) {
@@ -111,7 +112,6 @@ class UserMap extends Component {
       .catch(error => {
         console.log(error);
       });
-    console.log(this.state.geoJSONLayer);
   }
 
   componentWillUnmount() {
@@ -190,6 +190,7 @@ class UserMap extends Component {
             </Popup>
           </Marker>
         )}
+        <Player currentGameId={this.state.currentGameId} />
       </Map>
     );
   }
