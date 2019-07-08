@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
 export class RegisterForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      errorMsg: '',
-      username: '',
-      password: '',
-      password2: ''
+      errorMsg: "",
+      username: "",
+      password: "",
+      password2: ""
     };
   }
 
@@ -41,14 +41,14 @@ export class RegisterForm extends React.Component {
     e.preventDefault();
 
     if (this.state.password !== this.state.password2) {
-      this.handleError('Passwords do not match');
+      this.handleError("Passwords do not match");
     } else {
       // Send register info to the server
-      fetch('http://localhost:5000/user/register', {
-        method: 'POST',
+      fetch("http://172.20.2.143:5000/user/register", {
+        method: "POST",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
+          Accept: "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           name: name,
@@ -76,28 +76,28 @@ export class RegisterForm extends React.Component {
   };
 
   componentDidMount() {
-    document.addEventListener('keyup', this.handleEsc);
+    document.addEventListener("keyup", this.handleEsc);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keyup', this.handleEsc);
+    document.removeEventListener("keyup", this.handleEsc);
   }
 
   render() {
     return (
-      <div className='fade-main'>
-        <div className='sticky'>
-          <span className='close' onClick={this.handleView}>
+      <div className="fade-main">
+        <div className="sticky">
+          <span className="close" onClick={this.handleView}>
             ×
           </span>
         </div>
-        <div className='login'>
+        <div className="login">
           <form onSubmit={this.handleRegister}>
             <h1>register new user</h1>
             <br />
             <input
-              placeholder='Enter Username'
-              name='username'
+              placeholder="Enter Username"
+              name="username"
               value={this.state.username}
               onChange={this.handleChange}
               autoFocus
@@ -105,24 +105,24 @@ export class RegisterForm extends React.Component {
             />
             <br />
             <input
-              placeholder='Enter password'
-              type='password'
-              name='password'
+              placeholder="Enter password"
+              type="password"
+              name="password"
               value={this.state.password}
               onChange={this.handleChange}
               required
             />
             <br />
             <input
-              placeholder='Verify password'
-              type='password'
-              name='password2'
+              placeholder="Verify password"
+              type="password"
+              name="password2"
               value={this.state.password2}
               onChange={this.handleChange}
               required
             />
             <br />
-            <button type='submit'>register</button>
+            <button type="submit">register</button>
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>

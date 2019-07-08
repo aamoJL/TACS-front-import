@@ -38,7 +38,7 @@ export class LoginForm extends React.Component {
     e.preventDefault();
 
     // Send login info to the server
-    fetch(`${process.env.REACT_APP_URL}/user/login`, {
+    fetch(`http://172.20.2.143:5000/user/login`, {
       method: "POST",
       headers: {
         Accept: "application/json",

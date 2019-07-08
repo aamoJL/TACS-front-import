@@ -12,7 +12,7 @@ class Player extends Component {
 
   getPlayers() {
     fetch(
-      "http://localhost:5000/tracking/players/" + this.props.currentGameId,
+      "http://172.20.2.143:5000/tracking/players/" + this.props.currentGameId,
       {
         method: "GET",
         headers: {
