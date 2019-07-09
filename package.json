@@ -11,8 +11,9 @@
     "react-dom": "^16.8.6",
     "react-leaflet": "^2.3.0",
     "react-leaflet-draw": "0.19.0",
-    "universal-cookie": "^4.0.0",
-    "react-scripts": "3.0.1"
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "universal-cookie": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
