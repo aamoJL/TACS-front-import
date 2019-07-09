@@ -86,10 +86,9 @@ export class NewGameForm extends React.Component {
     })
       .then(res => res.json())
       .then(result => {
-        if(result.code){
+        if (result.code) {
           alert(result.message);
-        }
-        else{
+        } else {
           alert(`Game ${this.state.gamename} added`);
           this.handleView();
         }
@@ -112,12 +111,13 @@ export class NewGameForm extends React.Component {
           <span
             id="closeNewGameFormX"
             className="close"
-            onClick={this.handleView}>
+            onClick={this.handleView}
+          >
             ×
           </span>
         </div>
         <div className="">
-          <form id="gameCreationForm" onSubmit={this.handleGameCreation}></form>
+          <form id="gameCreationForm" onSubmit={this.handleGameCreation} />
           <h1>Demo Game Creation</h1>
           <br />
           <input
@@ -195,13 +195,17 @@ export class NewGameForm extends React.Component {
             onmoveend={this.handleMapDrag}
             onzoomend={this.handleMapScroll}
           >
-          <TileLayer
-            attribution="Maanmittauslaitoksen kartta"
-            url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
-          />
+            <TileLayer
+              attribution="Maanmittauslaitoksen kartta"
+              url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+            />
           </Map>
           <br />
-          <button id="newGameSubmitButton" type="submit" form="gameCreationForm">
+          <button
+            id="newGameSubmitButton"
+            type="submit"
+            form="gameCreationForm"
+          >
             Submit
           </button>
           <h2>{this.state.errorMsg}</h2>

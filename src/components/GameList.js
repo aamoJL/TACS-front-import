@@ -20,13 +20,21 @@ class GameList extends React.Component {
   }
 
   getGames() {
-    fetch(`${process.env.REACT_APP_URL}/game/listgames`)
+    fetch(`${process.env.REACT_APP_API_URL}/game/listgames`)
       .then(response => response.json())
       .then(games => {
-        let selectedGame = this.state.selectedGame !== undefined ? this.state.selectedGame : undefined;
+        let selectedGame =
+          this.state.selectedGame !== undefined
+            ? this.state.selectedGame
+            : undefined;
         this.setState({
           games: games,
-          selectedGame: selectedGame !== undefined ? selectedGame : games !== undefined ? games[0].id : undefined
+          selectedGame:
+            selectedGame !== undefined
+              ? selectedGame
+              : games !== undefined
+              ? games[0].id
+              : undefined
         });
       })
       .catch(error => {
@@ -53,14 +61,13 @@ class GameList extends React.Component {
   handleJoinClick = e => {
     if (this.state.selectedGame === undefined) {
       alert("No game selected");
-    }
-    else{
+    } else {
       this.setState({
         joinForm: true,
         editForm: false
       });
     }
-  }
+  };
 
   toggleView = e => {
     this.setState({
@@ -93,7 +100,7 @@ class GameList extends React.Component {
               Edit game
             </button>
             <button id="editGameButton" onClick={this.handleJoinClick}>
-            Join Game
+              Join Game
             </button>
           </Fragment>
         )}
