@@ -75,7 +75,7 @@ export class EditGameForm extends React.Component {
     let token = sessionStorage.getItem("token");
 
     // Send Game info to the server
-    fetch("http://172.20.2.143:5000/game/edit/" + this.props.gameId, {
+    fetch("http://localhost:5000/game/edit/" + this.props.gameId, {
       method: "PUT",
       headers: {
         Authorization: "Bearer " + token,
@@ -102,7 +102,7 @@ export class EditGameForm extends React.Component {
   }
 
   getGameInfo(gameId) {
-    fetch("http://172.20.2.143:5000/game/" + gameId)
+    fetch("http://localhost:5000/game/" + gameId)
       .then(response => response.json())
       .then(json => this.handleGameInfo(json))
       .catch(error => console.log(error));

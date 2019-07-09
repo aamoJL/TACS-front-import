@@ -45,7 +45,7 @@ class UserMap extends Component {
     // otherwise the fetch functions are the same in both if and else. any smarter way to do this?
     if (isDeleted === true) {
       fetch(
-        "http://172.20.2.143:5000/draw/mapdrawing/" + this.props.currentGameId,
+        "http://localhost:5000/draw/mapdrawing/" + this.props.currentGameId,
         {
           method: "PUT",
           headers: {
@@ -63,7 +63,7 @@ class UserMap extends Component {
       );
     } else {
       fetch(
-        "http://172.20.2.143:5000/draw/mapdrawing/" + this.props.currentGameId,
+        "http://localhost:5000/draw/mapdrawing/" + this.props.currentGameId,
         {
           method: "PUT",
           headers: {
@@ -87,7 +87,7 @@ class UserMap extends Component {
 
   // Get the drawings from the backend and add them to the state, so they can be drawn
   fetchGeoJSON() {
-    fetch("http://172.20.2.143:5000/draw/map/" + this.props.currentGameId, {
+    fetch("http://localhost:5000/draw/map/" + this.props.currentGameId, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),

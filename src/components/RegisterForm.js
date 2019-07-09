@@ -44,7 +44,7 @@ export class RegisterForm extends React.Component {
       this.handleError("Passwords do not match");
     } else {
       // Send register info to the server
-      fetch("http://172.20.2.143:5000/user/register", {
+      fetch("http://localhost:5000/user/register", {
         method: "POST",
         headers: {
           Accept: "application/json",
