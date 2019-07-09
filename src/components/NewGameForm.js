@@ -13,7 +13,6 @@ export class NewGameForm extends React.Component {
       startTime: "",
       endDate: "",
       endTime: "",
-      passwords: [],
       zoom: 13,
       mapCenter: {
         lat: 62.2416479,
@@ -68,7 +67,6 @@ export class NewGameForm extends React.Component {
       map: "",
       startdate: startDate,
       enddate: endDate,
-      passwords: [this.state.password],
       center: this.state.mapCenter
     };
 
@@ -77,7 +75,7 @@ export class NewGameForm extends React.Component {
     let token = sessionStorage.getItem("token");
 
     // Send Game info to the server
-    fetch("http://localhost:5000/game/new", {
+    fetch(`${process.env.REACT_APP_API_URL}/game/new`, {
       method: "POST",
       headers: {
         Authorization: "Bearer " + token,

@@ -38,7 +38,7 @@ export class LoginForm extends React.Component {
     e.preventDefault();
 
     // Send login info to the server
-    fetch(`http://localhost:5000/user/login`, {
+    fetch(`${process.env.REACT_APP_API_URL}/user/login`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -98,6 +98,7 @@ export class LoginForm extends React.Component {
               value={this.state.username}
               onChange={this.handleChange}
               id="loginUsernameInput"
+              autofocus
             />
             <br />
             <input

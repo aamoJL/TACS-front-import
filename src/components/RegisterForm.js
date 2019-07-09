@@ -44,7 +44,7 @@ export class RegisterForm extends React.Component {
       this.handleError("Passwords do not match");
     } else {
       // Send register info to the server
-      fetch("http://localhost:5000/user/register", {
+      fetch(`${process.env.REACT_APP_API_URL}/user/register`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -101,7 +101,7 @@ export class RegisterForm extends React.Component {
               value={this.state.username}
               onChange={this.handleChange}
               autoFocus
-              required
+              //required
             />
             <br />
             <input
@@ -110,7 +110,7 @@ export class RegisterForm extends React.Component {
               name="password"
               value={this.state.password}
               onChange={this.handleChange}
-              required
+              //required
             />
             <br />
             <input
@@ -119,7 +119,7 @@ export class RegisterForm extends React.Component {
               name="password2"
               value={this.state.password2}
               onChange={this.handleChange}
-              required
+              //required
             />
             <br />
             <button type="submit">register</button>

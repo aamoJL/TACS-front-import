@@ -18,7 +18,7 @@ class GameList extends React.Component {
   }
 
   getGames() {
-    fetch("http://localhost:5000/game/listgames")
+    fetch(`${process.env.REACT_APP_API_URL}/game/listgames`)
       .then(response => response.json())
       .then(games => {
         this.setState({

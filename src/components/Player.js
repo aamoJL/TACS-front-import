@@ -5,14 +5,15 @@ class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      players: null,
-      time: Date.now()
+      players: null
     };
   }
 
   getPlayers() {
     fetch(
-      "http://localhost:5000/tracking/players/" + this.props.currentGameId,
+      `${process.env.REACT_APP_API_URL}/tracking/players/${
+        this.props.currentGameId
+      }`,
       {
         method: "GET",
         headers: {
@@ -36,10 +37,7 @@ class Player extends Component {
 
   componentDidMount() {
     // update components every 10 seconds
-    this.interval = setInterval(
-      () => this.setState({ time: Date.now() }),
-      10000
-    );
+    this.interval = setInterval(() => this.setState(this.getPlayers()), 5000);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -75,7 +73,7 @@ class Player extends Component {
             return (
               <Marker
                 key={Math.random()}
-                position={player.coordinates}
+                position={[player.coordinates.lat, player.coordinates.lng]}
                 factionId={player.factionId}
                 gamepersonId={player.gamepersonId}
                 gamepersonRole={player.gamepersonRole}
