@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
 export class LoginForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      errorMsg: '',
-      username: '',
-      password: ''
+      errorMsg: "",
+      username: "",
+      password: ""
     };
   }
 
@@ -38,11 +38,11 @@ export class LoginForm extends React.Component {
     e.preventDefault();
 
     // Send login info to the server
-    fetch(`${process.env.REACT_APP_API_URL}/user/login`, {
-      method: 'POST',
+    fetch(`http://localhost:5000/user/login`, {
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         name: name,
@@ -69,47 +69,47 @@ export class LoginForm extends React.Component {
   };
 
   componentDidMount() {
-    document.addEventListener('keyup', this.handleEsc);
+    document.addEventListener("keyup", this.handleEsc);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keyup', this.handleEsc);
+    document.removeEventListener("keyup", this.handleEsc);
   }
 
   render() {
     return (
-      <div className='fade-main'>
-        <div className='sticky'>
+      <div className="fade-main">
+        <div className="sticky">
           <span
-            id='closeLoginFormX'
-            className='close'
+            id="closeLoginFormX"
+            className="close"
             onClick={this.handleView}
           >
             ×
           </span>
         </div>
-        <div className='login'>
+        <div className="login">
           <form onSubmit={this.handleLogin}>
             <h1>demo login</h1>
             <br />
             <input
-              placeholder='Enter Username'
-              name='username'
+              placeholder="Enter Username"
+              name="username"
               value={this.state.username}
               onChange={this.handleChange}
-              id='loginUsernameInput'
+              id="loginUsernameInput"
             />
             <br />
             <input
-              placeholder='Enter password'
-              type='password'
-              name='password'
+              placeholder="Enter password"
+              type="password"
+              name="password"
               value={this.state.password}
               onChange={this.handleChange}
-              id='loginPasswordInput'
+              id="loginPasswordInput"
             />
             <br />
-            <button id='submitLoginButton' type='submit'>
+            <button id="submitLoginButton" type="submit">
               login
             </button>
             <h2>{this.state.errorMsg}</h2>

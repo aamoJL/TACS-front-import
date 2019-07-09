@@ -252,14 +252,14 @@ class DrawTools extends Component {
           onDeleteStop={this._onEditDeleteStop}
           draw={{
             circle: {
-              repeatMode: true, // allows using the tool again after finishing the previous shape
+              repeatMode: false, // allows using the tool again after finishing the previous shape
               shapeOptions: {
                 color: "#f9f10c",
                 opacity: 1 // affects the outline only. for some reason it wasn't at full opacity, so this is needed for more clarity
               }
             },
             rectangle: {
-              repeatMode: true
+              repeatMode: false
             },
             polygon: {
               repeatMode: true,
