@@ -111,7 +111,7 @@ export class RegisterForm extends React.Component {
               name="password"
               value={this.state.password}
               onChange={this.handleChange}
-              id="registerUsernameInput"
+              id="registerPasswordInput"
             />
             <br />
             <input
