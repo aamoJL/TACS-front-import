@@ -87,7 +87,11 @@ export class RegisterForm extends React.Component {
     return (
       <div className="fade-main">
         <div className="sticky">
-          <span className="close" onClick={this.handleView}>
+          <span
+            className="close"
+            id="closeRegisterFormX"
+            onClick={this.handleView}
+          >
             ×
           </span>
         </div>
