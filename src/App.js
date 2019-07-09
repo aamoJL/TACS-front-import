@@ -3,6 +3,7 @@ import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
 import "./App.css";
 import UserMap from "./components/UserMap";
 import Header from "./components/Header";
+import ClientSocket from "./components/Socket";
 
 class App extends Component {
   constructor() {
@@ -57,6 +58,10 @@ class App extends Component {
           handleLayerChange={this.handleLayerChange}
           handleGameChange={this.handleGameChange}
         />
+        ,
+        {this.state.currentGameId && (
+          <ClientSocket gameId={this.state.currentGameId} />
+        )}
       </div>
     );
   }
