@@ -38,7 +38,7 @@ Open Browser To Login Page
     Login Page Should be Open
 
 Login Page Should be Open
-    Title Should Be     React App
+    Title Should Be     TACS
 
 
 Go To Login Page
