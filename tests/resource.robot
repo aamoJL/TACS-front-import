@@ -171,21 +171,22 @@ Draw A Rectangle
     Click Element       css=a[class=leaflet-draw-draw-rectangle]
     Drawing A Figure        -200     100
     Drawing A Figure        -0       500
-    Click Leaflet Panel     Cancel drawing
+    #Click Leaflet Panel     Cancel drawing
     Log To Console          Rectangle done
 
 Draw A Circle
     Click Element       css=a[class=leaflet-draw-draw-circle]
     Mouse Down      class:leaflet-tile-loaded:nth-child(2)
     Mouse Up        class:leaflet-tile-loaded:nth-child(5)
-    Click Leaflet Panel     Cancel drawing
+    #Click Leaflet Panel     Cancel drawing
     Log To Console          Circle done
 
 Draw A Marker
     Click Element       css=a[class=leaflet-draw-draw-marker]
     Drawing A Figure        200     200
+    Click Element       css=a[class=leaflet-draw-draw-marker]
     Drawing A Figure        300     300
-    Click Leaflet Panel     Cancel drawing
+    #Click Leaflet Panel     Cancel drawing
     Log To Console          Markers done
 
 Edit Layers
@@ -216,7 +217,7 @@ Delete Layers
     Click Element   class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
     Click Leaflet Panel     Save changes
     Click Element       css=a[class=leaflet-draw-edit-remove]
-    Drawing A Figure        50      300
+    Click Element At Coordinates    css=div[class=leaflet-control-container]        50        300
     Click Leaflet Panel     Cancel editing, discards all changes
     Click Element       css=a[class=leaflet-draw-edit-remove]
     Click Element       css=a[title="Clear all layers"]
@@ -230,13 +231,6 @@ Map Movement
     Log To Console      Map movement tested
 
 
-
-
-#Test
-
-Move Around On The Map Frontpage            #en saanut toimimaan
-    #Press Key       //*[@id="root"]/div/div[1]/div[1]       ARROW_LEFT
-    Press Combination       Key.
 
 
 
