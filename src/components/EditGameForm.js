@@ -67,7 +67,6 @@ export class EditGameForm extends React.Component {
 
     this.setState(state => {
       let factions = state.factions;
-      console.log(this.state.factionColorInput);
       factions.push({
         factionName: this.state.factionNameInput,
         factionPassword: this.state.factionPasswordInput,
