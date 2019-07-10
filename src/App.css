@@ -197,3 +197,18 @@ div.login button:hover {
   text-shadow: none;
   font-weight: normal;
 }
+.tasklist {
+  position: absolute;
+  margin-top: 50px;
+  z-index: 2020;
+  background-color: #ffffff80;
+}
+
+.tasklist-item {
+  margin: 20px;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+}
