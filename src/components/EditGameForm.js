@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { Map, TileLayer } from "react-leaflet";
+import { SketchPicker } from "react-color";
+import reactCSS from "reactcss";
 
 export class EditGameForm extends React.Component {
   constructor(props) {
@@ -26,7 +28,9 @@ export class EditGameForm extends React.Component {
       objectivePointMultiplierInput: "", // number
       objectivePoints: [],
       capture_time: 300,
-      confirmation_time: 60
+      confirmation_time: 60,
+      displayColorPicker: false,
+      color: "#852222"
     };
 
     this.handleMapDrag = this.handleMapDrag.bind(this);
@@ -382,6 +386,36 @@ export class EditGameForm extends React.Component {
       );
     }
 
+    const styles = reactCSS({
+      default: {
+        color: {
+          width: "36px",
+          height: "14px",
+          borderRadius: "2px",
+          background: `${this.state.color}`
+        },
+        swatch: {
+          padding: "5px",
+          background: "#fff",
+          borderRadius: "1px",
+          boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
+          display: "inline-block",
+          cursor: "pointer"
+        },
+        popover: {
+          position: "absolute",
+          zIndex: "2"
+        },
+        cover: {
+          position: "fixed",
+          top: "0px",
+          right: "0px",
+          bottom: "0px",
+          left: "0px"
+        }
+      }
+    });
+
     return ReactDOM.createPortal(
       <div className="fade-main">
         <div className="sticky">
@@ -490,6 +524,27 @@ export class EditGameForm extends React.Component {
             placeholder="Faction password"
             form="factionAddFrom"
           />
+          <div
+            style={styles.swatch}
+            onClick={() =>
+              this.setState({
+                displayColorPicker: !this.state.displayColorPicker
+              })
+            }
+          >
+            <div style={styles.color} />
+          </div>
+          {this.state.displayColorPicker && (
+            <div
+              style={styles.cover}
+              onClick={() => this.setState({ displayColorPicker: false })}
+            >
+              <SketchPicker
+                color={this.state.color}
+                onChangeComplete={color => this.setState({ color: color.hex })}
+              />
+            </div>
+          )}
           <button type="submit" form="factionAddFrom">
             Add
           </button>
