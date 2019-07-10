@@ -23,14 +23,14 @@ export class EditGameForm extends React.Component {
       },
       factionNameInput: "", // >= 2 chars
       factionPasswordInput: "", // >= 3 chars
+      factionColorInput: "#852222",
       factions: [],
       objectivePointDescriptionInput: "", // >= 7
       objectivePointMultiplierInput: "", // number
       objectivePoints: [],
       capture_time: 300,
       confirmation_time: 60,
-      displayColorPicker: false,
-      color: "#852222"
+      displayColorPicker: false
     };
 
     this.handleMapDrag = this.handleMapDrag.bind(this);
@@ -67,9 +67,11 @@ export class EditGameForm extends React.Component {
 
     this.setState(state => {
       let factions = state.factions;
+      console.log(this.state.factionColorInput);
       factions.push({
         factionName: this.state.factionNameInput,
         factionPassword: this.state.factionPasswordInput,
+        colour: this.state.factionColorInput,
         multiplier: 1
       });
       return {
@@ -302,7 +304,8 @@ export class EditGameForm extends React.Component {
           return {
             factionName: faction.factionName,
             factionPassword: faction.factionPassword,
-            multiplier: 1
+            multiplier: 1,
+            colour: faction.colour
           };
         });
 
@@ -353,7 +356,7 @@ export class EditGameForm extends React.Component {
       const faction = this.state.factions[i];
       factions.push(
         <li key={faction.factionName}>
-          <div>
+          <div style={{ color: faction.colour }}>
             {faction.factionName} : {faction.factionPassword}
           </div>
           <button
@@ -392,7 +395,7 @@ export class EditGameForm extends React.Component {
           width: "36px",
           height: "14px",
           borderRadius: "2px",
-          background: `${this.state.color}`
+          background: `${this.state.factionColorInput}`
         },
         swatch: {
           padding: "5px",
@@ -540,8 +543,10 @@ export class EditGameForm extends React.Component {
               onClick={() => this.setState({ displayColorPicker: false })}
             >
               <SketchPicker
-                color={this.state.color}
-                onChangeComplete={color => this.setState({ color: color.hex })}
+                color={this.state.factionColorInput}
+                onChangeComplete={color =>
+                  this.setState({ factionColorInput: color.hex })
+                }
               />
             </div>
           )}
