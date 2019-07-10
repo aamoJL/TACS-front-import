@@ -23,7 +23,7 @@ export default class GameSidebar extends React.Component {
           </button>
         )}
         {this.state.form === "newgame" && (
-          <NewGameForm view="" toggleView={this.toggleView} />
+          <NewGameForm view="" toggleView={() => this.toggleView("")} />
         )}
       </div>
     );
