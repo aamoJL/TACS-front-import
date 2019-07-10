@@ -15,9 +15,11 @@ class UserMap extends Component {
         type: "FeatureCollection",
         features: []
       },
-      currentGameId: null
+      currentGameId: null,
+      isDraggable: true
     };
 
+    this.changeDragState = this.changeDragState.bind(this);
     this.sendGeoJSON = this.sendGeoJSON.bind(this);
     this.setCurrentPosition = this.setCurrentPosition.bind(this);
     this.watchPositionId = null;
@@ -37,6 +39,13 @@ class UserMap extends Component {
       });
       this.fetchGeoJSON();
     }
+  }
+
+  // hovering on a textbox makes the map undraggable. This function changes the map dragging status in the Map component here
+  changeDragState(status) {
+    this.setState({
+      isDraggable: status
+    });
   }
 
   // Sends the players drawings to the backend (and database)
@@ -177,6 +186,7 @@ class UserMap extends Component {
         minZoom="7"
         maxZoom="17"
         zoomControl={false}
+        dragging={this.state.isDraggable}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
@@ -188,6 +198,7 @@ class UserMap extends Component {
           sendGeoJSON={this.sendGeoJSON}
           geoJSONLayer={this.state.geoJSONLayer}
           currentGameId={this.props.currentGameId}
+          changeDragState={this.changeDragState}
         />
         {this.state.ownLat !== null && (
           <Marker position={[this.state.ownLat, this.state.ownLng]}>

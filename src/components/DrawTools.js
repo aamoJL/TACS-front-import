@@ -106,14 +106,12 @@ class DrawTools extends Component {
 
       // disable dragging when cursor is over marker (tooltip)
       // clicking on tooltip fires the marker's click handler, hence e.layer.on
-      e.layer.on("mouseover", function() {
-        e.layer._map.dragging.disable();
-      });
+      e.layer.on("mouseover", this.props.changeDragState.bind(this, false));
 
       // enable dragging again when cursor is out of marker (tooltip)
-      e.layer.on("mouseout", function() {
-        e.layer._map.dragging.enable();
-      });
+      e.layer.on("mouseout", this.props.changeDragState.bind(this, true));
+
+      e.layer.on("click", this.checkEditModeStatus.bind(this));
 
       // show placeholder text again upon emptying textbox
       e.layer.on("keyup", function() {
@@ -182,6 +180,15 @@ class DrawTools extends Component {
     this.props.sendGeoJSON(geoJSON, false);
   };
 
+  // fired by a click event on textbox. hovering on textbox text disables dragging on map.
+  // deleting textbox fails to enable dragging, so a click event has been placed to check
+  // if edit mode is active. if so, dragging is enabled
+  checkEditModeStatus() {
+    if (this.state.editModeActive === true) {
+      this.props.changeDragState(true);
+    }
+  }
+
   _onEditDeleteStart = () => {
     this.setState({ editModeActive: true });
   };
@@ -192,6 +199,7 @@ class DrawTools extends Component {
 
   _onEdited = e => {
     // layers are saved in a rather curious format. they're not in an array, so need to make an array first
+    let dragStatus = null;
     let editedLayers = e.layers;
     let idsToEdit = [];
     editedLayers.eachLayer(function(layer) {
@@ -214,6 +222,7 @@ class DrawTools extends Component {
 
   _onDeleted = e => {
     // layers are saved in a rather curious format. they're not in an array, so need to make an array first
+    let dragStatus = null;
     let deletedLayers = e.layers;
     let idsToDelete = [];
     deletedLayers.eachLayer(function(layer) {
