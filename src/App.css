@@ -57,6 +57,8 @@ div.fade-main {
   margin: auto;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  overflow: scroll;
 }
 
 div.sticky {
