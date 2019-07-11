@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { Map, TileLayer } from "react-leaflet";
 
@@ -7,17 +7,26 @@ export class EditGameForm extends React.Component {
     super(props);
 
     this.state = {
+      zoom: 13,
       gamename: "",
       description: "",
       startDate: "",
       startTime: "",
       endDate: "",
       endTime: "",
-      zoom: 13,
+      map: "",
       mapCenter: {
         lat: 62.2416479,
         lng: 25.7597186
-      }
+      },
+      factionNameInput: "", // >= 2 chars
+      factionPasswordInput: "", // >= 3 chars
+      factions: [],
+      objectivePointDescriptionInput: "", // >= 7
+      objectivePointMultiplierInput: "", // number
+      objectivePoints: [],
+      capture_time: 300,
+      confirmation_time: 60
     };
 
     this.handleMapDrag = this.handleMapDrag.bind(this);
@@ -30,6 +39,142 @@ export class EditGameForm extends React.Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+  };
+
+  handleFactionAdd = e => {
+    e.preventDefault();
+
+    if (
+      this.state.factionNameInput === "" ||
+      this.state.factionPasswordInput === ""
+    ) {
+      return alert("Faction needs a name and password");
+    }
+
+    if (
+      this.state.factions.findIndex(
+        faction => faction.factionName === this.state.factionNameInput
+      ) !== -1
+    ) {
+      return alert(
+        "Faction " + this.state.factionNameInput + " already exists"
+      );
+    }
+
+    this.setState(state => {
+      let factions = state.factions;
+      factions.push({
+        factionName: this.state.factionNameInput,
+        factionPassword: this.state.factionPasswordInput,
+        multiplier: 1
+      });
+      return {
+        factions: factions,
+        factionNameInput: "",
+        factionPasswordInput: ""
+      };
+    });
+  };
+
+  removeFaction(factionName) {
+    this.setState(state => {
+      let factions = state.factions;
+      const index = factions.findIndex(
+        faction => faction.factionName === factionName
+      );
+
+      if (index !== -1) {
+        factions.splice(index, 1);
+      } else {
+        console.log("Faction is not in the faction list");
+      }
+
+      return factions;
+    });
+  }
+
+  handleObjectivePointAdd = e => {
+    e.preventDefault();
+
+    if (
+      this.state.objectivePointDescriptionInput === "" ||
+      this.state.objectivePointMultiplierInput === ""
+    ) {
+      return alert("Capture point needs an ID and multiplier");
+    }
+
+    if (
+      this.state.objectivePoints.findIndex(
+        point =>
+          point.objectivePointDescription ===
+          this.state.objectivePointDescriptionInput
+      ) !== -1
+    ) {
+      return alert(
+        "Capture point " +
+          this.state.objectivePointDescriptionInput +
+          " already exists"
+      );
+    }
+
+    this.setState(state => {
+      let objectivePoints = state.objectivePoints;
+      objectivePoints.push({
+        objectivePointDescription: this.state.objectivePointDescriptionInput,
+        objectivePointMultiplier: parseFloat(
+          this.state.objectivePointMultiplierInput
+        )
+      });
+
+      return {
+        objectivePoints: objectivePoints,
+        objectivePointDescriptionInput: "",
+        objectivePointMultiplierInput: ""
+      };
+    });
+  };
+
+  removeObjectivePoint(objectivePointId) {
+    this.setState(state => {
+      let objectivePoints = state.objectivePoints;
+      const index = objectivePoints.findIndex(
+        point => point.objectivePointDescription === objectivePointId
+      );
+
+      if (index !== -1) {
+        objectivePoints.splice(index, 1);
+      } else {
+        console.log("Objective point is not in the point list");
+      }
+
+      return objectivePoints;
+    });
+  }
+
+  handleGameDeletion = e => {
+    e.preventDefault();
+
+    let token = sessionStorage.getItem("token");
+
+    if (window.confirm("Are you sure you want to delete this game")) {
+      alert("Game deleted");
+
+      fetch(
+        `${process.env.REACT_APP_API_URL}/game/delete/${this.props.gameId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        }
+      )
+        .then(result => result.json())
+        .then(result => {
+          console.log(result);
+          this.handleView();
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   // show/hide this form
@@ -57,20 +202,44 @@ export class EditGameForm extends React.Component {
   };
 
   handleGameSave = e => {
+    e.preventDefault();
+
     let startDate =
       this.state.startDate + "T" + this.state.startTime + ":00.000Z";
     let endDate = this.state.endDate + "T" + this.state.endTime + ":00.000Z";
 
-    const gameObject = {
+    let objectivePoints = this.state.objectivePoints;
+
+    // objective points are not allowed if the game has no factions
+    if (this.state.factions.length === 0) {
+      objectivePoints = [];
+    }
+
+    // Object the form sends to server
+    let gameObject = {
       name: this.state.gamename,
       desc: this.state.description,
       map: "",
       startdate: startDate,
       enddate: endDate,
-      center: this.state.mapCenter
+      center: this.state.mapCenter,
+      factions: this.state.factions,
+      objective_points: objectivePoints
     };
 
-    e.preventDefault();
+    // Add node settings to the game if the game has objective points
+    if (objectivePoints.length > 0) {
+      gameObject.nodesettings = {
+        node_settings: {
+          capture_time: this.state.capture_time,
+          confirmation_time: this.state.confirmation_time,
+          owner: 0,
+          capture: 0,
+          buttons_available: 16,
+          heartbeat_interval: 60
+        }
+      };
+    }
 
     let token = sessionStorage.getItem("token");
 
@@ -87,7 +256,9 @@ export class EditGameForm extends React.Component {
       .then(res => res.json())
       .then(result => {
         alert(result.message);
-        this.handleView();
+        if (result.code === 200) {
+          this.handleView();
+        }
       })
       .catch(error => console.log("Error: ", error));
   };
@@ -104,27 +275,113 @@ export class EditGameForm extends React.Component {
   getGameInfo(gameId) {
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
       .then(response => response.json())
-      .then(json => this.handleGameInfo(json))
+      .then(json => this.setGameInfoToState(json))
       .catch(error => console.log(error));
   }
 
-  handleGameInfo(json) {
-    this.setState({
-      gamename: json.name,
-      description: json.desc,
-      startDate: json.startdate.substring(0, 10),
-      startTime: json.startdate.substring(11, 16),
-      endDate: json.enddate.substring(0, 10),
-      endTime: json.enddate.substring(11, 16),
-      zoom: 13,
-      mapCenter: {
-        lat: json.center.lat,
-        lng: json.center.lng
+  setGameInfoToState(json) {
+    let token = sessionStorage.getItem("token");
+
+    // Get factions and passwordds
+    fetch(
+      `${process.env.REACT_APP_API_URL}/game/get-factions/${this.props.gameId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token
+        }
       }
-    });
+    )
+      .then(result => result.json())
+      .then(result => {
+        let factions = result.map(faction => {
+          return {
+            factionName: faction.factionName,
+            factionPassword: faction.factionPassword,
+            multiplier: 1
+          };
+        });
+
+        // Remove objective point's id from the object
+        let objectivePoints = json.objective_points.map(point => {
+          return {
+            objectivePointDescription: point.objectivePointDescription,
+            objectivePointMultiplier: point.objectivePointMultiplier
+          };
+        });
+
+        // get node settings if the settings exists in the game
+        let nodesettings =
+          json.nodesettings !== null &&
+          json.nodesettings.node_settings !== undefined
+            ? json.nodesettings.node_settings
+            : undefined;
+
+        this.setState({
+          gamename: json.name,
+          description: json.desc,
+          startDate: json.startdate.substring(0, 10),
+          startTime: json.startdate.substring(11, 16),
+          endDate: json.enddate.substring(0, 10),
+          endTime: json.enddate.substring(11, 16),
+          mapCenter: {
+            lat: json.center.lat,
+            lng: json.center.lng
+          },
+          factions: factions,
+          objectivePoints: objectivePoints,
+          capture_time:
+            nodesettings !== undefined
+              ? json.nodesettings.node_settings.capture_time
+              : this.state.capture_time,
+          confirmation_time:
+            nodesettings !== undefined
+              ? json.nodesettings.node_settings.confirmation_time
+              : this.state.confirmation_time
+        });
+      })
+      .catch(error => console.log(error));
   }
 
   render() {
+    let factions = [];
+    for (let i = 0; i < this.state.factions.length; i++) {
+      const faction = this.state.factions[i];
+      factions.push(
+        <li key={faction.factionName}>
+          <div>
+            {faction.factionName} : {faction.factionPassword}
+          </div>
+          <button
+            type="button"
+            onClick={() => this.removeFaction(faction.factionName)}
+          >
+            Remove
+          </button>
+        </li>
+      );
+    }
+
+    let objectivePoints = [];
+    for (let i = 0; i < this.state.objectivePoints.length; i++) {
+      const point = this.state.objectivePoints[i];
+      objectivePoints.push(
+        <li key={point.objectivePointDescription}>
+          <div>
+            {point.objectivePointDescription} : {point.objectivePointMultiplier}
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              this.removeObjectivePoint(point.objectivePointDescription)
+            }
+          >
+            Remove
+          </button>
+        </li>
+      );
+    }
+
     return ReactDOM.createPortal(
       <div className="fade-main">
         <div className="sticky">
@@ -137,85 +394,185 @@ export class EditGameForm extends React.Component {
           </span>
         </div>
         <div className="">
-          <form onSubmit={this.handleGameSave}>
-            <h1>Demo Game Creation</h1>
-            <br />
-            <input
-              placeholder="Game name"
-              name="gamename"
-              value={this.state.gamename}
-              onChange={this.handleChange}
-              id="editGameNameInput"
+          <form id="gameEditForm" onSubmit={this.handleGameSave} />
+          <form id="factionAddFrom" onSubmit={this.handleFactionAdd} />
+          <form id="gameDeletionForm" onSubmit={this.handleGameDeletion} />
+          <form
+            id="objectivePointAddFrom"
+            onSubmit={this.handleObjectivePointAdd}
+          />
+
+          <h1>Demo Game Editor</h1>
+          <br />
+          <input
+            placeholder="Game name"
+            name="gamename"
+            value={this.state.gamename}
+            onChange={this.handleChange}
+            id="editGameNameInput"
+            form="gameEditForm"
+            required
+          />
+          <br />
+          <input
+            placeholder="Description"
+            type="text"
+            name="description"
+            value={this.state.description}
+            onChange={this.handleChange}
+            id="editGameDescriptionInput"
+            form="gameEditForm"
+            required
+          />
+          <br />
+          <label className="">Start:</label>
+          <input
+            className="formDate"
+            type="date"
+            name="startDate"
+            value={this.state.startDate}
+            onChange={this.handleChange}
+            id="editGameDateStartInput"
+            form="gameEditForm"
+            required
+          />
+          <input
+            className="formTime"
+            type="time"
+            name="startTime"
+            value={this.state.startTime}
+            onChange={this.handleChange}
+            sid="editGameTimeStartInput"
+            form="gameEditForm"
+            required
+          />
+          <br />
+          <label className="">End:</label>
+          <input
+            className="formDate"
+            type="date"
+            name="endDate"
+            value={this.state.endDate}
+            onChange={this.handleChange}
+            min={this.state.startDate}
+            id="editGameDateEndInput"
+            form="gameEditForm"
+            required
+          />
+          <input
+            className="formTime"
+            type="time"
+            name="endTime"
+            value={this.state.endTime}
+            onChange={this.handleChange}
+            id="editGameTimeEndInput"
+            form="gameEditForm"
+            required
+          />
+          <br />
+          <br />
+
+          <label>Factions</label>
+          <br />
+          <input
+            name="factionNameInput"
+            value={this.state.factionNameInput}
+            minLength="2"
+            onChange={this.handleChange}
+            placeholder="Add new faction"
+            form="factionAddFrom"
+          />
+          <input
+            name="factionPasswordInput"
+            value={this.state.factionPasswordInput}
+            minLength="3"
+            onChange={this.handleChange}
+            placeholder="Faction password"
+            form="factionAddFrom"
+          />
+          <button type="submit" form="factionAddFrom">
+            Add
+          </button>
+          <ul>{factions}</ul>
+          <br />
+          <br />
+          <label>Objective points</label>
+          <br />
+          <input
+            name="objectivePointDescriptionInput"
+            type="number"
+            value={this.state.objectivePointDescriptionInput}
+            onChange={this.handleChange}
+            placeholder="Objective point id"
+            min="1000000"
+            form="objectivePointAddFrom"
+          />
+          <input
+            name="objectivePointMultiplierInput"
+            type="number"
+            value={this.state.objectivePointMultiplierInput}
+            onChange={this.handleChange}
+            placeholder="Objective point multiplier"
+            form="objectivePointAddFrom"
+          />
+          <button type="submit" form="objectivePointAddFrom">
+            Add
+          </button>
+          <ul>{objectivePoints}</ul>
+          <br />
+          <br />
+          <label>Node things (set if objective points are in the game)</label>
+          <br />
+          <br />
+          <label className="" form="gameEditForm">
+            Capture time:
+          </label>
+          <input
+            name="capture_time"
+            type="number"
+            value={this.state.capture_time}
+            form="gameEditForm"
+            onChange={this.handleChange}
+          />
+          <label className="">Confimation time:</label>
+          <input
+            name="confirmation_time"
+            type="number"
+            value={this.state.confirmation_time}
+            form="gameEditForm"
+            onChange={this.handleChange}
+          />
+          <br />
+          <br />
+          <label>Map things</label>
+          <br />
+          <Map
+            id="editGameCenterMap"
+            className=""
+            center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
+            zoom={this.state.zoom}
+            maxZoom="13"
+            style={{ height: "400px", width: "400px" }}
+            onmoveend={this.handleMapDrag}
+            onzoomend={this.handleMapScroll}
+          >
+            <TileLayer
+              attribution="Maanmittauslaitoksen kartta"
+              url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
             />
-            <br />
-            <input
-              placeholder="Description"
-              type="text"
-              name="description"
-              value={this.state.description}
-              onChange={this.handleChange}
-              id="editGameDescriptionInput"
-            />
-            <br />
-            <label className="">Start:</label>
-            <input
-              className="formDate"
-              type="date"
-              name="startDate"
-              value={this.state.startDate}
-              onChange={this.handleChange}
-              id="editGameDateStartInput"
-            />
-            <input
-              className="formTime"
-              type="time"
-              name="startTime"
-              value={this.state.startTime}
-              onChange={this.handleChange}
-              rid="editGameTimeStartInput"
-            />
-            <br />
-            <label className="">End:</label>
-            <input
-              className="formDate"
-              type="date"
-              name="endDate"
-              value={this.state.endDate}
-              onChange={this.handleChange}
-              min={this.state.startDate}
-              id="editGameDateEndInput"
-            />
-            <input
-              className="formTime"
-              type="time"
-              name="endTime"
-              value={this.state.endTime}
-              onChange={this.handleChange}
-              id="editGameTimeEndInput"
-            />
-            <br />
-            <label>Map things</label>
-            <br />
-            <Map
-              id="editGameCenterMap"
-              className=""
-              center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
-              zoom={this.state.zoom}
-              style={{ height: "400px", width: "400px" }}
-              onmoveend={this.handleMapDrag}
-              onzoomend={this.handleMapScroll}
-            >
-              <TileLayer
-                attribution="Maanmittauslaitoksen kartta"
-                url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
-              />
-            </Map>
-            <br />
-            <button id="editGameSubmitButton" type="submit">
-              Save changes
-            </button>
-            <h2>{this.state.errorMsg}</h2>
-          </form>
+          </Map>
+          <br />
+          <button
+            style={{ backgroundColor: "red" }}
+            type="submit"
+            form="gameDeletionForm"
+          >
+            Delete
+          </button>
+          <button id="editGameSubmitButton" type="submit" form="gameEditForm">
+            Save changes
+          </button>
+          <h2>{this.state.errorMsg}</h2>
         </div>
       </div>,
       document.getElementById("form")
