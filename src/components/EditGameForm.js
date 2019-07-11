@@ -258,12 +258,16 @@ export class EditGameForm extends React.Component {
       },
       body: JSON.stringify(gameObject)
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw Error(res.statusMessage);
+        } else {
+          return res.json();
+        }
+      })
       .then(result => {
         alert(result.message);
-        if (result.code === 200) {
-          this.handleView();
-        }
+        this.handleView();
       })
       .catch(error => console.log("Error: ", error));
   };
