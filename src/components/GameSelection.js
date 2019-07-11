@@ -1,37 +1,31 @@
 import React from "react";
 import GameList from "./GameList";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Switch,
-  Redirect
-} from "react-router-dom";
+import NewGameForm from "./NewGameForm";
 
 export default class GameSelection extends React.Component {
   state = {
-    currentGameId: ""
-  };
-
-  handleGameChange = gameId => {
-    this.setState({
-      currentGameId: gameId
-    });
-  };
-
-  handleGameSelection = () => {
-    console.log(this.state.currentGameId);
+    newGameForm: false
   };
 
   render() {
     return (
       <div>
-        <GameList handleGameChange={this.handleGameChange} />
-        <Link
-          to={{ pathname: "/game", search: "?id=" + this.state.currentGameId }}
+        <label>Games</label>
+        <br />
+        <button
+          id="newGameButton"
+          onClick={() => this.setState({ newGameForm: true })}
         >
-          <button type="button">Select</button>
-        </Link>
+          New Game
+        </button>
+        {this.state.newGameForm && (
+          <NewGameForm
+            view=""
+            handleState={this.handleState}
+            toggleView={() => this.setState({ newGameForm: false })}
+          />
+        )}
+        <GameList />
       </div>
     );
   }

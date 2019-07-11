@@ -2,6 +2,8 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background-color: #1d1d1b;
+  color: #ffffff;
 }
 
 .hidden {
@@ -196,4 +198,19 @@ div.login button:hover {
   color: #777;
   text-shadow: none;
   font-weight: normal;
+}
+
+.gamecard {
+  border: 5px solid #647828;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 10px;
+  background-color: #859b28;
+  color: #ffffff;
+}
+
+.gamelist {
+  background-color: #1d1d1b;
+  max-width: 500px;
+  padding: 10px;
 }

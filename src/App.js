@@ -1,12 +1,9 @@
 import React, { Component, Fragment } from "react";
 import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
 import "./App.css";
-import UserMap from "./components/UserMap";
-import Header from "./components/Header";
 import {
   BrowserRouter as Router,
   Route,
-  Link,
   Switch,
   Redirect
 } from "react-router-dom";
@@ -136,14 +133,6 @@ class App extends Component {
     );
   };
 
-  gameView = () => {
-    return <GameView />;
-  };
-
-  gameSelection = () => {
-    return <GameSelection />;
-  };
-
   render() {
     const initialPosition = [this.state.lat, this.state.lng];
     return (
@@ -162,8 +151,19 @@ class App extends Component {
 
           {this.state.logged && (
             <Switch>
-              <Route path="/game" component={this.gameView} />
-              <Route exact path="/" component={this.gameSelection} />
+              <Route
+                path="/game"
+                component={() => {
+                  return <GameView />;
+                }}
+              />
+              <Route
+                exact
+                path="/"
+                component={() => {
+                  return <GameSelection />;
+                }}
+              />
               {/* Redirect from any other path to root */}
               <Redirect from="*" to="/" />
             </Switch>
