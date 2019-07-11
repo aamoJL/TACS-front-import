@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import { Map, TileLayer } from "react-leaflet";
+import { SketchPicker } from "react-color";
+import reactCSS from "reactcss";
 
 export class EditGameForm extends React.Component {
   constructor(props) {
@@ -21,12 +23,14 @@ export class EditGameForm extends React.Component {
       },
       factionNameInput: "", // >= 2 chars
       factionPasswordInput: "", // >= 3 chars
+      factionColorInput: "#852222",
       factions: [],
       objectivePointDescriptionInput: "", // >= 7
       objectivePointMultiplierInput: "", // number
       objectivePoints: [],
       capture_time: 300,
-      confirmation_time: 60
+      confirmation_time: 60,
+      displayColorPicker: false
     };
 
     this.handleMapDrag = this.handleMapDrag.bind(this);
@@ -66,6 +70,7 @@ export class EditGameForm extends React.Component {
       factions.push({
         factionName: this.state.factionNameInput,
         factionPassword: this.state.factionPasswordInput,
+        colour: this.state.factionColorInput,
         multiplier: 1
       });
       return {
@@ -253,12 +258,16 @@ export class EditGameForm extends React.Component {
       },
       body: JSON.stringify(gameObject)
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw Error(res.statusMessage);
+        } else {
+          return res.json();
+        }
+      })
       .then(result => {
         alert(result.message);
-        if (result.code === 200) {
-          this.handleView();
-        }
+        this.handleView();
       })
       .catch(error => console.log("Error: ", error));
   };
@@ -298,7 +307,8 @@ export class EditGameForm extends React.Component {
           return {
             factionName: faction.factionName,
             factionPassword: faction.factionPassword,
-            multiplier: 1
+            multiplier: 1,
+            colour: faction.colour
           };
         });
 
@@ -349,7 +359,7 @@ export class EditGameForm extends React.Component {
       const faction = this.state.factions[i];
       factions.push(
         <li key={faction.factionName}>
-          <div>
+          <div style={{ color: faction.colour }}>
             {faction.factionName} : {faction.factionPassword}
           </div>
           <button
@@ -381,6 +391,36 @@ export class EditGameForm extends React.Component {
         </li>
       );
     }
+
+    const styles = reactCSS({
+      default: {
+        color: {
+          width: "36px",
+          height: "14px",
+          borderRadius: "2px",
+          background: `${this.state.factionColorInput}`
+        },
+        swatch: {
+          padding: "5px",
+          background: "#fff",
+          borderRadius: "1px",
+          boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
+          display: "inline-block",
+          cursor: "pointer"
+        },
+        popover: {
+          position: "absolute",
+          zIndex: "2"
+        },
+        cover: {
+          position: "fixed",
+          top: "0px",
+          right: "0px",
+          bottom: "0px",
+          left: "0px"
+        }
+      }
+    });
 
     return ReactDOM.createPortal(
       <div className="fade-main">
@@ -490,6 +530,29 @@ export class EditGameForm extends React.Component {
             placeholder="Faction password"
             form="factionAddFrom"
           />
+          <div
+            style={styles.swatch}
+            onClick={() =>
+              this.setState({
+                displayColorPicker: !this.state.displayColorPicker
+              })
+            }
+          >
+            <div style={styles.color} />
+          </div>
+          {this.state.displayColorPicker && (
+            <div
+              style={styles.cover}
+              onClick={() => this.setState({ displayColorPicker: false })}
+            >
+              <SketchPicker
+                color={this.state.factionColorInput}
+                onChangeComplete={color =>
+                  this.setState({ factionColorInput: color.hex })
+                }
+              />
+            </div>
+          )}
           <button type="submit" form="factionAddFrom">
             Add
           </button>

@@ -51,7 +51,7 @@ class GameList extends React.Component {
       },
       () => {
         // taking the changed gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
-        this.props.handleGameChange(this.state.selectedGame);
+        //this.props.handleGameChange(this.state.selectedGame);
       }
     );
   };
