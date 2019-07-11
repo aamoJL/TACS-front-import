@@ -1,4 +1,11 @@
 import React from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect
+} from "react-router-dom";
 
 export class LoginForm extends React.Component {
   constructor(props) {
@@ -115,6 +122,9 @@ export class LoginForm extends React.Component {
             </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
+          <Link to="/register">
+            <button>Register</button>
+          </Link>
         </div>
       </div>
     );
