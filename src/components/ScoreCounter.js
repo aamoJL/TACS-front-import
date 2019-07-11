@@ -11,22 +11,21 @@ export default class ScoreCounter extends Component {
 
   // Gets the current scores with factions (and their colors for display)
   getScoresAndFactions = () => {
-    fetch(
-      `https://tacs-testing.cf:8443/score/get-score/${this.state.testGameid}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        }
+    fetch(`${process.env.REACT_APP_API_URL}/${this.state.testGameid}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
       }
-    )
+    })
       .then(res => res.json())
       .then(scores => {
-        console.log(scores);
-        this.setState({
-          scores
-        });
+        if (scores.length > 0) {
+          console.log(scores);
+          this.setState({
+            scores
+          });
+        }
       })
       .catch(error => {
         console.log(error);
