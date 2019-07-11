@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
 import DrawTools from "./DrawTools.js";
 import Player from "./Player.js";
+import { fetchGeoJSON } from "./fetchGeoJSON.js";
 
 class UserMap extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class UserMap extends Component {
     };
 
     this.sendGeoJSON = this.sendGeoJSON.bind(this);
+    this.fetchGeoJSON = this.fetchGeoJSON.bind(this);
     this.setCurrentPosition = this.setCurrentPosition.bind(this);
     this.watchPositionId = null;
   }
@@ -29,14 +31,11 @@ class UserMap extends Component {
     });
   }
 
-  componentDidUpdate() {
-    // check if game ID has changed and fetch that game's drawings
-    if (this.state.currentGameId !== this.props.currentGameId) {
-      this.setState({
-        currentGameId: this.props.currentGameId
-      });
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.socketSignal === "drawing-update") {
       this.fetchGeoJSON();
     }
+    return true;
   }
 
   // Sends the players drawings to the backend (and database)

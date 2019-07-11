@@ -2,6 +2,7 @@ import React from "react";
 import io from "socket.io-client";
 
 const socketUrl = process.env.REACT_APP_API_URL;
+
 export default class ClientSocket extends React.Component {
   constructor(props) {
     super(props);
@@ -14,29 +15,44 @@ export default class ClientSocket extends React.Component {
     };
   }
 
-  // iniate the socket on component mount
+  // initiate the socket on component mount
   componentWillMount() {
-    console.log("iniated socket");
+    console.log("hi socket");
+    if (this.props.gameId !== null) {
+      this.props.getSocketSignal("drawing-update");
+    }
     this.initSocket();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps !== this.props) {
+      this.initSocket();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // disconnect the socket on component dismount
   componentWillUnmount() {
+    console.log("bye socket");
     this.state.sock.disconnect();
   }
 
   initSocket = () => {
     const socket = io(socketUrl);
+
     // set the socket to listen gameId-thread
     socket.on(this.props.gameId, data => {
+      this.props.getSocketSignal(data.type);
       // check socket update type
       this.setState({ update: data });
-      console.log(this.state.update);
     });
+
     this.setState({ sock: socket });
   };
 
   render() {
-    return null;
+    return this.state.update;
   }
 }
