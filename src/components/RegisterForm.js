@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 export class RegisterForm extends React.Component {
   constructor(props) {
@@ -86,14 +87,9 @@ export class RegisterForm extends React.Component {
   render() {
     return (
       <div className="fade-main">
-        <div className="sticky">
-          <span className="close" onClick={this.handleView}>
-            ×
-          </span>
-        </div>
         <div className="login">
           <form onSubmit={this.handleRegister}>
-            <h1>register new user</h1>
+            <h1>Register</h1>
             <br />
             <input
               placeholder="Enter Username"
@@ -122,9 +118,12 @@ export class RegisterForm extends React.Component {
               //required
             />
             <br />
-            <button type="submit">register</button>
+            <button type="submit">Submit</button>
             <h2>{this.state.errorMsg}</h2>
           </form>
+          <Link to="/">
+            <button>Back</button>
+          </Link>
         </div>
       </div>
     );

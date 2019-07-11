@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Switch,
-  Redirect
-} from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 export class LoginForm extends React.Component {
   constructor(props) {
@@ -86,18 +80,9 @@ export class LoginForm extends React.Component {
   render() {
     return (
       <div className="fade-main">
-        <div className="sticky">
-          <span
-            id="closeLoginFormX"
-            className="close"
-            onClick={this.handleView}
-          >
-            ×
-          </span>
-        </div>
         <div className="login">
           <form onSubmit={this.handleLogin}>
-            <h1>demo login</h1>
+            <h1>Login</h1>
             <br />
             <input
               placeholder="Enter Username"
@@ -118,12 +103,12 @@ export class LoginForm extends React.Component {
             />
             <br />
             <button id="submitLoginButton" type="submit">
-              login
+              Submit
             </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
           <Link to="/register">
-            <button>Register</button>
+            <button>Create account</button>
           </Link>
         </div>
       </div>
