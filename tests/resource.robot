@@ -2,18 +2,19 @@
 Documentation       A resource file with reusable keywords and variables.
 Library     SeleniumLibrary    run_on_failure=nothing
 Library     String
+Library     DateTime
 
 *** Variables ***
-${SERVER}       %{SITE_URL}
-${BROWSER}      ff
-${DELAY}        0.2
+${SERVER}           %{SITE_URL}
+${BROWSER}          ff
+${DELAY}            0.2
 #${VALID USER} =     ville
 ${VALID PASSWORD} =     koira
 ${LOGIN URL}        https://${SERVER}/
 ${WELCOME URL}      #You can use this if there's a different page after login page.
-${LOC_USER}           id=registerUsernameInput            #Generated username.
-${LOC_PASSWORD}       id=registerPasswordInput            #Generated password first time.
-${LOC_PASSWORD2}      id=registerPasswordVerifyInput      #Generated password verify.
+${LOC_USER}         id=registerUsernameInput            #Generated username.
+${LOC_PASSWORD}     id=registerPasswordInput            #Generated password first time.
+${LOC_PASSWORD2}    id=registerPasswordVerifyInput      #Generated password verify.
 ${ZOOMIN}           css=a[class=leaflet-control-zoom-in]        #Zoom in button location
 ${ZOOMOUT}          css=a[class=leaflet-control-zoom-out]        #Zoom out button location
 ${INVALID_U}        User does not exist
@@ -29,7 +30,31 @@ ${LU_SP}            Validation failed: name must be shorter than or equal to 31 
 ${ACC_EXISTS}       User already exists
 ${P_NOMATCH}        Passwords do not match
 
+## New Game /
+# B = Button / I = Input
+${B_NEWGAME}        id=newGameButton
+${B_EDITGAME}       id=editGameButton
+${I_NGAMENAME}      id=newGameNameInput
+${I_NGAMEDESC}      id=newGameDescriptionInput
+${I_NGAMESTART}     id=newGameDateStartInput
+${I_NSTARTTIME}     id=newGameTimeStartInput
+${I_NGAMESTOP}      id=newGameDateEndInput
+${I_NSTOPTIME}      id=newGameTimeEndInput
+${B_NSUBMIT}        id=newGameSubmitButton
+${L_GAMELIST}       id=changeActiveGameList
+${START}
+
+## Edit Game
+${I_EGAMENAME}      id=editGameNameInput
+${I_EGAMEDESC}      id=editGameDescriptionInput
+${I_EGAMESTART}     id=editGameDateStartInput
+${I_ESTARTTIME}     id=editGameTimeStartInput
+${I_EGAMESTOP}      id=editGameDateEndInput
+${I_ESTOPTIME}      id=editGameTimeEndInput
+${B_ESUBMIT}        id=editGameSubmitButton
+
 *** Keywords ***
+
 #Valid Login
 Open Browser To Login Page
     Open Browser        ${LOGIN URL}      ${BROWSER}
@@ -39,7 +64,6 @@ Open Browser To Login Page
 
 Login Page Should be Open
     Title Should Be     TACS
-
 
 Go To Login Page
     Go To       ${LOGIN URL}
@@ -71,6 +95,8 @@ Close Login Screen
 Wait For Log Out Button To Appear
     Wait Until Page Contains Element        id=logoutButton      1
 
+
+
 #Registration
 Open Registration
     Click Button        id=registerButton
@@ -85,7 +111,6 @@ Input Valid Username        #Inputs the generated valid username for login. (Tes
 Input Valid Password        #Inputs the valid password: ville. (Test suite 00 and 01)
     Input Text      ${LOC_PASSWORD}        ${VALID PASSWORD}
     Input Text      ${LOC_PASSWORD2}        ${VALID PASSWORD}
-
 
 Generate Username       #Generates a random username        lenght=8     chars=[LETTERS][NUMBERS]
     [Arguments]     ${GNUM_U}
@@ -111,8 +136,9 @@ Submit Credentials Registration
 Close Registration Screen
     Click Element       id=closeRegisterFormX
 
-#Zoom frontpage
 
+
+#Zoom frontpage
 Zoom In On Frontpage
     Repeat Keyword          3 times         Click Element      ${ZOOMIN}
 
@@ -120,8 +146,9 @@ Zoom In On Frontpage
 Zoom Out On Frontpage
     Repeat Keyword          3 times         Click Element       ${ZOOMOUT}
 
-#Drawing tools and map movement frontpage
 
+
+#Drawing tools and map movement frontpage
 Drawing A Figure
     [Arguments]     ${X}        ${Y}
     Click Element At Coordinates    css=div[class=leaflet-control-container]        ${X}        ${Y}
@@ -176,8 +203,8 @@ Draw A Rectangle
 
 Draw A Circle
     Click Element       css=a[class=leaflet-draw-draw-circle]
-    Mouse Down      class:leaflet-tile-loaded:nth-child(2)
-    Mouse Up        class:leaflet-tile-loaded:nth-child(5)
+    Mouse Down          class:leaflet-tile-loaded:nth-child(2)
+    Mouse Up            class:leaflet-tile-loaded:nth-child(5)
     #Click Leaflet Panel     Cancel drawing
     Log To Console          Circle done
 
@@ -210,11 +237,11 @@ Edit Layers
     Mouse Down      class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
     Mouse Up        class:leaflet-tile-loaded:nth-child(3)              #Marker
     Click Leaflet Panel     Cancel editing, discards all changes
-    Log To Console      Editing done
+    Log To Console          Editing done
 
 Delete Layers
-    Click Element   css=a[class=leaflet-draw-edit-remove]
-    Click Element   class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
+    Click Element       css=a[class=leaflet-draw-edit-remove]
+    Click Element       class:leaflet-marker-icon:nth-last-of-type(2)       #Marker
     Click Leaflet Panel     Save changes
     Click Element       css=a[class=leaflet-draw-edit-remove]
     Click Element At Coordinates    css=div[class=leaflet-control-container]        50        300
@@ -228,15 +255,125 @@ Map Movement
     Drag And Drop By Offset    css=div[class=leaflet-control-container]     50     300
     Drag And Drop By Offset    css=div[class=leaflet-control-container]     800     800
     Drag And Drop By Offset    css=div[class=leaflet-control-container]     -50     -50
-    Log To Console      Map movement tested
+    Log To Console             Map movement tested
 
 
 
 
+#
+#   New Game
+#   Valid name 3-30 / Desc 1 - 255
+#${B_NEWGAME}        id=newGameButton
+#${I_NGAMENAME}      id=newGameNameInput
+#${I_NGAMEDESC}      id=newGameDescriptionInput
+#${I_NGAMESTART}     id=newGameDateStartInput
+#${I_NSTARTTIME}     id=newGameTimeStartInput
+#${I_NGAMESTOP}      id=newGameDateEndInput
+#${I_NSTOPTIME}      id=newGameTimeEndInput
+#${B_NSUBMIT}        id=newGameSubmitButton
+#${L_GAMELIST}       id=changeActiveGameList
+#${START}
+
+### Edit Game
+#${B_EDITGAME}       id=editGameButton
+#${I_EGAMENAME}      id=editGameNameInput
+#${I_EGAMEDESC}      id=editGameDescriptionInput
+#${I_EGAMESTART}     id=editGameDateStartInput
+#${I_ESTARTTIME}     id=editGameTimeStartInput
+#${I_EGAMESTOP}      id=editGameDateEndInput
+#${I_ESTOPTIME}      id=editGameTimeEndInput
+#${B_ESUBMIT}        id=editGameSubmitButton
+
+Create Game
+    Wait Until Page Contains Element        id=newGameButton      1
+    Generate Valid Gamename
+    Click Button    ${B_NEWGAME}
+    Input Text      ${I_NGAMENAME}   ${VALID_GAME}
+    Log             GameName set
+    Input Text      ${I_NGAMEDESC}   Hello! ~RobotFramework
+    Log             Desc set
+
+    # Set Game start time
+    Generate Game Start Date And Time   # Generate globals: STARTDATE, STARTTIME
+    Input Text      ${I_NGAMESTART}  ${STARTDATE}
+    Input Text      ${I_NSTARTTIME}  ${STARTTIME}
+    Log             start datetime ok
+
+    # Set Game end time
+    Generate Game End Date And Time     # Generate globals: ENDDATE, ENDTIME
+    Input Text      ${I_NGAMESTOP}   ${ENDDATE}
+    Input Text      ${I_NSTOPTIME}   ${ENDTIME}
+    Log             end tadedime ok
+
+    Click Button    ${B_NSUBMIT}
+
+Select Game
+    Select From List By Label    ${L_GAMELIST}   ${VALID_GAME}
+    Log                 Game Selected
+
+Edit Game
+    Wait Until Page Contains Element        id=editGameButton      1
+    Click Button    ${B_EDITGAME}
+    Input Text      ${I_EGAMENAME}   ${VALID_GAME}  #test_bINk5V
+    Log             GameName edited
+    Input Text      ${I_EGAMEDESC}   Hello, I Edited this game ~RobotFramework
+    Log             Desc edited
+
+    # Set Game start time
+    Generate Game Start Date And Time
+    Input Text      ${I_EGAMESTART}  ${STARTDATE}
+    Input Text      ${I_ESTARTTIME}  ${STARTTIME}
+    Log             start edited
+
+    # Set Game end time
+    Generate Game End Date And Time
+    Input Text      ${I_EGAMESTOP}   ${ENDDATE}
+    Input Text      ${I_ESTOPTIME}   ${ENDTIME}
+    Click Button    ${B_ESUBMIT}
+    Log             end edited
+
+Generate Valid Gamename     #Generates new name for every test rotation in gitlab. Used in test suite xx.
+    ${g_name} =     Generate Random String      6       [LETTERS][NUMBERS]
+    ${x} =          Format String           test_{}     ${g_name}
+    Set Global Variable     ${VALID_GAME}    ${x}
+
+Randint
+    [Arguments]     ${x}    ${y}
+    ${random} =     Evaluate    random.randint(${x}, ${y})  modules=random
+    [Return]        ${random}
+
+Generate Game Start Date And Time
+    ${datetime} =   Get Current Date    result_format=%Y-%m-%d %H:%M
+
+    ${random} =     Randint     1   365
+    ${startdate} =  Add Time To Date    ${datetime}   ${random} days
+
+    ${random} =     Randint     0   1339
+    ${startdate} =  Add Time To Date    ${startdate}  ${random} minutes
+
+    ${startdate} =          Convert Date    ${startdate}   result_format=%Y-%m-%d %H:%M
+    ${date}  ${time} =      Split String    ${startdate}
+    Set Global Variable     ${START}        ${startdate}
+    Set Global Variable     ${STARTDATE}    ${date}
+    Set Global Variable     ${STARTTIME}    ${time}
 
 
+Generate Game End Date And Time
+    ${datetime} =   Set Variable  ${START}
 
+    ${random} =     Randint     1   365
+    ${enddate} =    Add Time To Date    ${datetime}  ${random} days
 
+    ${random} =     Randint     0   1339
+    ${enddate} =    Add Time To Date    ${enddate}   ${random} minutes
 
+    ${enddate} =    Convert Date        ${enddate}   result_format=%Y-%m-%d %H:%M
+    ${date}  ${time} =      Split String  ${enddate}
 
+    Set Global Variable     ${END}        ${enddate}
+    Set Global Variable     ${ENDDATE}    ${date}
+    Set Global Variable     ${ENDTIME}    ${time}
 
+Log
+    [Arguments]     ${x}
+    Log To Console  ${x}
