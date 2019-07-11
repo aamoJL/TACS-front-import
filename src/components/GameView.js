@@ -1,8 +1,13 @@
 import React from "react";
+import UserMap from "./UserMap";
 
 export default class GameView extends React.Component {
   state = {
-    gameId: null
+    gameId: null,
+    lat: 62.2416479,
+    lng: 25.7597186,
+    zoom: 13,
+    mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
   };
 
   componentDidMount() {
@@ -13,6 +18,22 @@ export default class GameView extends React.Component {
   }
 
   render() {
-    return <div>{this.state.gameId}</div>;
+    if (this.state.gameId === null) {
+      return false;
+    }
+
+    const initialPosition = [this.state.lat, this.state.lng];
+
+    return (
+      <div>
+        <div>{this.state.gameId}</div>
+        <UserMap
+          position={initialPosition}
+          zoom={this.state.zoom}
+          mapUrl={this.state.mapUrl}
+          currentGameId={this.state.currentGameId}
+        />
+      </div>
+    );
   }
 }

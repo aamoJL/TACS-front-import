@@ -18,12 +18,9 @@ class App extends Component {
 
     // set initial state
     this.state = {
-      lat: 62.2416479,
-      lng: 25.7597186,
-      zoom: 13,
-      mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg",
       currentGameId: null,
-      logged: false
+      logged: false,
+      authenticateComplete: false
     };
 
     this.handleLayerChange = this.handleLayerChange.bind(this);
@@ -85,7 +82,12 @@ class App extends Component {
           error => {
             console.log(error);
           }
-        );
+        )
+        .then(() => {
+          this.setState({
+            authenticateComplete: true
+          });
+        });
     }
   }
 
@@ -134,17 +136,33 @@ class App extends Component {
   };
 
   render() {
-    const initialPosition = [this.state.lat, this.state.lng];
+    // TODO: think better solution to wait for authenticator
+    if (!this.state.authenticateComplete) {
+      return false;
+    }
+
     return (
       <Router>
         <div>
+          {/* Debug Sign out button ------------------------ */}
+          {this.state.logged && (
+            <button
+              onClick={() => {
+                sessionStorage.setItem("token", "");
+                this.setState({ logged: false });
+              }}
+            >
+              Sign out
+            </button>
+          )}
+          {/* Debug End ----------------------- */}
+
           {!this.state.logged && (
             <Switch>
               <Route exact path="/replay" component={this.replay} />
               <Route exact path="/register" component={this.registerForm} />
               <Route exact path="/" component={this.loginForm} />
               {/* Redirect from any other path to root */}
-              {/* TODO: disable this if login state has not been set yet */}
               <Redirect from="*" to="/" />
             </Switch>
           )}
@@ -168,28 +186,6 @@ class App extends Component {
               <Redirect from="*" to="/" />
             </Switch>
           )}
-
-          {/* Debug ------------------------ */}
-          {this.state.logged && (
-            <button
-              onClick={() => {
-                sessionStorage.setItem("token", "");
-                this.setState({ logged: false });
-              }}
-            >
-              Sign out
-            </button>
-          )}
-          {/* <UserMap
-            position={initialPosition}
-            zoom={this.state.zoom}
-            mapUrl={this.state.mapUrl}
-            currentGameId={this.state.currentGameId}
-          />
-          <Header
-            handleLayerChange={this.handleLayerChange}
-            handleGameChange={this.handleGameChange}
-          /> */}
         </div>
       </Router>
     );
