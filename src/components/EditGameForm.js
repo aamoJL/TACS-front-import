@@ -172,7 +172,7 @@ export class EditGameForm extends React.Component {
               name="startTime"
               value={this.state.startTime}
               onChange={this.handleChange}
-              rid="editGameTimeStartInput"
+              id="editGameTimeStartInput"
             />
             <br />
             <label className="">End:</label>
