@@ -3,6 +3,7 @@ import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
 import "./App.css";
 import UserMap from "./components/UserMap";
 import Header from "./components/Header";
+import ScoreCounter from "./components/ScoreCounter";
 
 class App extends Component {
   constructor() {
@@ -46,6 +47,7 @@ class App extends Component {
     const initialPosition = [this.state.lat, this.state.lng];
     return (
       <div>
+        <ScoreCounter />
         <UserMap
           position={initialPosition}
           zoom={this.state.zoom}
