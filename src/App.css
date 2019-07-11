@@ -11,18 +11,21 @@ body {
 /* UserMap */
 .map {
   position: absolute;
-  margin-top: 50px;
-  height: 95vh;
+  height: 100vh;
   width: 100vw;
 }
 
 /* Header */
 div.header {
+  transition-property: width;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
   position: absolute;
   top: 0;
-  height: 50px;
-  width: 100%;
-  background: white;
+  right: 0;
+  height: 100vh;
+  width: 100px;
+  background: #1d1d1b;
   z-index: 1000;
 }
 
@@ -30,20 +33,24 @@ div.header button {
   transition-property: background-color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
-  background-color: #279fd9;
+  background-color: #1d1d1b;
   color: white;
   font-weight: bold;
   border: 0px;
-  padding: 0.5em;
-  margin: 0em 1em;
-  width: 10%;
-  height: 100%;
+  width: 100%;
+  height: 10%;
   font-size: 18px;
-  float: right;
+}
+
+div.header:hover {
+  transition-property: width;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  width: 200px;
 }
 
 div.header button:hover {
-  background-color: darkblue;
+  background-color: #556023;
   cursor: pointer;
 }
 
