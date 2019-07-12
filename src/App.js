@@ -18,10 +18,6 @@ class App extends Component {
       currentGameId: null,
       socketSignal: null
     };
-
-    this.handleLayerChange = this.handleLayerChange.bind(this);
-    this.handleGameChange = this.handleGameChange.bind(this);
-    this.getSocketSignal = this.getSocketSignal.bind(this);
   }
   // Toggles through the list and changes the mapUrl state
   handleLayerChange = () => {
@@ -45,6 +41,8 @@ class App extends Component {
     });
   };
 
+  // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
+  // setting socketSignal to null immediately after to avoid multiple database fetches
   getSocketSignal = type => {
     this.setState(
       {

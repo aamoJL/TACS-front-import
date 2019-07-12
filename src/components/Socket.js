@@ -25,7 +25,8 @@ export default class ClientSocket extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps !== this.props) {
+    // re-initialize socket when gameId has changed
+    if (nextProps.gameId !== this.props.gameId) {
       this.initSocket();
       return true;
     } else {
@@ -46,7 +47,7 @@ export default class ClientSocket extends React.Component {
     socket.on(this.props.gameId, data => {
       this.props.getSocketSignal(data.type);
       // check socket update type
-      this.setState({ update: data });
+      this.setState({ update: data.type });
     });
 
     this.setState({ sock: socket });

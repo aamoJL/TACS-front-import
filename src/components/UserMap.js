@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
 import DrawTools from "./DrawTools.js";
 import Player from "./Player.js";
-import { fetchGeoJSON } from "./fetchGeoJSON.js";
 
 class UserMap extends Component {
   constructor(props) {
@@ -83,9 +82,6 @@ class UserMap extends Component {
         }
       );
     }
-
-    // get the layers again to stop updating with old objects
-    this.fetchGeoJSON();
   }
 
   // Get the drawings from the backend and add them to the state, so they can be drawn
