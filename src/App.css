@@ -59,6 +59,8 @@ div.fade-main {
   margin: auto;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  overflow: scroll;
 }
 
 div.sticky {
@@ -213,4 +215,20 @@ div.login button:hover {
   background-color: #1d1d1b;
   max-width: 500px;
   padding: 10px;
+}
+
+.tasklist {
+  position: absolute;
+  margin-top: 50px;
+  z-index: 2020;
+  background-color: #ffffff80;
+}
+
+.tasklist-item {
+  margin: 20px;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
 }
