@@ -21,7 +21,7 @@ class TaskItem extends React.Component {
   };
 
   getFactionlist(gameId) {
-    fetch(`${process.env.REACT_APP_URL}/game/${gameId}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`, {
       method: "GET"
     })
       .then(result => {
@@ -56,10 +56,17 @@ class TaskItem extends React.Component {
 
   onTaskDelete = e => {
     e.preventDefault();
-    this.props.onDelete(this.props.task.taskId);
-    this.setState({
-      edit: false
-    });
+
+    if (
+      window.confirm(
+        `Are you sure you want to delete task "${this.props.task.taskName}"`
+      )
+    ) {
+      this.props.onDelete(this.props.task.taskId);
+      this.setState({
+        edit: false
+      });
+    }
   };
 
   render() {

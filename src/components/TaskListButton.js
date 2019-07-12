@@ -1,12 +1,12 @@
 import React, { Fragment } from "react";
 import TaskList from "./TaskList";
 
-class TaskListButton extends React.Component {
+export default class TaskListButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
-      newTasks: 0
+      open: false
+      // newTasks: 0
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -28,10 +28,11 @@ class TaskListButton extends React.Component {
         open: !this.state.open
       },
       () => {
+        // Websocket task notification template
         // Set new task cout to zero when the tasklist opens
-        if (this.state.open) {
-          this.setState({ newTasks: 0 });
-        }
+        // if (this.state.open) {
+        //   this.setState({ newTasks: 0 });
+        // }
       }
     );
   };
@@ -40,14 +41,11 @@ class TaskListButton extends React.Component {
     return (
       <Fragment>
         <button id="tasklistButton" onClick={this.handleClick}>
-          Tasks ({this.state.newTasks})
+          {/* Tasks ({this.state.newTasks}) */}
+          Tasks
         </button>
-        {this.state.open && (
-          <TaskList gameId="2c097e6a-591c-4a27-b7cb-38eb44e1f31c" />
-        )}
+        {this.state.open && <TaskList gameId={this.props.gameId} />}
       </Fragment>
     );
   }
 }
-
-export default TaskListButton;

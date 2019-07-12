@@ -219,9 +219,10 @@ div.login button:hover {
 
 .tasklist {
   position: absolute;
-  margin-top: 50px;
+  margin-top: 100px;
   z-index: 2020;
   background-color: #ffffff80;
+  color: black;
 }
 
 .tasklist-item {

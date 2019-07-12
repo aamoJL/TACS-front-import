@@ -1,5 +1,6 @@
 import React from "react";
 import UserMap from "./UserMap";
+import TaskListButton from "./TaskListButton";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 
 export default class GameView extends React.Component {
@@ -31,6 +32,7 @@ export default class GameView extends React.Component {
         <Link to="/">
           <button>Game selection</button>
         </Link>
+        <TaskListButton gameId={this.state.gameId} />
         <UserMap
           position={initialPosition}
           zoom={this.state.zoom}

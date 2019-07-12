@@ -21,7 +21,7 @@ class TaskList extends React.Component {
 
   getTasks(gameId) {
     let token = sessionStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_URL}/task/get-tasks/${gameId}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/task/get-tasks/${gameId}`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + token
@@ -43,7 +43,7 @@ class TaskList extends React.Component {
   }
 
   getFactionlist(gameId) {
-    fetch(`${process.env.REACT_APP_URL}/game/${gameId}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`, {
       method: "GET"
     })
       .then(result => {
@@ -68,24 +68,27 @@ class TaskList extends React.Component {
     }
 
     let token = sessionStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_URL}/task/new-task/${this.props.gameId}`, {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        taskName: this.state.taskNameInput,
-        taskDescription: this.state.taskDescriptionInput,
-        taskIsActive: true,
-        faction:
-          this.state.selectedFactionId === ""
-            ? null
-            : this.state.selectedFactionId,
-        taskWinner: null,
-        taskGame: this.props.gameId
-      })
-    })
+    fetch(
+      `${process.env.REACT_APP_API_URL}/task/new-task/${this.props.gameId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          taskName: this.state.taskNameInput,
+          taskDescription: this.state.taskDescriptionInput,
+          taskIsActive: true,
+          faction:
+            this.state.selectedFactionId === ""
+              ? null
+              : this.state.selectedFactionId,
+          taskWinner: null,
+          taskGame: this.props.gameId
+        })
+      }
+    )
       .then(result => {
         if (!result.ok) {
           throw Error(Response.statusText);
@@ -112,18 +115,21 @@ class TaskList extends React.Component {
 
   onTaskEditSave = (task, winnerFactionId) => {
     let token = sessionStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_URL}/task/edit-task/${this.props.gameId}`, {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        taskId: task.taskId,
-        taskWinner: winnerFactionId,
-        taskGame: this.props.gameId
-      })
-    })
+    fetch(
+      `${process.env.REACT_APP_API_URL}/task/edit-task/${this.props.gameId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          taskId: task.taskId,
+          taskWinner: winnerFactionId,
+          taskGame: this.props.gameId
+        })
+      }
+    )
       .then(result => {
         if (!result.ok) {
           throw Error(result.responseText);
@@ -144,7 +150,7 @@ class TaskList extends React.Component {
     }
     let token = sessionStorage.getItem("token");
     fetch(
-      `${process.env.REACT_APP_URL}/task/delete-task/${this.props.gameId}`,
+      `${process.env.REACT_APP_API_URL}/task/delete-task/${this.props.gameId}`,
       {
         method: "DELETE",
         headers: {
