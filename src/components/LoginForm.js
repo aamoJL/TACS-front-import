@@ -98,7 +98,7 @@ export class LoginForm extends React.Component {
               value={this.state.username}
               onChange={this.handleChange}
               id="loginUsernameInput"
-              autofocus
+              autoFocus
             />
             <br />
             <input

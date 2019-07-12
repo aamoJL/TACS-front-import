@@ -2,8 +2,8 @@ import React from "react";
 
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
-import GameList from "./GameList";
-import NewGameForm from "./NewGameForm";
+import TaskListButton from "./TaskListButton";
+import GameSidebar from "./GameSidebar";
 
 class Header extends React.Component {
   constructor(props) {
@@ -13,7 +13,8 @@ class Header extends React.Component {
   state = {
     form: "", // Popup form (login, register etc.)
     username: null,
-    token: null
+    token: null,
+    sidebar: false
   };
 
   // toggles the login/register view
@@ -81,14 +82,7 @@ class Header extends React.Component {
               login
             </button>
           )}
-          {this.state.username && (
-            <button
-              id="newGameButton"
-              onClick={() => this.toggleView("newgame")}
-            >
-              New Game
-            </button>
-          )}
+
           {this.state.username && (
             <button id="logoutButton" onClick={this.handleLogout}>
               logout
@@ -98,7 +92,16 @@ class Header extends React.Component {
           <button id="changeLayerButton" onClick={this.props.handleLayerChange}>
             change layer
           </button>
-          <GameList handleGameChange={this.props.handleGameChange} />
+          {this.state.username && <TaskListButton />}
+          <button
+            id="sidebarButton"
+            onClick={() => this.setState({ sidebar: !this.state.sidebar })}
+          >
+            Tools
+          </button>
+          {this.state.sidebar && (
+            <GameSidebar loggedIn={this.state.username ? true : false} />
+          )}
         </div>
         {this.state.form === "register" && (
           <RegisterForm
@@ -109,13 +112,6 @@ class Header extends React.Component {
         )}
         {this.state.form === "login" && (
           <LoginForm
-            view=""
-            handleState={this.handleState}
-            toggleView={this.toggleView}
-          />
-        )}
-        {this.state.form === "newgame" && (
-          <NewGameForm
             view=""
             handleState={this.handleState}
             toggleView={this.toggleView}

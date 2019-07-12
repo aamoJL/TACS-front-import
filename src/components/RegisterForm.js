@@ -82,7 +82,7 @@ export class RegisterForm extends React.Component {
   componentWillUnmount() {
     document.removeEventListener("keyup", this.handleEsc);
   }
-
+  // UNCOMMENT "REQUIRED" FOR PRODUCTION
   render() {
     return (
       <div className="fade-main">
