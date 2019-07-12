@@ -122,7 +122,7 @@ export class RegisterForm extends React.Component {
             <h2>{this.state.errorMsg}</h2>
           </form>
           <Link to="/">
-            <button>Back</button>
+            <button>Login</button>
           </Link>
         </div>
       </div>

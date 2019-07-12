@@ -1,5 +1,6 @@
 import React from "react";
 import UserMap from "./UserMap";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 export default class GameView extends React.Component {
   state = {
@@ -27,6 +28,9 @@ export default class GameView extends React.Component {
     return (
       <div>
         <div>{this.state.gameId}</div>
+        <Link to="/">
+          <button>Game selection</button>
+        </Link>
         <UserMap
           position={initialPosition}
           zoom={this.state.zoom}

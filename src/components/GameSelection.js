@@ -4,8 +4,28 @@ import NewGameForm from "./NewGameForm";
 
 export default class GameSelection extends React.Component {
   state = {
-    newGameForm: false
+    newGameForm: false,
+    games: []
   };
+
+  componentDidMount() {
+    this.getGames();
+  }
+
+  getGames() {
+    fetch(`${process.env.REACT_APP_API_URL}/game/listgames`)
+      .then(response => response.json())
+      .then(games => {
+        this.setState({
+          games: games
+        });
+        // taking the initialized gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
+        //this.props.handleGameChange(games[0].id);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
   render() {
     return (
@@ -22,10 +42,14 @@ export default class GameSelection extends React.Component {
           <NewGameForm
             view=""
             handleState={this.handleState}
-            toggleView={() => this.setState({ newGameForm: false })}
+            toggleView={() =>
+              this.setState({ newGameForm: false }, () => {
+                this.getGames();
+              })
+            }
           />
         )}
-        <GameList />
+        <GameList games={this.state.games} />
       </div>
     );
   }

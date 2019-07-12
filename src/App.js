@@ -88,6 +88,10 @@ class App extends Component {
             authenticateComplete: true
           });
         });
+    } else {
+      this.setState({
+        authenticateComplete: true
+      });
     }
   }
 
@@ -138,7 +142,7 @@ class App extends Component {
   render() {
     // TODO: think better solution to wait for authenticator
     if (!this.state.authenticateComplete) {
-      return false;
+      return <div>Authenticating...</div>;
     }
 
     return (
@@ -146,14 +150,17 @@ class App extends Component {
         <div>
           {/* Debug Sign out button ------------------------ */}
           {this.state.logged && (
-            <button
-              onClick={() => {
-                sessionStorage.setItem("token", "");
-                this.setState({ logged: false });
-              }}
-            >
-              Sign out
-            </button>
+            <div>
+              <label>Logged in: {sessionStorage.getItem("name")}</label>
+              <button
+                onClick={() => {
+                  sessionStorage.setItem("token", "");
+                  this.setState({ logged: false });
+                }}
+              >
+                Sign out
+              </button>
+            </div>
           )}
           {/* Debug End ----------------------- */}
 
