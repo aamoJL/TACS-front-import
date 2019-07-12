@@ -482,7 +482,7 @@ export class EditGameForm extends React.Component {
             name="startTime"
             value={this.state.startTime}
             onChange={this.handleChange}
-            sid="editGameTimeStartInput"
+            id="editGameTimeStartInput"
             form="gameEditForm"
             required
           />
@@ -516,6 +516,7 @@ export class EditGameForm extends React.Component {
           <br />
           <input
             name="factionNameInput"
+            id="factionNameInput"
             value={this.state.factionNameInput}
             minLength="2"
             onChange={this.handleChange}
@@ -524,6 +525,7 @@ export class EditGameForm extends React.Component {
           />
           <input
             name="factionPasswordInput"
+            id="factionPasswordInput"
             value={this.state.factionPasswordInput}
             minLength="3"
             onChange={this.handleChange}
@@ -553,7 +555,7 @@ export class EditGameForm extends React.Component {
               />
             </div>
           )}
-          <button type="submit" form="factionAddFrom">
+          <button type="submit" form="factionAddFrom" id="factionAddButton">
             Add
           </button>
           <ul>{factions}</ul>
@@ -563,6 +565,7 @@ export class EditGameForm extends React.Component {
           <br />
           <input
             name="objectivePointDescriptionInput"
+            id="objectivePointDescriptionInput"
             type="number"
             value={this.state.objectivePointDescriptionInput}
             onChange={this.handleChange}
@@ -572,13 +575,14 @@ export class EditGameForm extends React.Component {
           />
           <input
             name="objectivePointMultiplierInput"
+            id="objectivePointMultiplierInput"
             type="number"
             value={this.state.objectivePointMultiplierInput}
             onChange={this.handleChange}
             placeholder="Objective point multiplier"
             form="objectivePointAddFrom"
           />
-          <button type="submit" form="objectivePointAddFrom">
+          <button type="submit" form="objectivePointAddFrom" id="objectivePointAddButton">
             Add
           </button>
           <ul>{objectivePoints}</ul>
@@ -592,6 +596,7 @@ export class EditGameForm extends React.Component {
           </label>
           <input
             name="capture_time"
+            id="captureTimeInput"
             type="number"
             value={this.state.capture_time}
             form="gameEditForm"
@@ -600,6 +605,7 @@ export class EditGameForm extends React.Component {
           <label className="">Confimation time:</label>
           <input
             name="confirmation_time"
+            id="confirmationTimeInput"
             type="number"
             value={this.state.confirmation_time}
             form="gameEditForm"
@@ -626,6 +632,7 @@ export class EditGameForm extends React.Component {
           </Map>
           <br />
           <button
+            id="gameDeleteButton"
             style={{ backgroundColor: "red" }}
             type="submit"
             form="gameDeletionForm"
