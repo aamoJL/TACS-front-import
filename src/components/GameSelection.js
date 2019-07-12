@@ -49,7 +49,12 @@ export default class GameSelection extends React.Component {
             }
           />
         )}
-        <GameList games={this.state.games} />
+        <GameList
+          games={this.state.games}
+          onEditSave={() => {
+            this.getGames();
+          }}
+        />
       </div>
     );
   }

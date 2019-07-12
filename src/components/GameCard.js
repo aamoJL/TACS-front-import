@@ -10,6 +10,10 @@ export default class GameCard extends React.Component {
 
   // Get game info
   componentDidMount() {
+    this.getGameInfo();
+  }
+
+  getGameInfo() {
     fetch(`${process.env.REACT_APP_API_URL}/game/${this.props.gameId}`)
       .then(res => {
         if (res.ok) {
@@ -63,6 +67,10 @@ export default class GameCard extends React.Component {
           <EditGameForm
             gameId={this.state.gameInfo.id}
             toggleView={() => this.setState({ editForm: false })}
+            onEditSave={() => {
+              this.props.onEditSave();
+              this.getGameInfo();
+            }}
           />
         )}
       </div>

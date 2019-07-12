@@ -8,7 +8,7 @@ class GameList extends React.Component {
         <GameCard
           key={game.id}
           gameId={game.id}
-          onEditSave={() => this.getGames()}
+          onEditSave={this.props.onEditSave}
         />
       );
     });

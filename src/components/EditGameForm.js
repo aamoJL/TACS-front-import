@@ -177,6 +177,7 @@ export class EditGameForm extends React.Component {
         .then(result => {
           console.log(result);
           this.handleView();
+          this.props.onEditSave();
         })
         .catch(error => console.log(error));
     }
@@ -267,6 +268,7 @@ export class EditGameForm extends React.Component {
       })
       .then(result => {
         alert(result.message);
+        this.props.onEditSave();
         this.handleView();
       })
       .catch(error => console.log("Error: ", error));
@@ -305,6 +307,7 @@ export class EditGameForm extends React.Component {
       .then(result => {
         let factions = result.map(faction => {
           return {
+            factionId: faction.factionId,
             factionName: faction.factionName,
             factionPassword: faction.factionPassword,
             multiplier: 1,
@@ -315,6 +318,7 @@ export class EditGameForm extends React.Component {
         // Remove objective point's id from the object
         let objectivePoints = json.objective_points.map(point => {
           return {
+            objectivePointId: point.objectivePointId,
             objectivePointDescription: point.objectivePointDescription,
             objectivePointMultiplier: point.objectivePointMultiplier
           };
