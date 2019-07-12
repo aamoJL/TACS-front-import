@@ -2,22 +2,23 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background-color: "#1d1d1bM";
 }
 
-.hidden {
+/* .hidden {
   display: none;
-}
+} */
 
 /* UserMap */
-.map {
+/* .map {
   position: absolute;
   margin-top: 50px;
   height: 95vh;
   width: 100vw;
-}
+} */
 
 /* Header */
-div.header {
+/* div.header {
   position: absolute;
   top: 0;
   height: 50px;
@@ -45,10 +46,10 @@ div.header button {
 div.header button:hover {
   background-color: darkblue;
   cursor: pointer;
-}
+} */
 
 /* Login&RegisterForm */
-div.fade-main {
+/* div.fade-main {
   position: fixed;
   top: 0;
   z-index: 1020;
@@ -59,27 +60,11 @@ div.fade-main {
   background-color: rgba(0, 0, 0, 0.85);
   color: white;
   overflow: scroll;
-}
+} */
 
-div.sticky {
+/* div.sticky {
   position: fixed;
-  top: 0px;
-  right: 0px;
-  height: 100px;
-  width: 100px;
-  margin-right: 150px;
-}
-
-.close {
-  position: fixed;
-  color: #f1f1f1;
-  height: 85px;
-  font-size: 100px;
-  font-weight: bold;
-  transition: transform 0.4s ease-in-out;
-  line-height: 70%;
-}
-
+  to
 .close:hover,
 .close:focus {
   color: #bbb;
@@ -95,20 +80,126 @@ div.login {
   margin-top: 5%;
   padding-top: 25px;
 }
+  ri
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+  transform: rotate(90deg);
+}
 
+div.login {
+  height: 60vh;
+  width: 40vw;
+  margin: auto;
+  margin-top: 5%;
+  padding-top: 25px;
+}
+  he
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+  transform: rotate(90deg);
+}
+
+div.login {
+  height: 60vh;
+  width: 40vw;
+  margin: auto;
+  margin-top: 5%;
+  padding-top: 25px;
+}
+  wi
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+  transform: rotate(90deg);
+}
+
+div.login {
+  height: 60vh;
+  width: 40vw;
+  margin: auto;
+  margin-top: 5%;
+  padding-top: 25px;
+}
+  ma
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+  transform: rotate(90deg);
+}
+
+div.login {
+  height: 60vh;
+  width: 40vw;
+  margin: auto;
+  margin-top: 5%;
+  padding-top: 25px;
+}
+} */
+/* .close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+  transform: rotate(90deg);
+} */
+
+/* div.login {
+  height: 60vh;
+  width: 40vw;
+  margin: auto;
+  margin-top: 5%;
+  padding-top: 25px;
+} */
+
+/* .close {
+  position: fixed;
+  color: #f1f1f1;
+  height: 85px;
+  font-size: 100px;
+  font-weight: bold;
+  transition: transform 0.4s ease-in-out;
+  line-height: 70%;
+} */
+/* 
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+  transform: rotate(90deg);
+}
+
+div.login {
+  height: 60vh;
+  width: 40vw;
+  margin: auto;
+  margin-top: 5%;
+  padding-top: 25px;
+} */
+/* 
 div.login h1 {
   color: rgb(0, 200, 255);
   margin-bottom: 0.5em;
   font-size: 3em;
-}
+} */
 
-div.login h2 {
+/* div.login h2 {
   color: rgb(255, 0, 0);
   margin-top: 2em;
   font-size: 1.5em;
-}
+} */
 
-div.login input {
+/* div.login input {
   background: none;
   border: none;
   outline: none;
@@ -120,9 +211,9 @@ div.login input {
   font-size: 180%;
   color: white;
   border-bottom: 3px solid rgb(0, 200, 255);
-}
+} */
 
-div.login button {
+/* div.login button {
   transition-property: background-color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
@@ -134,28 +225,28 @@ div.login button {
   margin: 0em 2em;
   width: 20%;
   font-size: 20px;
-}
+} */
 
-div.login button:hover {
+/* div.login button:hover {
   background-color: darkblue;
   cursor: pointer;
-}
+} */
 
-.login .formDate {
+/* .login .formDate {
   width: 30%;
-}
+} */
 
-.login label.formDate {
+/* .login label.formDate {
   color: white;
   width: 10%;
   margin-left: 10%;
   font-size: 180%;
-}
+} */
 
-.login .formTime {
+/* .login .formTime {
   width: 30%;
   margin-right: 20%;
-}
+} */
 
 /* Editing text button in the toolbar */
 .leaflet-draw-toolbar .leaflet-draw-draw-textbox {
@@ -179,27 +270,27 @@ div.login button:hover {
 }
 
 /* Editing editable tooltips */
-.editable {
+/* .editable {
   display: block;
   cursor: text; /* the cursor icon doesn't change by default when hovering on top of the text; overriding */
-  min-width: 154px;
+/*  min-width: 154px;
   min-height: 18px;
   color: #fff;
   font-weight: bold;
   /* text borders */
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+/*  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
-}
+} */
 
 /* placeholder text for tooltip */
-[contenteditable="true"]:empty:before {
+/* [contenteditable="true"]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
-  color: #777;
+/*  color: #777;
   text-shadow: none;
   font-weight: normal;
-}
-.tasklist {
+} */
+/* .tasklist {
   position: absolute;
   margin-top: 50px;
   z-index: 2020;
@@ -213,4 +304,4 @@ div.login button:hover {
 .task-form {
   display: flex;
   flex-direction: column;
-}
+} */

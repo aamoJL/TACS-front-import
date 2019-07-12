@@ -78,43 +78,59 @@ export class LoginForm extends React.Component {
 
   render() {
     return (
-      <div className="fade-main">
-        <div className="sticky">
-          <span
-            id="closeLoginFormX"
-            className="close"
-            onClick={this.handleView}
-          >
-            ×
-          </span>
-        </div>
-        <div className="login">
-          <form onSubmit={this.handleLogin}>
-            <h1>demo login</h1>
-            <br />
-            <input
-              placeholder="Enter Username"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleChange}
-              id="loginUsernameInput"
-              autoFocus
-            />
-            <br />
-            <input
-              placeholder="Enter password"
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-              id="loginPasswordInput"
-            />
-            <br />
-            <button id="submitLoginButton" type="submit">
-              login
-            </button>
-            <h2>{this.state.errorMsg}</h2>
-          </form>
+      <div style={{ "max-height": "100%" }}>
+        <div className="container-fluid form-group shadow-lg bg-primary h-100">
+          <div className="row">
+            <div className="col-sm">
+              <div className="sticky">
+                <h1>LOGO</h1>
+                <span
+                  id="closeLoginFormX"
+                  className="close"
+                  onClick={this.handleView}
+                >
+                  ×
+                </span>
+              </div>
+            </div>
+            <div className="col-sm">
+              <div className="login">
+                <form onSubmit={this.handleLogin}>
+                  <h1>demo login</h1>
+                  <br />
+                  <input
+                    className="form-control"
+                    placeholder="Enter Username"
+                    name="username"
+                    value={this.state.username}
+                    onChange={this.handleChange}
+                    id="loginUsernameInput"
+                    autoFocus
+                  />
+                  <br />
+                  <input
+                    className="form-control"
+                    placeholder="Enter password"
+                    type="password"
+                    name="password"
+                    value={this.state.password}
+                    onChange={this.handleChange}
+                    id="loginPasswordInput"
+                  />
+                  <br />
+                  <button
+                    type="button"
+                    className={`btn btn-primary`}
+                    id="submitLoginButton"
+                    type="submit"
+                  >
+                    login
+                  </button>
+                  <h2>{this.state.errorMsg}</h2>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
