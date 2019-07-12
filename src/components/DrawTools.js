@@ -335,9 +335,9 @@ class DrawTools extends Component {
                     className="editable"
                     interactive={true}
                   >
-                    <div class="editable">
+                    <div className="editable">
                       <div
-                        contenteditable="true"
+                        contentEditable="true"
                         placeholder="Click out to save"
                       >
                         {text}
