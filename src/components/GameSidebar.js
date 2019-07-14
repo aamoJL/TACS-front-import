@@ -14,18 +14,6 @@ export default class GameSidebar extends React.Component {
   };
 
   render() {
-    return (
-      <div className="game-sidebar">
-        <GameList />
-        {this.props.loggedIn && (
-          <button id="newGameButton" onClick={() => this.toggleView("newgame")}>
-            New Game
-          </button>
-        )}
-        {this.state.form === "newgame" && (
-          <NewGameForm view="" toggleView={() => this.toggleView("")} />
-        )}
-      </div>
-    );
+    return false;
   }
 }

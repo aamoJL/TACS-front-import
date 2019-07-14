@@ -1,0 +1,68 @@
+import React from "react";
+import PropTypes from "prop-types";
+import PlayerlistFaction from "./PlayerlistFaction";
+
+export default class PlayerlistView extends React.Component {
+  state = {
+    factions: null,
+    isAdmin: false
+  };
+
+  componentDidMount() {
+    let token = sessionStorage.getItem("token");
+
+    if (this.state.isAdmin) {
+      // get all factions in the game
+      fetch(
+        `${process.env.REACT_APP_API_URL}/game/get-factions/${
+          this.props.gameId
+        }`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(res => {
+          this.setState({ factions: res });
+        })
+        .catch(error => console.log(error));
+    } else {
+      // get player's faction
+      fetch(
+        `${process.env.REACT_APP_API_URL}/faction/check-faction/${
+          this.props.gameId
+        }`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(res => {
+          this.setState({ factions: [res] });
+        })
+        .catch(error => console.log(error));
+    }
+  }
+
+  render() {
+    if (this.state.factions === null) {
+      return false;
+    }
+
+    let factionlistItems = this.state.factions.map(faction => {
+      return <PlayerlistFaction faction={faction} />;
+    });
+
+    return <div className="fade-main">{factionlistItems}</div>;
+  }
+}
+
+PlayerlistView.propTypes = {
+  gameId: PropTypes.string
+};
