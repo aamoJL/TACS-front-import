@@ -57,13 +57,13 @@ export default class GameCard extends React.Component {
         >
           <button type="button">Select</button>
         </Link>
-        <button
+        {/* <button
           id="editGameButton"
           onClick={() => this.setState({ editForm: true })}
         >
           Edit
-        </button>
-        {this.state.editForm && (
+        </button> */}
+        {/* {this.state.editForm && (
           <EditGameForm
             gameId={this.state.gameInfo.id}
             toggleView={() => this.setState({ editForm: false })}
@@ -72,7 +72,7 @@ export default class GameCard extends React.Component {
               this.getGameInfo();
             }}
           />
-        )}
+        )} */}
       </div>
     );
   }
