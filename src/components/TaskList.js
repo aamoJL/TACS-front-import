@@ -186,6 +186,7 @@ class TaskList extends React.Component {
           <TaskItem
             key={task.taskId}
             task={task}
+            role={this.props.role}
             gameId={this.props.gameId}
             onSave={this.onTaskEditSave}
             onDelete={this.onTaskDeletion}
@@ -196,6 +197,7 @@ class TaskList extends React.Component {
           <TaskItem
             key={task.taskId}
             task={task}
+            role={this.props.role}
             gameId={this.props.gameId}
             onSave={this.onTaskEditSave}
             onDelete={this.onTaskDeletion}
@@ -222,31 +224,33 @@ class TaskList extends React.Component {
     return ReactDOM.createPortal(
       <div className="tasklist">
         <h1>Tasklist</h1>
-        <form className="task-form" onSubmit={this.handleTaskCreation}>
-          <label>New task</label>
-          <input
-            id="taskNameInput"
-            type="text"
-            placeholder="Task name"
-            minLength="3"
-            value={this.state.taskNameInput}
-            onChange={e => this.setState({ taskNameInput: e.target.value })}
-          />
-          <textarea
-            id="taskDescriptionInput"
-            placeholder="Task description"
-            value={this.state.taskDescriptionInput}
-            onChange={e =>
-              this.setState({ taskDescriptionInput: e.target.value })
-            }
-          />
-          <select id="taskFactionSelect" onChange={this.handleFactionChange}>
-            {factionlistItems}
-          </select>
-          <button id="newTaskSubmitButton" type="submit">
-            Add new task
-          </button>
-        </form>
+        {this.props.role === "admin" && (
+          <form className="task-form" onSubmit={this.handleTaskCreation}>
+            <label>New task</label>
+            <input
+              id="taskNameInput"
+              type="text"
+              placeholder="Task name"
+              minLength="3"
+              value={this.state.taskNameInput}
+              onChange={e => this.setState({ taskNameInput: e.target.value })}
+            />
+            <textarea
+              id="taskDescriptionInput"
+              placeholder="Task description"
+              value={this.state.taskDescriptionInput}
+              onChange={e =>
+                this.setState({ taskDescriptionInput: e.target.value })
+              }
+            />
+            <select id="taskFactionSelect" onChange={this.handleFactionChange}>
+              {factionlistItems}
+            </select>
+            <button id="newTaskSubmitButton" type="submit">
+              Add new task
+            </button>
+          </form>
+        )}
         {incompleteTasks}
         <br />
         <label>Completed tasks</label>

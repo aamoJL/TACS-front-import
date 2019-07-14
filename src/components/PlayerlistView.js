@@ -4,29 +4,18 @@ import PlayerlistFaction from "./PlayerlistFaction";
 
 export default class PlayerlistView extends React.Component {
   state = {
-    factions: null,
-    isAdmin: false
+    factions: null
   };
 
   componentDidMount() {
     let token = sessionStorage.getItem("token");
 
-    if (this.state.isAdmin) {
+    if (this.props.role !== "soldier") {
       // get all factions in the game
-      fetch(
-        `${process.env.REACT_APP_API_URL}/game/get-factions/${
-          this.props.gameId
-        }`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: "Bearer " + token
-          }
-        }
-      )
+      fetch(`${process.env.REACT_APP_API_URL}/game/${this.props.gameId}`)
         .then(res => res.json())
         .then(res => {
-          this.setState({ factions: res });
+          this.setState({ factions: res.factions });
         })
         .catch(error => console.log(error));
     } else {

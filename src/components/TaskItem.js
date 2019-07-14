@@ -99,7 +99,7 @@ class TaskItem extends React.Component {
             <label>Winner: {this.props.task.taskWinner.factionName}</label>
           )}
         </div>
-        {this.props.task.taskIsActive && (
+        {this.props.task.taskIsActive && this.props.role === "admin" && (
           <button onClick={this.onEditClick}>Edit</button>
         )}
         {this.state.edit && (
@@ -115,9 +115,14 @@ class TaskItem extends React.Component {
             <button type="submit">Save</button>
           </form>
         )}
-        <button onClick={this.onTaskDelete} style={{ backgroundColor: "red" }}>
-          Delete
-        </button>
+        {this.props.role === "admin" && (
+          <button
+            onClick={this.onTaskDelete}
+            style={{ backgroundColor: "red" }}
+          >
+            Delete
+          </button>
+        )}
       </div>
     );
   }

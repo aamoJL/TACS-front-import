@@ -10,6 +10,7 @@ import NotificationView from "./NotificationView";
 export default class GameView extends React.Component {
   state = {
     gameInfo: null,
+    role: "", //empty, soldier, admin
     form: "",
     lat: 62.2416479,
     lng: 25.7597186,
@@ -19,6 +20,11 @@ export default class GameView extends React.Component {
 
   componentDidMount() {
     let gameId = new URL(window.location.href).searchParams.get("id");
+    let token = sessionStorage.getItem("token");
+    let error = false;
+    // TODO: redirect to root if the game is not found
+
+    // Get game info
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
       .then(res => res.json())
       .then(res => {
@@ -27,6 +33,34 @@ export default class GameView extends React.Component {
         });
       })
       .catch(error => console.log(error));
+
+    // Get Role
+    fetch(`${process.env.REACT_APP_API_URL}/faction/check-faction/${gameId}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          error = true;
+        }
+        return res.json();
+      })
+      .then(res => {
+        if (error && res.message === "You are admin for this game!") {
+          this.setState({
+            role: "admin"
+          });
+        } else if (error) {
+          return;
+        } else {
+          this.setState({
+            role: "soldier"
+          });
+        }
+      })
+      .catch();
   }
 
   render() {
@@ -40,37 +74,56 @@ export default class GameView extends React.Component {
         {this.state.gameInfo !== null && (
           <div>
             <div>Game Name: {this.state.gameInfo.name}</div>
-            <button
-              id="editGameButton"
-              onClick={() => this.setState({ form: "edit" })}
-            >
-              Edit
-            </button>
-            <button
-              id="joinGameButton"
-              onClick={() => this.setState({ form: "join" })}
-            >
-              Join
-            </button>
+            {this.state.role === "" && (
+              <div>You don't have a role in this game</div>
+            )}
+            {this.state.role !== "" && (
+              <div>Your role in this game: {this.state.role}</div>
+            )}
+            {this.state.role === "admin" && (
+              <button
+                id="editGameButton"
+                onClick={() => this.setState({ form: "edit" })}
+              >
+                Edit
+              </button>
+            )}
+            {this.state.role === "" && (
+              <button
+                id="joinGameButton"
+                onClick={() => this.setState({ form: "join" })}
+              >
+                Join
+              </button>
+            )}
             <button
               id="showPlayersButton"
               onClick={() => this.setState({ form: "players" })}
             >
               Players
             </button>
-            <button
-              id="notificationsButton"
-              onClick={() => this.setState({ form: "notifications" })}
-            >
-              Notifications
-            </button>
-            <TaskListButton gameId={this.state.gameInfo.id} />
-            <button
-              id="leaveFactionButton"
-              onClick={() => console.log("WIP: leave faction")}
-            >
-              Leave Faction
-            </button>
+            {this.state.role !== "" && (
+              <button
+                id="notificationsButton"
+                onClick={() => this.setState({ form: "notifications" })}
+              >
+                Notifications
+              </button>
+            )}
+            {this.state.role !== "" && (
+              <TaskListButton
+                gameId={this.state.gameInfo.id}
+                role={this.state.role}
+              />
+            )}
+            {this.state.role === "soldier" && (
+              <button
+                id="leaveFactionButton"
+                onClick={() => console.log("WIP: leave faction")}
+              >
+                Leave Faction
+              </button>
+            )}
             <UserMap
               position={initialPosition}
               zoom={this.state.zoom}
@@ -96,6 +149,7 @@ export default class GameView extends React.Component {
             {this.state.form === "players" && (
               <PlayerlistView
                 gameId={this.state.gameInfo.id}
+                role={this.state.role}
                 toggleView={() => this.setState({ form: "" })}
               />
             )}
