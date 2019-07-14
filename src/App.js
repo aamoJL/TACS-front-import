@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
 import "./App.css";
 import {

@@ -1,10 +1,10 @@
-import React, { Fragment } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import { Map, TileLayer } from "react-leaflet";
 import { SketchPicker } from "react-color";
 import reactCSS from "reactcss";
 
-export class EditGameForm extends React.Component {
+export default class EditGameForm extends React.Component {
   constructor(props) {
     super(props);
 
@@ -646,5 +646,3 @@ export class EditGameForm extends React.Component {
     );
   }
 }
-
-export default EditGameForm;

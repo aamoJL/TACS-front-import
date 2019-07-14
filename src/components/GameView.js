@@ -1,7 +1,7 @@
 import React from "react";
 import UserMap from "./UserMap";
 import TaskListButton from "./TaskListButton";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import EditGameForm from "./EditGameForm";
 import JoinGameForm from "./JoinGameForm";
 import PlayerlistView from "./PlayerlistView";

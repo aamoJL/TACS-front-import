@@ -1,6 +1,6 @@
 import React from "react";
-import { EditGameForm } from "./EditGameForm";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import EditGameForm from "./EditGameForm";
+import { Link } from "react-router-dom";
 
 export default class GameCard extends React.Component {
   state = {
