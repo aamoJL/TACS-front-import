@@ -1,9 +1,40 @@
-body {
+body{
+  background-color: #1d1d1b;
+  color: #ffffff;
+  overflow: hidden;
+  margin: 0;
+}
+
+.form-control {
+  background-color: #7a7a7a;
+  padding: 1em;
+  color: #ffffff;
+  margin: 1em;
+}
+
+::placeholder{
+  color: #ffffff !important;
+}
+
+.border-right{
+  height: 100%;
+}
+
+input{
+  width: 80% !important;
+}
+
+.form-control:focus{
+  border-color: #7a7a7a !important; 
+  outline: #7a7a7a !important;
+}
+
+/* body {
   margin: 0;
   padding: 0;
   overflow: hidden;
   background-color: "#1d1d1bM";
-}
+} */
 
 /* .hidden {
   display: none;

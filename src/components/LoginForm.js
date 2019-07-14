@@ -1,5 +1,7 @@
 import React from "react";
 
+import logo from '../icons/placeholderlogo.PNG'
+
 export class LoginForm extends React.Component {
   constructor(props) {
     super(props);
@@ -78,26 +80,19 @@ export class LoginForm extends React.Component {
 
   render() {
     return (
-      <div style={{ "max-height": "100%" }}>
-        <div className="container-fluid form-group shadow-lg bg-primary h-100">
+       
+       <div className="display-3">
           <div className="row">
             <div className="col-sm">
-              <div className="sticky">
-                <h1>LOGO</h1>
-                <span
-                  id="closeLoginFormX"
-                  className="close"
-                  onClick={this.handleView}
-                >
-                  ×
-                </span>
+              <div className="border-right">
+                <img className="img-fluid" src={logo}/>
               </div>
             </div>
             <div className="col-sm">
               <div className="login">
                 <form onSubmit={this.handleLogin}>
-                  <h1>demo login</h1>
-                  <br />
+          
+                  <h1>Login</h1>
                   <input
                     className="form-control"
                     placeholder="Enter Username"
@@ -107,7 +102,7 @@ export class LoginForm extends React.Component {
                     id="loginUsernameInput"
                     autoFocus
                   />
-                  <br />
+                  
                   <input
                     className="form-control"
                     placeholder="Enter password"
@@ -120,19 +115,19 @@ export class LoginForm extends React.Component {
                   <br />
                   <button
                     type="button"
-                    className={`btn btn-primary`}
+                    className="btn btn-secondary"
                     id="submitLoginButton"
                     type="submit"
                   >
-                    login
+                    Login
                   </button>
                   <h2>{this.state.errorMsg}</h2>
                 </form>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+          </div>
+    
     );
   }
 }
