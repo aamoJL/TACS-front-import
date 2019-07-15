@@ -100,7 +100,10 @@ class Header extends React.Component {
             Tools
           </button>
           {this.state.sidebar && (
-            <GameSidebar loggedIn={this.state.username ? true : false} />
+            <GameSidebar
+              loggedIn={this.state.username ? true : false}
+              handleGameChange={this.props.handleGameChange}
+            />
           )}
         </div>
         {this.state.form === "register" && (

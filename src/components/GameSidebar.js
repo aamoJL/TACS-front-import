@@ -16,7 +16,7 @@ export default class GameSidebar extends React.Component {
   render() {
     return (
       <div className="game-sidebar">
-        <GameList />
+        <GameList handleGameChange={this.props.handleGameChange} />
         {this.props.loggedIn && (
           <button id="newGameButton" onClick={() => this.toggleView("newgame")}>
             New Game
