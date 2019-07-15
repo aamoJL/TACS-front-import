@@ -1,5 +1,4 @@
 import React from "react";
-import EditGameForm from "./EditGameForm";
 import { Link } from "react-router-dom";
 
 export default class GameCard extends React.Component {
@@ -57,22 +56,6 @@ export default class GameCard extends React.Component {
         >
           <button type="button">Select</button>
         </Link>
-        {/* <button
-          id="editGameButton"
-          onClick={() => this.setState({ editForm: true })}
-        >
-          Edit
-        </button> */}
-        {/* {this.state.editForm && (
-          <EditGameForm
-            gameId={this.state.gameInfo.id}
-            toggleView={() => this.setState({ editForm: false })}
-            onEditSave={() => {
-              this.props.onEditSave();
-              this.getGameInfo();
-            }}
-          />
-        )} */}
       </div>
     );
   }

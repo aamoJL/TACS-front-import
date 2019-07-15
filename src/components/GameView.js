@@ -10,7 +10,7 @@ import NotificationView from "./NotificationView";
 export default class GameView extends React.Component {
   state = {
     gameInfo: null,
-    role: "", //empty, soldier, admin
+    role: "", //empty, soldier, factionleader, admin
     form: "",
     lat: 62.2416479,
     lng: 25.7597186,
@@ -41,27 +41,14 @@ export default class GameView extends React.Component {
         Authorization: "Bearer " + token
       }
     })
+      .then(res => res.json())
       .then(res => {
-        if (!res.ok) {
-          error = true;
-        }
-        return res.json();
+        this.setState({ role: res.role });
       })
-      .then(res => {
-        if (error && res.message === "You are admin for this game!") {
-          this.setState({
-            role: "admin"
-          });
-        } else if (error) {
-          return;
-        } else {
-          this.setState({
-            role: "soldier"
-          });
-        }
-      })
-      .catch();
+      .catch(error => console.log(error));
   }
+
+  handleLeaveFaction = e => {};
 
   render() {
     const initialPosition = [this.state.lat, this.state.lng];
@@ -116,11 +103,8 @@ export default class GameView extends React.Component {
                 role={this.state.role}
               />
             )}
-            {this.state.role === "soldier" && (
-              <button
-                id="leaveFactionButton"
-                onClick={() => console.log("WIP: leave faction")}
-              >
+            {this.state.role !== "admin" && this.state.role !== "" && (
+              <button id="leaveFactionButton" onClick={this.handleLeaveFaction}>
                 Leave Faction
               </button>
             )}

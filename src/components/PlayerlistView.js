@@ -10,11 +10,12 @@ export default class PlayerlistView extends React.Component {
   componentDidMount() {
     let token = sessionStorage.getItem("token");
 
-    if (this.props.role !== "soldier") {
+    if (this.props.role !== "soldier" && this.props.role !== "factionleader") {
       // get all factions in the game
       fetch(`${process.env.REACT_APP_API_URL}/game/${this.props.gameId}`)
         .then(res => res.json())
         .then(res => {
+          console.log(res);
           this.setState({ factions: res.factions });
         })
         .catch(error => console.log(error));
