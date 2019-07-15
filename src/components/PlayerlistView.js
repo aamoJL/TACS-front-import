@@ -58,18 +58,29 @@ export default class PlayerlistView extends React.Component {
       return false;
     }
 
-    let factionlistItems = this.state.factions.map(faction => {
-      return (
-        <PlayerlistFaction
-          key={faction.factionId}
-          faction={faction}
-          role={this.props.role}
-          gameId={this.props.gameId}
-        />
-      );
-    });
+    let factionlistItems = this.state.factions.map(faction => (
+      <PlayerlistFaction
+        key={faction.factionId}
+        faction={faction}
+        role={this.props.role}
+        gameId={this.props.gameId}
+      />
+    ));
 
-    return <div className="fade-main">{factionlistItems}</div>;
+    return (
+      <div className="fade-main">
+        <div className="sticky">
+          <span
+            id="closeEditGameFormX"
+            className="close"
+            onClick={() => this.props.toggleView()}
+          >
+            ×
+          </span>
+        </div>
+        {factionlistItems}
+      </div>
+    );
   }
 }
 

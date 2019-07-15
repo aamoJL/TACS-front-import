@@ -21,8 +21,18 @@ export default class GameView extends React.Component {
   componentDidMount() {
     let gameId = new URL(window.location.href).searchParams.get("id");
     let token = sessionStorage.getItem("token");
-    let error = false;
-    // TODO: redirect to root if the game is not found
+
+    console.log(gameId);
+    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
+      .then(res => {
+        if (!res.ok) {
+          throw Error();
+        }
+      })
+      .catch(error => {
+        alert("Game not found");
+        window.document.location.href = "/";
+      });
 
     // Get game info
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
