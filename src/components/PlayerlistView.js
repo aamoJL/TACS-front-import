@@ -46,7 +46,13 @@ export default class PlayerlistView extends React.Component {
     }
 
     let factionlistItems = this.state.factions.map(faction => {
-      return <PlayerlistFaction faction={faction} />;
+      return (
+        <PlayerlistFaction
+          key={faction.factionId}
+          faction={faction}
+          role={this.props.role}
+        />
+      );
     });
 
     return <div className="fade-main">{factionlistItems}</div>;

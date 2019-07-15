@@ -1,4 +1,5 @@
 import React from "react";
+import PlayerlistPlayerCard from "./PlayerlistPlayerCard";
 
 export default class PlayerlistFaction extends React.Component {
   state = {
@@ -26,9 +27,11 @@ export default class PlayerlistFaction extends React.Component {
 
     let members = this.state.factionMembers.map(member => {
       return (
-        <div key={member.gamepersonId}>
-          {member.person.name} : {member.role}
-        </div>
+        <PlayerlistPlayerCard
+          key={member.gamepersonId}
+          player={member}
+          role={this.props.role}
+        />
       );
     });
 
