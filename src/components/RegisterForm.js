@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../icons/placeholderlogo.PNG";
 
 export class RegisterForm extends React.Component {
   constructor(props) {
@@ -85,46 +86,63 @@ export class RegisterForm extends React.Component {
   // UNCOMMENT "REQUIRED" FOR PRODUCTION
   render() {
     return (
-      <div className="fade-main">
-        <div className="sticky">
-          <span className="close" onClick={this.handleView}>
-            ×
-          </span>
+      <div className="row content">
+        <div className="d-flex flexbox-container flex-fill justify-content-around border-right">
+          <img className="img" src={logo} />
         </div>
-        <div className="login">
-          <form onSubmit={this.handleRegister}>
-            <h1>register new user</h1>
-            <br />
-            <input
-              placeholder="Enter Username"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleChange}
-              autoFocus
-              //required
-            />
-            <br />
-            <input
-              placeholder="Enter password"
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-              //required
-            />
-            <br />
-            <input
-              placeholder="Verify password"
-              type="password"
-              name="password2"
-              value={this.state.password2}
-              onChange={this.handleChange}
-              //required
-            />
-            <br />
-            <button type="submit">register</button>
-            <h2>{this.state.errorMsg}</h2>
-          </form>
+        <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+          <div className="login">
+            <form onSubmit={this.handleRegister}>
+              <h1>Register</h1>
+
+              <input
+                className="form-control"
+                placeholder="Enter Username"
+                name="username"
+                value={this.state.username}
+                onChange={this.handleChange}
+                autoFocus
+                required
+              />
+              <input
+                className="form-control"
+                placeholder="Enter password"
+                type="password"
+                name="password"
+                value={this.state.password}
+                onChange={this.handleChange}
+                required
+              />
+              <input
+                className="form-control"
+                placeholder="Verify password"
+                type="password"
+                name="password2"
+                value={this.state.password2}
+                onChange={this.handleChange}
+                required
+              />
+
+              <button
+                type="button"
+                className="btn btn-secondary"
+                id="submitRegisterButton"
+                type="submit"
+              >
+                Register
+              </button>
+              {this.state.errorMsg && (
+                <div className="d-flex flex-fill justify-content-center text-center">
+                  {this.state.errorMsg}
+                </div>
+              )}
+            </form>
+          </div>
+        </div>
+        <div className="row copyright">
+          <div className="d-flex flex-fill justify-content-center text-center">
+            <div>&copy; 2019 TACS</div>
+          </div>
         </div>
       </div>
     );

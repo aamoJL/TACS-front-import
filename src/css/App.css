@@ -1,15 +1,23 @@
 body {
   background-color: #1d1d1b;
   color: #ffffff;
-  overflow: hidden;
+  overflow: scroll;
   margin: 0;
 }
 
 .form-control {
   background-color: #7a7a7a;
-  padding: 1em;
   color: #ffffff;
-  margin: 1em;
+  border-color: #647828 !important;
+  outline: #647828 !important;
+}
+
+.form-control:focus {
+  border-color: #647828;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #647828;
+}
+textarea:focus {
+  outline: #647828 !important;
 }
 
 ::placeholder {
@@ -17,16 +25,64 @@ body {
 }
 
 .border-right {
-  height: 100%;
+  border-right: #ffffff;
+  height: 80vh;
 }
 
 input {
-  width: 80% !important;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  /* width: 100% !important; */
 }
 
-.form-control:focus {
-  border-color: #7a7a7a !important;
-  outline: #7a7a7a !important;
+.flexbox-container {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 100%;
+}
+.copyright {
+  height: 10vh;
+  width: 100vw;
+}
+
+.content {
+  height: 90vh;
+  width: 100vw;
+}
+
+.login {
+  width: 20vw;
+}
+
+.alert {
+  width: 30vw;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  position: none;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 576px) {
+  .row {
+    height: auto;
+    width: auto;
+  }
+  .flexbox-container {
+    height: auto;
+  }
+
+  .border-right {
+    border-right: 0px !important;
+    height: auto;
+  }
 }
 
 /* body {
@@ -281,7 +337,7 @@ div.login h1 {
 
 /* Editing text button in the toolbar */
 .leaflet-draw-toolbar .leaflet-draw-draw-textbox {
-  background-image: url("icons/button-textbox.png");
+  background-image: url("../icons/button-textbox.png");
   background-size: 30px 30px;
 }
 

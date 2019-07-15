@@ -1,6 +1,6 @@
 import React from "react";
 
-import logo from '../icons/placeholderlogo.PNG'
+import logo from "../icons/placeholderlogo.PNG";
 
 export class LoginForm extends React.Component {
   constructor(props) {
@@ -25,6 +25,13 @@ export class LoginForm extends React.Component {
   // show/hide this form
   handleView = e => {
     this.props.toggleView(this.props.view);
+  };
+
+  // toggles the login/register view
+  toggleView = view => {
+    this.setState({
+      form: view
+    });
   };
 
   // remove login view with ESC
@@ -80,54 +87,65 @@ export class LoginForm extends React.Component {
 
   render() {
     return (
-       
-       <div className="display-3">
-          <div className="row">
-            <div className="col-sm">
-              <div className="border-right">
-                <img className="img-fluid" src={logo}/>
+      <div className="row content">
+        <div className="d-flex flexbox-container flex-fill justify-content-around border-right">
+          <img className="img" src={logo} />
+        </div>
+        <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+          <div className="login">
+            <form onSubmit={this.handleLogin}>
+              <h1>Login</h1>
+              <input
+                className="form-control"
+                placeholder="Enter Username"
+                name="username"
+                value={this.state.username}
+                onChange={this.handleChange}
+                id="loginUsernameInput"
+                autoFocus
+                required
+              />
+              <input
+                className="form-control"
+                placeholder="Enter password"
+                type="password"
+                name="password"
+                value={this.state.password}
+                onChange={this.handleChange}
+                id="loginPasswordInput"
+                required
+              />
+
+              <button
+                type="button"
+                className="btn btn-secondary"
+                id="submitLoginButton"
+                type="submit"
+              >
+                Login
+              </button>
+              {this.state.errorMsg && (
+                <div className="d-flex flex-fill justify-content-center text-center">
+                  {this.state.errorMsg}
+                </div>
+              )}
+            </form>
+            {!this.state.username && (
+              <div
+                id="registerButton"
+                onClick={() => this.toggleView("register")}
+              >
+                Don't have account yet? Register!
               </div>
-            </div>
-            <div className="col-sm">
-              <div className="login">
-                <form onSubmit={this.handleLogin}>
-          
-                  <h1>Login</h1>
-                  <input
-                    className="form-control"
-                    placeholder="Enter Username"
-                    name="username"
-                    value={this.state.username}
-                    onChange={this.handleChange}
-                    id="loginUsernameInput"
-                    autoFocus
-                  />
-                  
-                  <input
-                    className="form-control"
-                    placeholder="Enter password"
-                    type="password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                    id="loginPasswordInput"
-                  />
-                  <br />
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    id="submitLoginButton"
-                    type="submit"
-                  >
-                    Login
-                  </button>
-                  <h2>{this.state.errorMsg}</h2>
-                </form>
-              </div>
-            </div>
+            )}
           </div>
+        </div>
+        <div className="row copyright">
+          <div className="d-flex flex-fill justify-content-center text-center">
+            <div>&copy; 2019 TACS</div>
           </div>
-    
+        </div>
+      </div>
     );
   }
 }
