@@ -48,7 +48,31 @@ export default class GameView extends React.Component {
       .catch(error => console.log(error));
   }
 
-  handleLeaveFaction = e => {};
+  handleLeaveFaction = e => {
+    let token = sessionStorage.getItem("token");
+    fetch(
+      `${process.env.REACT_APP_API_URL}/faction/leave/${
+        this.state.gameInfo.id
+      }`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      }
+    )
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw Error(res.statusText);
+        }
+      })
+      .then(res => {
+        alert(res.message);
+      })
+      .catch(error => console.log(error));
+  };
 
   render() {
     const initialPosition = [this.state.lat, this.state.lng];
