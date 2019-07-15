@@ -6,6 +6,7 @@ import EditGameForm from "./EditGameForm";
 import JoinGameForm from "./JoinGameForm";
 import PlayerlistView from "./PlayerlistView";
 import NotificationView from "./NotificationView";
+import GameStateButtons from "./GameStateButtons";
 
 export default class GameView extends React.Component {
   state = {
@@ -22,7 +23,6 @@ export default class GameView extends React.Component {
     let gameId = new URL(window.location.href).searchParams.get("id");
     let token = sessionStorage.getItem("token");
 
-    console.log(gameId);
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
       .then(res => {
         if (!res.ok) {
@@ -141,6 +141,9 @@ export default class GameView extends React.Component {
               <button id="leaveFactionButton" onClick={this.handleLeaveFaction}>
                 Leave Faction
               </button>
+            )}
+            {this.state.role === "admin" && (
+              <GameStateButtons gameState={this.state.gameInfo.state} />
             )}
             <UserMap
               position={initialPosition}
