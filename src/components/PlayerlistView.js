@@ -8,6 +8,9 @@ export default class PlayerlistView extends React.Component {
   };
 
   componentDidMount() {
+    // Add event to close the playerlist if "esc" is pressed
+    document.addEventListener("keyup", this.handleEsc);
+
     let token = sessionStorage.getItem("token");
 
     if (this.props.role !== "soldier" && this.props.role !== "factionleader") {
@@ -38,6 +41,17 @@ export default class PlayerlistView extends React.Component {
         })
         .catch(error => console.log(error));
     }
+  }
+
+  // remove view with "ESC"
+  handleEsc = e => {
+    if (e.keyCode === 27) {
+      this.props.toggleView();
+    }
+  };
+
+  componentWillUnmount() {
+    document.removeEventListener("keyup", this.handleEsc);
   }
 
   render() {
