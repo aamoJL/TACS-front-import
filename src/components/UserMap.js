@@ -21,6 +21,7 @@ class UserMap extends Component {
 
     this.changeDragState = this.changeDragState.bind(this);
     this.sendGeoJSON = this.sendGeoJSON.bind(this);
+    this.fetchGeoJSON = this.fetchGeoJSON.bind(this);
     this.setCurrentPosition = this.setCurrentPosition.bind(this);
     this.watchPositionId = null;
   }
@@ -31,71 +32,41 @@ class UserMap extends Component {
     });
   }
 
-  componentDidUpdate() {
-    // check if game ID has changed and fetch that game's drawings
-    if (this.state.currentGameId !== this.props.currentGameId) {
-      this.setState({
-        currentGameId: this.props.currentGameId
-      });
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.currentGameId === null) {
+      return false;
+    }
+
+    return true;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.socketSignal === "drawing-update") {
       this.fetchGeoJSON();
     }
   }
 
-  // hovering on a textbox makes the map undraggable. This function changes the map dragging status in the Map component here
-  changeDragState(status) {
-    this.setState({
-      isDraggable: status
-    });
-  }
-
   // Sends the players drawings to the backend (and database)
-  sendGeoJSON(layerToDatabase, isDeleted) {
-    // isDeleted is used to determine the drawing's drawingIsActive status
-    // otherwise the fetch functions are the same in both if and else. any smarter way to do this?
-    if (isDeleted === true) {
-      fetch(
-        `${process.env.REACT_APP_API_URL}/draw/mapdrawing/${
-          this.props.currentGameId
-        }`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: "Bearer " + sessionStorage.getItem("token"),
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            type: "FeatureCollection",
-            drawingIsActive: false,
-            mapDrawingId: layerToDatabase.mapDrawingId,
-            data: layerToDatabase.data
-          })
-        }
-      );
-    } else {
-      fetch(
-        `${process.env.REACT_APP_API_URL}/draw/mapdrawing/${
-          this.props.currentGameId
-        }`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: "Bearer " + sessionStorage.getItem("token"),
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            type: "FeatureCollection",
-            drawingIsActive: true,
-            mapDrawingId: layerToDatabase.mapDrawingId,
-            data: layerToDatabase.data
-          })
-        }
-      );
-    }
-
-    // get the layers again to stop updating with old objects
-    this.fetchGeoJSON();
+  sendGeoJSON(layerToDatabase) {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/draw/mapdrawing/${
+        this.props.currentGameId
+      }`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          type: "FeatureCollection",
+          drawingIsActive: layerToDatabase.drawingIsActive,
+          mapDrawingId: layerToDatabase.mapDrawingId,
+          data: layerToDatabase.data
+        })
+      }
+    );
   }
 
   // Get the drawings from the backend and add them to the state, so they can be drawn
@@ -116,6 +87,7 @@ class UserMap extends Component {
         let newFeatures = [];
         data.map(item => {
           newFeatures.push(item);
+          return true;
         });
 
         this.setState({
@@ -208,7 +180,10 @@ class UserMap extends Component {
             </Popup>
           </Marker>
         )}
-        <Player currentGameId={this.state.currentGameId} />
+        <Player
+          currentGameId={this.props.currentGameId}
+          socketSignal={this.props.socketSignal}
+        />
       </Map>
     );
   }

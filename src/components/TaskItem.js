@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 class TaskItem extends React.Component {
   constructor(props) {
