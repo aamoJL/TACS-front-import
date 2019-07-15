@@ -65,6 +65,7 @@ export default class PlayerlistView extends React.Component {
           key={faction.factionId}
           faction={faction}
           role={this.props.role}
+          gameId={this.props.gameId}
         />
       );
     });

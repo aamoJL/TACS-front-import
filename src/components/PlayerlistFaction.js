@@ -31,6 +31,7 @@ export default class PlayerlistFaction extends React.Component {
           key={member.gamepersonId}
           player={member}
           role={this.props.role}
+          gameId={this.props.gameId}
         />
       );
     });
