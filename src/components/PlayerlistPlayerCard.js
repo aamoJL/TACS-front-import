@@ -39,16 +39,18 @@ export default class PlayerlistPlayerCard extends React.Component {
           return res.json();
         })
         .then(res => {
+          this.props.onChange();
           alert(
             `Player ${this.props.player.person.name}'s role was changed to "${
               res.role
             }"`
           );
+          this.setState({ edit: false });
         })
         .catch(error => console.log(error));
+    } else {
+      this.setState({ edit: false, roleInput: this.props.player.role });
     }
-
-    this.setState({ edit: false, roleInput: this.props.player.role });
   };
 
   render() {

@@ -18,7 +18,6 @@ export default class PlayerlistView extends React.Component {
       fetch(`${process.env.REACT_APP_API_URL}/game/${this.props.gameId}`)
         .then(res => res.json())
         .then(res => {
-          console.log(res);
           this.setState({ factions: res.factions });
         })
         .catch(error => console.log(error));

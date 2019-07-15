@@ -8,6 +8,10 @@ export default class PlayerlistFaction extends React.Component {
 
   // get faction members
   componentDidMount() {
+    this.getFactionMembers();
+  }
+
+  getFactionMembers() {
     fetch(
       `${process.env.REACT_APP_API_URL}/faction/get-faction-members/${
         this.props.faction.factionId
@@ -32,6 +36,7 @@ export default class PlayerlistFaction extends React.Component {
           player={member}
           role={this.props.role}
           gameId={this.props.gameId}
+          onChange={() => this.getFactionMembers()}
         />
       );
     });
