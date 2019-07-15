@@ -1,4 +1,4 @@
-body{
+body {
   background-color: #1d1d1b;
   color: #ffffff;
   overflow: hidden;
@@ -12,20 +12,20 @@ body{
   margin: 1em;
 }
 
-::placeholder{
+::placeholder {
   color: #ffffff !important;
 }
 
-.border-right{
+.border-right {
   height: 100%;
 }
 
-input{
+input {
   width: 80% !important;
 }
 
-.form-control:focus{
-  border-color: #7a7a7a !important; 
+.form-control:focus {
+  border-color: #7a7a7a !important;
   outline: #7a7a7a !important;
 }
 
