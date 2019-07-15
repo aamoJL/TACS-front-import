@@ -5,11 +5,12 @@ class Player extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      players: null
+      players: null,
+      timer: null
     };
   }
 
-  getPlayers() {
+  getPlayers = () => {
     fetch(
       `${process.env.REACT_APP_API_URL}/tracking/players/${
         this.props.currentGameId
@@ -26,43 +27,49 @@ class Player extends Component {
         // don't do anything if data is not an array, as it breaks the map function at render
         if (Array.isArray(data)) {
           this.setState({
-            players: data
+            players: data,
+            timer: null // state for updating player positions every minute
           });
         }
       })
       .catch(error => {
         console.log(error);
       });
-  }
-
-  componentDidMount() {
-    // update components every 10 seconds
-    this.interval = setInterval(() => this.setState(this.getPlayers()), 5000);
-  }
+  };
 
   shouldComponentUpdate(nextProps, nextState) {
     // do not update component until players have been fetched and game ID is available
-    if (this.state.players === null) {
-      this.getPlayers();
+    if (this.props.currentGameId === null) {
       return false;
-    } else if (this.props.currentGameId === null) {
+    }
+    /*
+    if (this.props.socketSignal !== "tracking-update") {
+      return false;
+    }
+    */
+    return true;
+    /*
+    if (nextProps.currentGameId === null) {
+      return false;
+    } else if (this.state.players === null) {
+      this.getPlayers();
       return false;
     } else {
       return true;
     }
+    */
   }
 
-  componentDidUpdate() {
-    // check if game ID has changed
-    if (this.state.currentGameId !== this.props.currentGameId) {
-      this.setState({
-        currentGameId: this.props.currentGameId
-      });
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.socketSignal === "tracking-update") {
+      // start updating interval
+      if (prevState.timer === null) {
+        this.getPlayers();
+        this.setState({
+          timer: setInterval(this.getPlayers, 60000)
+        });
+      }
     }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
 
   render() {

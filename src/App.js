@@ -44,6 +44,7 @@ class App extends Component {
   // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
   // setting socketSignal to null immediately after to avoid multiple database fetches
   getSocketSignal = type => {
+    console.log(type);
     this.setState(
       {
         socketSignal: type
