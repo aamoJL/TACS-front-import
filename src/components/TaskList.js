@@ -214,38 +214,52 @@ class TaskList extends React.Component {
     );
 
     return ReactDOM.createPortal(
-      <div className="tasklist">
-        <h1>Tasklist</h1>
-        <form className="task-form" onSubmit={this.handleTaskCreation}>
-          <label>New task</label>
-          <input
-            id="taskNameInput"
-            type="text"
-            placeholder="Task name"
-            minLength="3"
-            value={this.state.taskNameInput}
-            onChange={e => this.setState({ taskNameInput: e.target.value })}
-          />
-          <textarea
-            id="taskDescriptionInput"
-            placeholder="Task description"
-            value={this.state.taskDescriptionInput}
-            onChange={e =>
-              this.setState({ taskDescriptionInput: e.target.value })
-            }
-          />
-          <select id="taskFactionSelect" onChange={this.handleFactionChange}>
-            {factionlistItems}
-          </select>
-          <button id="newTaskSubmitButton" type="submit">
-            Add new task
-          </button>
-        </form>
-        {incompleteTasks}
-        <br />
-        <label>Completed tasks</label>
-        {completedTasks}
-        <br />
+      <div className="tasklist row content">
+        <div className="d-flex flexbox-container flex-fill justify-content-around border-right">
+          <h1>TaskList</h1>
+          <label>Tasks yet done</label>
+          {incompleteTasks}
+          <br />
+          <label>Completed tasks</label>
+          {completedTasks}
+        </div>
+        <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+          <form className="task-form" onSubmit={this.handleTaskCreation}>
+            <label>Add new Task</label>
+            <input
+              className="form-control"
+              id="taskNameInput"
+              type="text"
+              placeholder="Task name"
+              minLength="3"
+              value={this.state.taskNameInput}
+              onChange={e => this.setState({ taskNameInput: e.target.value })}
+            />
+            <textarea
+              className="form-control"
+              id="taskDescriptionInput"
+              placeholder="Task description"
+              value={this.state.taskDescriptionInput}
+              onChange={e =>
+                this.setState({ taskDescriptionInput: e.target.value })
+              }
+            />
+            <select
+              className="form-control"
+              id="taskFactionSelect"
+              onChange={this.handleFactionChange}
+            >
+              {factionlistItems}
+            </select>
+            <button
+              className="btn btn-secondary"
+              id="newTaskSubmitButton"
+              type="submit"
+            >
+              Add new task
+            </button>
+          </form>
+        </div>
       </div>,
       document.getElementById("tasklist")
     );
