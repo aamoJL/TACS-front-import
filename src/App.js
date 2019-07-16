@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
 import "./App.css";
 import ClientSocket from "./components/Socket";
-import ScoreCounter from "./components/ScoreCounter";
 import {
   BrowserRouter as Router,
   Route,
@@ -149,7 +148,6 @@ export default class App extends Component {
 
     return (
       <div>
-        <ScoreCounter />
         {this.state.currentGameId && (
           <ClientSocket
             gameId={this.state.currentGameId}
@@ -160,19 +158,7 @@ export default class App extends Component {
         <Router>
           <div>
             {/* Debug Sign out button ------------------------ */}
-            {this.state.logged && (
-              <div>
-                <label>Logged in: {sessionStorage.getItem("name")}</label>
-                <button
-                  onClick={() => {
-                    sessionStorage.setItem("token", "");
-                    this.setState({ logged: false });
-                  }}
-                >
-                  Sign out
-                </button>
-              </div>
-            )}
+
             {/* Debug End ----------------------- */}
 
             {!this.state.logged && (
@@ -190,7 +176,7 @@ export default class App extends Component {
                 <Route
                   path="/game"
                   component={() => {
-                    return <GameView />;
+                    return <GameView logged={this.state.logged} />;
                   }}
                 />
                 <Route

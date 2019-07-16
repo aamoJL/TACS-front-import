@@ -7,6 +7,7 @@ import JoinGameForm from "./JoinGameForm";
 import PlayerlistView from "./PlayerlistView";
 import NotificationView from "./NotificationView";
 import GameStateButtons from "./GameStateButtons";
+import ScoreCounter from "./ScoreCounter";
 
 export default class GameView extends React.Component {
   state = {
@@ -89,11 +90,22 @@ export default class GameView extends React.Component {
 
     return (
       <div>
-        <Link to="/">
-          <button>Game selection</button>
-        </Link>
+        {this.state.gameInfo && (
+          <div>
+            <UserMap
+              position={initialPosition}
+              zoom={this.state.zoom}
+              mapUrl={this.state.mapUrl}
+              currentGameId={this.state.gameInfo.id}
+            />
+          </div>
+        )}
         {this.state.gameInfo !== null && (
           <div>
+            <Link to="/">
+              <button>Game selection</button>
+            </Link>
+            <ScoreCounter />
             <div>Game Name: {this.state.gameInfo.name}</div>
             {this.state.role === "" && (
               <div>You don't have a role in this game</div>
@@ -101,88 +113,101 @@ export default class GameView extends React.Component {
             {this.state.role !== "" && (
               <div>Your role in this game: {this.state.role}</div>
             )}
-            {this.state.role === "admin" && (
+            <div className="header">
+              {this.state.role === "admin" && (
+                <button
+                  id="editGameButton"
+                  onClick={() => this.setState({ form: "edit" })}
+                >
+                  Edit
+                </button>
+              )}
+              {this.state.role === "" && (
+                <button
+                  id="joinGameButton"
+                  onClick={() => this.setState({ form: "join" })}
+                >
+                  Join
+                </button>
+              )}
               <button
-                id="editGameButton"
-                onClick={() => this.setState({ form: "edit" })}
+                id="showPlayersButton"
+                onClick={() => this.setState({ form: "players" })}
               >
-                Edit
+                Players
               </button>
-            )}
-            {this.state.role === "" && (
-              <button
-                id="joinGameButton"
-                onClick={() => this.setState({ form: "join" })}
-              >
-                Join
-              </button>
-            )}
-            <button
-              id="showPlayersButton"
-              onClick={() => this.setState({ form: "players" })}
-            >
-              Players
-            </button>
-            {this.state.role !== "" && (
-              <button
-                id="notificationsButton"
-                onClick={() => this.setState({ form: "notifications" })}
-              >
-                Notifications
-              </button>
-            )}
-            {this.state.role !== "" && (
-              <TaskListButton
-                gameId={this.state.gameInfo.id}
-                role={this.state.role}
-              />
-            )}
-            {this.state.role !== "admin" && this.state.role !== "" && (
-              <button id="leaveFactionButton" onClick={this.handleLeaveFaction}>
-                Leave Faction
-              </button>
-            )}
-            {this.state.role === "admin" && (
-              <GameStateButtons
-                gameState={this.state.gameInfo.state}
-                gameId={this.state.gameInfo.id}
-              />
-            )}
-            <UserMap
-              position={initialPosition}
-              zoom={this.state.zoom}
-              mapUrl={this.state.mapUrl}
-              currentGameId={this.state.gameInfo.id}
-            />
-            {this.state.form === "edit" && (
-              <EditGameForm
-                gameId={this.state.gameInfo.id}
-                toggleView={() => this.setState({ form: "" })}
-                onEditSave={() => {
-                  this.getGameInfo();
-                }}
-              />
-            )}
-            {this.state.form === "join" && (
-              <JoinGameForm
-                gameId={this.state.gameInfo.id}
-                toggleView={() => this.setState({ form: "" })}
-                onJoin={() => console.log("joinde")}
-              />
-            )}
-            {this.state.form === "players" && (
-              <PlayerlistView
-                gameId={this.state.gameInfo.id}
-                role={this.state.role}
-                toggleView={() => this.setState({ form: "" })}
-              />
-            )}
-            {this.state.form === "notifications" && (
-              <NotificationView
-                gameId={this.state.gameInfo.id}
-                toggleView={() => this.setState({ form: "" })}
-              />
-            )}
+              {this.state.role !== "" && (
+                <button
+                  id="notificationsButton"
+                  onClick={() => this.setState({ form: "notifications" })}
+                >
+                  Notifications
+                </button>
+              )}
+              {this.state.role !== "" && (
+                <TaskListButton
+                  gameId={this.state.gameInfo.id}
+                  role={this.state.role}
+                />
+              )}
+              {this.state.role !== "admin" && this.state.role !== "" && (
+                <button
+                  id="leaveFactionButton"
+                  onClick={this.handleLeaveFaction}
+                >
+                  Leave Faction
+                </button>
+              )}
+              {this.state.role === "admin" && (
+                <GameStateButtons
+                  gameState={this.state.gameInfo.state}
+                  gameId={this.state.gameInfo.id}
+                />
+              )}
+
+              {this.state.form === "edit" && (
+                <EditGameForm
+                  gameId={this.state.gameInfo.id}
+                  toggleView={() => this.setState({ form: "" })}
+                  onEditSave={() => {
+                    this.getGameInfo();
+                  }}
+                />
+              )}
+              {this.state.form === "join" && (
+                <JoinGameForm
+                  gameId={this.state.gameInfo.id}
+                  toggleView={() => this.setState({ form: "" })}
+                  onJoin={() => console.log("joinde")}
+                />
+              )}
+              {this.state.form === "players" && (
+                <PlayerlistView
+                  gameId={this.state.gameInfo.id}
+                  role={this.state.role}
+                  toggleView={() => this.setState({ form: "" })}
+                />
+              )}
+              {this.state.form === "notifications" && (
+                <NotificationView
+                  gameId={this.state.gameInfo.id}
+                  toggleView={() => this.setState({ form: "" })}
+                />
+              )}
+              {this.props.logged && (
+                <div>
+                  <label>Logged in: {sessionStorage.getItem("name")}</label>
+                  <button
+                    onClick={() => {
+                      sessionStorage.setItem("token", "");
+                      this.setState({ logged: false });
+                    }}
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
