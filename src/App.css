@@ -212,8 +212,12 @@ div.login button:hover {
 }
 
 .gamelist {
+  border: 2px solid white;
+  max-width: 800px;
+}
+
+.gamelist-item {
   background-color: #1d1d1b;
-  max-width: 500px;
   padding: 10px;
 }
 
