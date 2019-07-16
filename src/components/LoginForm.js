@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export class LoginForm extends React.Component {
   constructor(props) {
@@ -18,18 +19,6 @@ export class LoginForm extends React.Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
-  };
-
-  // show/hide this form
-  handleView = e => {
-    this.props.toggleView(this.props.view);
-  };
-
-  // remove login view with ESC
-  handleEsc = e => {
-    if (e.keyCode === 27) {
-      this.handleView();
-    }
   };
 
   handleLogin = e => {
@@ -54,7 +43,6 @@ export class LoginForm extends React.Component {
         result => {
           if (result.name) {
             this.props.handleState(result);
-            this.handleView();
           } else {
             this.handleError(result.message);
           }
@@ -68,29 +56,12 @@ export class LoginForm extends React.Component {
       );
   };
 
-  componentDidMount() {
-    document.addEventListener("keyup", this.handleEsc);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keyup", this.handleEsc);
-  }
-
   render() {
     return (
       <div className="fade-main">
-        <div className="sticky">
-          <span
-            id="closeLoginFormX"
-            className="close"
-            onClick={this.handleView}
-          >
-            ×
-          </span>
-        </div>
         <div className="login">
           <form onSubmit={this.handleLogin}>
-            <h1>demo login</h1>
+            <h1>Login</h1>
             <br />
             <input
               placeholder="Enter Username"
@@ -111,10 +82,13 @@ export class LoginForm extends React.Component {
             />
             <br />
             <button id="submitLoginButton" type="submit">
-              login
+              Submit
             </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
+          <Link to="/register">
+            <button>Create account</button>
+          </Link>
         </div>
       </div>
     );
