@@ -47,16 +47,18 @@ export default class ClientSocket extends React.Component {
 
     // set the socket to listen gameId-thread
     socket.on(this.props.gameId, data => {
-      console.log(data);
-      this.props.getSocketSignal(data.type);
+      console.log("on " + data);
+      this.props.getSocketSignal(data);
       // check socket update type
       this.setState({ update: data.type });
     });
 
+    this.props.onSocketChange(socket);
     this.setState({ sock: socket });
   };
 
   render() {
+    //TODO: return needed?
     return this.state.update;
   }
 }

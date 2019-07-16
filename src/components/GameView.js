@@ -8,6 +8,7 @@ import PlayerlistView from "./PlayerlistView";
 import NotificationView from "./NotificationView";
 import GameStateButtons from "./GameStateButtons";
 import ClientSocket from "./Socket";
+import NotificationPopup from "./NotificationPopup";
 
 export default class GameView extends React.Component {
   state = {
@@ -18,7 +19,8 @@ export default class GameView extends React.Component {
     lng: 25.7597186,
     zoom: 13,
     mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg",
-    socketSignal: null
+    socketSignal: null,
+    socket: null
   };
 
   componentDidMount() {
@@ -88,11 +90,11 @@ export default class GameView extends React.Component {
 
   // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
   // setting socketSignal to null immediately after to avoid multiple database fetches
-  getSocketSignal = type => {
-    console.log(type);
+  getSocketSignal = data => {
+    console.log(data);
     this.setState(
       {
-        socketSignal: type
+        socketSignal: data
       },
       () => {
         this.setState({
@@ -100,6 +102,12 @@ export default class GameView extends React.Component {
         });
       }
     );
+  };
+
+  onSocketChange = newSocket => {
+    this.setState({
+      socket: newSocket
+    });
   };
 
   render() {
@@ -116,6 +124,7 @@ export default class GameView extends React.Component {
               <ClientSocket
                 gameId={this.state.gameInfo.id}
                 getSocketSignal={this.getSocketSignal}
+                onSocketChange={this.onSocketChange}
               />
             )}
             <div>Game Name: {this.state.gameInfo.name}</div>
@@ -177,8 +186,13 @@ export default class GameView extends React.Component {
               zoom={this.state.zoom}
               mapUrl={this.state.mapUrl}
               currentGameId={this.state.gameInfo.id}
-              socketSignal={this.state.socketSignal}
+              socketSignal={
+                this.state.socketSignal !== null
+                  ? this.state.socketSignal
+                  : null
+              }
             />
+            <NotificationPopup socketSignal={this.state.socketSignal} />
             {this.state.form === "edit" && (
               <EditGameForm
                 gameId={this.state.gameInfo.id}
@@ -206,6 +220,7 @@ export default class GameView extends React.Component {
               <NotificationView
                 gameId={this.state.gameInfo.id}
                 toggleView={() => this.setState({ form: "" })}
+                socket={this.state.socket}
               />
             )}
           </div>
