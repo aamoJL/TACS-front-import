@@ -108,7 +108,7 @@ export class LoginForm extends React.Component {
               </form>
               {!this.state.username && (
                 <Link to="/register">
-                  <button id="registerButton">Create account</button>
+                  <a id="registerButton">Create account</a>
                 </Link>
               )}
             </div>

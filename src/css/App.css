@@ -139,7 +139,7 @@ div.header button:hover {
 } */
 
 /* Login&RegisterForm */
-/* div.fade-main {
+div.fade-main {
   position: fixed;
   top: 0;
   z-index: 1020;
@@ -150,7 +150,7 @@ div.header button:hover {
   background-color: rgba(0, 0, 0, 0.85);
   color: white;
   overflow: scroll;
-} */
+}
 
 /* div.sticky {
   position: fixed;
