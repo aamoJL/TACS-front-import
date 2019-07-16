@@ -3,6 +3,7 @@ import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
 import "./css/App.css";
 import UserMap from "./components/UserMap";
 import Header from "./components/Header";
+import ClientSocket from "./components/Socket";
 
 class App extends Component {
   constructor() {
@@ -14,11 +15,9 @@ class App extends Component {
       lng: 25.7597186,
       zoom: 13,
       mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg",
-      currentGameId: null
+      currentGameId: null,
+      socketSignal: null
     };
-
-    this.handleLayerChange = this.handleLayerChange.bind(this);
-    this.handleGameChange = this.handleGameChange.bind(this);
   }
   // Toggles through the list and changes the mapUrl state
   handleLayerChange = () => {
@@ -42,6 +41,22 @@ class App extends Component {
     });
   };
 
+  // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
+  // setting socketSignal to null immediately after to avoid multiple database fetches
+  getSocketSignal = type => {
+    console.log(type);
+    this.setState(
+      {
+        socketSignal: type
+      },
+      () => {
+        this.setState({
+          socketSignal: null
+        });
+      }
+    );
+  };
+
   render() {
     const initialPosition = [this.state.lat, this.state.lng];
     return (
@@ -51,12 +66,18 @@ class App extends Component {
           zoom={this.state.zoom}
           mapUrl={this.state.mapUrl}
           currentGameId={this.state.currentGameId}
+          socketSignal={this.state.socketSignal}
         />
-        ,
         <Header
           handleLayerChange={this.handleLayerChange}
           handleGameChange={this.handleGameChange}
         />
+        {this.state.currentGameId && (
+          <ClientSocket
+            gameId={this.state.currentGameId}
+            getSocketSignal={this.getSocketSignal}
+          />
+        )}
       </div>
     );
   }
