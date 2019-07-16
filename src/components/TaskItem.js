@@ -21,7 +21,7 @@ class TaskItem extends React.Component {
   };
 
   getFactionlist(gameId) {
-    fetch(`${process.env.REACT_APP_URL}/game/${gameId}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`, {
       method: "GET"
     })
       .then(result => {
@@ -56,10 +56,17 @@ class TaskItem extends React.Component {
 
   onTaskDelete = e => {
     e.preventDefault();
-    this.props.onDelete(this.props.task.taskId);
-    this.setState({
-      edit: false
-    });
+
+    if (
+      window.confirm(
+        `Are you sure you want to delete task "${this.props.task.taskName}"`
+      )
+    ) {
+      this.props.onDelete(this.props.task.taskId);
+      this.setState({
+        edit: false
+      });
+    }
   };
 
   render() {
@@ -92,7 +99,7 @@ class TaskItem extends React.Component {
             <label>Winner: {this.props.task.taskWinner.factionName}</label>
           )}
         </div>
-        {this.props.task.taskIsActive && (
+        {this.props.task.taskIsActive && this.props.role === "admin" && (
           <button onClick={this.onEditClick}>Edit</button>
         )}
         {this.state.edit && (
@@ -108,9 +115,14 @@ class TaskItem extends React.Component {
             <button type="submit">Save</button>
           </form>
         )}
-        <button onClick={this.onTaskDelete} style={{ backgroundColor: "red" }}>
-          Delete
-        </button>
+        {this.props.role === "admin" && (
+          <button
+            onClick={this.onTaskDelete}
+            style={{ backgroundColor: "red" }}
+          >
+            Delete
+          </button>
+        )}
       </div>
     );
   }

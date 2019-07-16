@@ -152,6 +152,7 @@ class DrawTools extends Component {
     } // end if (e.layerType === "textbox")
 
     this.makeGeoJSON(e.layerType, e.layer);
+    e.layer.remove();
   }; // end _onCreated
 
   // turn layer to GeoJSON data
@@ -159,7 +160,8 @@ class DrawTools extends Component {
     // setting the format in which the data will be sent
     let geoJSON = {
       data: layer.toGeoJSON(),
-      mapDrawingId: layer.options.id
+      mapDrawingId: layer.options.id,
+      drawingIsActive: true
     };
 
     // setting properties
@@ -179,7 +181,7 @@ class DrawTools extends Component {
     geoJSON.data.properties.color = layer.options.color;
 
     // send item to database, and receive an ID for the layer
-    this.props.sendGeoJSON(geoJSON, false);
+    this.props.sendGeoJSON(geoJSON);
   };
 
   _onEditDeleteStart = () => {
@@ -209,6 +211,7 @@ class DrawTools extends Component {
       } else {
         this.makeGeoJSON(null, layer);
       }
+      return true;
     });
   };
 
@@ -223,14 +226,16 @@ class DrawTools extends Component {
     idsToDelete.map(layer => {
       let geoJSON = {
         data: layer.toGeoJSON(),
-        mapDrawingId: layer.options.id
+        mapDrawingId: layer.options.id,
+        drawingIsActive: false
       };
 
-      this.props.sendGeoJSON(geoJSON, true);
+      this.props.sendGeoJSON(geoJSON);
+      return true;
     });
   };
 
-  shouldComponentUpdate() {
+  shouldComponentUpdate(nextProps, nextState) {
     // disable re-rendering when edit mode is active
     return !this.state.editModeActive;
   }
@@ -326,9 +331,9 @@ class DrawTools extends Component {
                     className="editable"
                     interactive={true}
                   >
-                    <div class="editable">
+                    <div className="editable">
                       <div
-                        contenteditable="true"
+                        contentEditable="true"
                         placeholder="Click out to save"
                       >
                         {text}
@@ -388,6 +393,7 @@ class DrawTools extends Component {
               />
             );
           }
+          return null;
         })}
       </FeatureGroup>
     );
