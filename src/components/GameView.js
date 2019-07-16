@@ -7,6 +7,7 @@ import JoinGameForm from "./JoinGameForm";
 import PlayerlistView from "./PlayerlistView";
 import NotificationView from "./NotificationView";
 import GameStateButtons from "./GameStateButtons";
+import ClientSocket from "./Socket";
 
 export default class GameView extends React.Component {
   state = {
@@ -16,7 +17,8 @@ export default class GameView extends React.Component {
     lat: 62.2416479,
     lng: 25.7597186,
     zoom: 13,
-    mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+    mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg",
+    socketSignal: null
   };
 
   componentDidMount() {
@@ -84,6 +86,22 @@ export default class GameView extends React.Component {
       .catch(error => console.log(error));
   };
 
+  // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
+  // setting socketSignal to null immediately after to avoid multiple database fetches
+  getSocketSignal = type => {
+    console.log(type);
+    this.setState(
+      {
+        socketSignal: type
+      },
+      () => {
+        this.setState({
+          socketSignal: null
+        });
+      }
+    );
+  };
+
   render() {
     const initialPosition = [this.state.lat, this.state.lng];
 
@@ -94,6 +112,12 @@ export default class GameView extends React.Component {
         </Link>
         {this.state.gameInfo !== null && (
           <div>
+            {this.state.gameInfo.id && (
+              <ClientSocket
+                gameId={this.state.gameInfo.id}
+                getSocketSignal={this.getSocketSignal}
+              />
+            )}
             <div>Game Name: {this.state.gameInfo.name}</div>
             {this.state.role === "" && (
               <div>You don't have a role in this game</div>
@@ -153,6 +177,7 @@ export default class GameView extends React.Component {
               zoom={this.state.zoom}
               mapUrl={this.state.mapUrl}
               currentGameId={this.state.gameInfo.id}
+              socketSignal={this.state.socketSignal}
             />
             {this.state.form === "edit" && (
               <EditGameForm
