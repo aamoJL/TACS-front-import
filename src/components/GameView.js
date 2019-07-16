@@ -143,7 +143,10 @@ export default class GameView extends React.Component {
               </button>
             )}
             {this.state.role === "admin" && (
-              <GameStateButtons gameState={this.state.gameInfo.state} />
+              <GameStateButtons
+                gameState={this.state.gameInfo.state}
+                gameId={this.state.gameInfo.id}
+              />
             )}
             <UserMap
               position={initialPosition}
