@@ -27,20 +27,22 @@ export default class ReplayMap extends React.Component {
 
   async componentDidMount() {
     await this.fetchPlayerData();
-    await this.fetchDrawingData();
-    this.tickDrawings();
+    //await this.fetchDrawingData();
+    //this.tickDrawings();
     this.replay();
   }
 
   componentWillReceiveProps(nextProps) {}
 
   // cloud game a1231e2b-aa29-494d-b687-ea2d48cc23df
+  // local game wimma 15e9563b-e621-4ba1-a440-1b21c7774923
+  // local game vbox 16977b13-c419-48b4-b7d6-e7620f27bf39
   // fetch player locations from the game
   fetchPlayerData = async () => {
     await fetch(
       `${
         process.env.REACT_APP_API_URL
-      }/replay/players/15e9563b-e621-4ba1-a440-1b21c7774923`,
+      }/replay/players/16977b13-c419-48b4-b7d6-e7620f27bf39`,
       {
         method: "GET"
       }
@@ -61,9 +63,10 @@ export default class ReplayMap extends React.Component {
 
   fetchDrawingData = async () => {
     await fetch(
-      `${
-        process.env.REACT_APP_API_URL
-      }/replay/a1231e2b-aa29-494d-b687-ea2d48cc23df`,
+      `${process.env.REACT_APP_API_URL}/replay/{
+		"lng": 25.72588,
+		"lat": 62.23147
+}`,
       {
         method: "GET"
       }

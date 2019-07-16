@@ -67,23 +67,15 @@ export const Draw = L.Class.extend({
 
     // 目标如果使用图片，先加载图片
     if (this.targetOptions.useImg) {
-      let img = new Image();
-      let img2 = new Image();
-      img2.onload = () => {
-        this._targetImg2 = img2;
-      };
-      img2.onerror = () => {
-        throw new Error("img load error!");
-      };
-      img2.src = this.targetOptions.imgUrl;
-
-      img.onload = () => {
-        this._targetImg = img;
-      };
-      img.onerror = () => {
-        throw new Error("img load error!");
-      };
-      img.src = this.targetOptions.imgUrl;
+      /*       let img2 = new Image();
+            img2.onload = () => {
+              this._targetImg2 = img2;
+            };
+            img2.onerror = () => {
+              throw new Error("img load error!");
+            };
+            img2.src = this.targetOptions.imgUrl; */
+      this._targetImg = [];
     }
   },
 
@@ -312,11 +304,25 @@ export const Draw = L.Class.extend({
     };
     this._ctx.save();
     this._ctx.translate(point.x, point.y);
-
+    let image;
+    this._targetImg.map(img => {
+      if (img.icon == info[0]["value"]) {
+        image = img;
+      }
+    });
+    if (!image) {
+      let img = new Image();
+      img.onload = () => {
+        this._targetImg.push(img);
+      };
+      img.onerror = () => {
+        throw new Error("img load error!");
+      };
+      img.src = info[0]["value"];
+      img.icon = info[0]["value"];
+      image = img;
+    }
     //let svg = document.createElementNS(`../${info[0]["value"]}`, "svg"); //http://www.sclance.com/pngs/random-png/random_png_1136179.png
-    let image =
-      info[0]["value"] === "infantry.svg" ? this._targetImg : this._targetImg2;
-    image.src = `../${info[0]["value"]}`;
     this._ctx.drawImage(image, 0 - offset.x, 0 - offset.y, width, height);
     this._ctx.restore();
   },
