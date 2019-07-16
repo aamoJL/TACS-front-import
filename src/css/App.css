@@ -8,8 +8,6 @@ body {
 .form-control {
   background-color: #7a7a7a;
   color: #ffffff;
-  border-color: #647828 !important;
-  outline: #647828 !important;
 }
 
 .form-control:focus {
@@ -46,12 +44,11 @@ input {
   height: 100%;
 }
 .copyright {
-  height: 10vh;
-  width: 100vw;
+  margin: 1em;
 }
 
-.content {
-  height: 90vh;
+.container {
+  height: 100vh;
   width: 100vw;
 }
 

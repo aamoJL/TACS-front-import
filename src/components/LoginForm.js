@@ -87,62 +87,66 @@ export class LoginForm extends React.Component {
 
   render() {
     return (
-      <div className="row content">
-        <div className="d-flex flexbox-container flex-fill justify-content-around border-right">
-          <img className="img" src={logo} />
-        </div>
-        <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
-          <div className="login">
-            <form onSubmit={this.handleLogin}>
-              <h1>Login</h1>
-              <input
-                className="form-control"
-                placeholder="Enter Username"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleChange}
-                id="loginUsernameInput"
-                autoFocus
-                required
-              />
-              <input
-                className="form-control"
-                placeholder="Enter password"
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleChange}
-                id="loginPasswordInput"
-                required
-              />
-
-              <button
-                type="button"
-                className="btn btn-secondary"
-                id="submitLoginButton"
-                type="submit"
-              >
-                Login
-              </button>
-              {this.state.errorMsg && (
-                <div className="d-flex flex-fill justify-content-center text-center">
-                  {this.state.errorMsg}
-                </div>
-              )}
-            </form>
-            {!this.state.username && (
-              <div
-                id="registerButton"
-                onClick={() => this.toggleView("register")}
-              >
-                Don't have account yet? Register!
-              </div>
-            )}
+      <div className="container">
+        <div className="row">
+          <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+            <img className="img" src={logo} />
           </div>
         </div>
-        <div className="row copyright">
-          <div className="d-flex flex-fill justify-content-center text-center">
-            <div>&copy; 2019 TACS</div>
+        <div className="row">
+          <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+            <div className="login">
+              <form onSubmit={this.handleLogin}>
+                <h1>Login</h1>
+                <input
+                  className="form-control"
+                  placeholder="Enter Username"
+                  name="username"
+                  value={this.state.username}
+                  onChange={this.handleChange}
+                  id="loginUsernameInput"
+                  autoFocus
+                  required
+                />
+                <input
+                  className="form-control"
+                  placeholder="Enter password"
+                  type="password"
+                  name="password"
+                  value={this.state.password}
+                  onChange={this.handleChange}
+                  id="loginPasswordInput"
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  id="submitLoginButton"
+                  type="submit"
+                >
+                  Login
+                </button>
+                {this.state.errorMsg && (
+                  <div className="d-flex flex-fill justify-content-center text-center">
+                    {this.state.errorMsg}
+                  </div>
+                )}
+              </form>
+              {!this.state.username && (
+                <div
+                  id="registerButton"
+                  onClick={() => this.toggleView("register")}
+                >
+                  Don't have account yet? Register!
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+            &copy; 2019 TACS
           </div>
         </div>
       </div>
