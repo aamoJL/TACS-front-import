@@ -1,15 +1,10 @@
 import React from "react";
-
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import TaskListButton from "./TaskListButton";
 import GameSidebar from "./GameSidebar";
 
 class Header extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   state = {
     form: "", // Popup form (login, register etc.)
     username: null,
@@ -100,7 +95,10 @@ class Header extends React.Component {
             Tools
           </button>
           {this.state.sidebar && (
-            <GameSidebar loggedIn={this.state.username ? true : false} />
+            <GameSidebar
+              loggedIn={this.state.username ? true : false}
+              handleGameChange={this.props.handleGameChange}
+            />
           )}
         </div>
         {this.state.form === "register" && (

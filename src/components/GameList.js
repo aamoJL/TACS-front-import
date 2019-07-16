@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
-import EditGameForm from "./EditGameForm";
-import JoinGameForm from "./JoinGameForm";
+import GameCard from "./GameCard";
 
 class GameList extends React.Component {
   constructor(props) {
@@ -36,7 +35,7 @@ class GameList extends React.Component {
               ? games[0].id
               : undefined
         });
-        // taking the initialized gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
+        // taking the initialized gameID to App.js (GameList.js -> GameSidebar.js -> Header.js -> App.js)
         this.props.handleGameChange(games[0].id);
       })
       .catch(error => {
@@ -45,15 +44,11 @@ class GameList extends React.Component {
   }
 
   handleChange = e => {
-    this.setState(
-      {
-        selectedGame: e.target.value
-      },
-      () => {
-        // taking the changed gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
-        //this.props.handleGameChange(this.state.selectedGame);
-      }
-    );
+    this.setState({
+      selectedGame: e.target.value
+    });
+    // taking the changed gameID to App.js (GameList.js -> GameSidebar.js -> Header.js -> App.js)
+    this.props.handleGameChange(e.target.value);
   };
 
   handleEditClick = e => {
@@ -85,45 +80,19 @@ class GameList extends React.Component {
   };
 
   render() {
-    let items = [];
-
-    for (let i = 0; i < this.state.games.length; i++) {
-      const element = this.state.games[i];
-      items.push(
-        <option key={element.id} value={element.id}>
-          {element.name}
-        </option>
+    let gamelistItems = this.props.games.map(game => {
+      return (
+        <GameCard
+          key={game.id}
+          gameId={game.id}
+          onEditSave={this.props.onEditSave}
+        />
       );
-    }
+    });
 
     return (
       <Fragment>
-        <label>Game: </label>
-        <select id="changeActiveGameList" onChange={this.handleChange}>
-          {items}
-        </select>
-        {sessionStorage.getItem("token") && (
-          <Fragment>
-            <button id="editGameButton" onClick={this.handleEditClick}>
-              Edit game
-            </button>
-            <button id="editGameButton" onClick={this.handleJoinClick}>
-              Join Game
-            </button>
-          </Fragment>
-        )}
-        {this.state.editForm && this.state.selectedGame !== undefined && (
-          <EditGameForm
-            gameId={this.state.selectedGame}
-            toggleView={this.toggleView}
-          />
-        )}
-        {this.state.joinForm && this.state.selectedGame !== undefined && (
-          <JoinGameForm
-            gameId={this.state.selectedGame}
-            toggleView={this.toggleView}
-          />
-        )}
+        <div className="gamelist">{gamelistItems}</div>
       </Fragment>
     );
   }

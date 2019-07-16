@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export class RegisterForm extends React.Component {
   constructor(props) {
@@ -21,18 +22,6 @@ export class RegisterForm extends React.Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
-  };
-
-  // show/hide this form
-  handleView = e => {
-    this.props.toggleView(this.props.view);
-  };
-
-  // remove register view with ESC
-  handleEsc = e => {
-    if (e.keyCode === 27) {
-      this.handleView();
-    }
   };
 
   handleRegister = e => {
@@ -60,7 +49,6 @@ export class RegisterForm extends React.Component {
           result => {
             if (result.name) {
               this.props.handleState(result);
-              this.handleView();
             } else {
               this.handleError(result.message);
             }
@@ -75,29 +63,13 @@ export class RegisterForm extends React.Component {
     }
   };
 
-  componentDidMount() {
-    document.addEventListener("keyup", this.handleEsc);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keyup", this.handleEsc);
-  }
   // UNCOMMENT "REQUIRED" FOR PRODUCTION
   render() {
     return (
       <div className="fade-main">
-        <div className="sticky">
-          <span
-            className="close"
-            id="closeRegisterFormX"
-            onClick={this.handleView}
-          >
-            ×
-          </span>
-        </div>
         <div className="login">
           <form onSubmit={this.handleRegister}>
-            <h1>register new user</h1>
+            <h1>Register</h1>
             <br />
             <input
               placeholder="Enter Username"
@@ -128,10 +100,13 @@ export class RegisterForm extends React.Component {
             />
             <br />
             <button id="submitRegisterButton" type="submit">
-              register
+              Submit
             </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
+          <Link to="/">
+            <button id="openLoginFormButton">Login</button>
+          </Link>
         </div>
       </div>
     );
