@@ -106,12 +106,25 @@ class DrawTools extends Component {
 
       // disable dragging when cursor is over marker (tooltip)
       // clicking on tooltip fires the marker's click handler, hence e.layer.on
+      /*
+      e.layer.on("mouseover", function() {
+        e.layer._map.dragging.disable();
+      });
+
+      // enable dragging again when cursor is out of marker (tooltip)
+      e.layer.on("mouseout", function() {
+        e.layer._map.dragging.enable();
+      });
+      */
+
+      /*
       e.layer.on("mouseover", this.props.changeDragState.bind(this, false));
 
       // enable dragging again when cursor is out of marker (tooltip)
       e.layer.on("mouseout", this.props.changeDragState.bind(this, true));
 
       e.layer.on("click", this.checkEditModeStatus.bind(this));
+      */
 
       // show placeholder text again upon emptying textbox
       e.layer.on("keyup", function() {
@@ -153,6 +166,10 @@ class DrawTools extends Component {
     e.layer.remove();
   }; // end _onCreated
 
+  handleTextBoxKeyUp(layer) {
+    console.log(layer);
+  }
+
   // turn layer to GeoJSON data
   makeGeoJSON = (layerType, layer) => {
     // setting the format in which the data will be sent
@@ -185,11 +202,11 @@ class DrawTools extends Component {
   // fired by a click event on textbox. hovering on textbox text disables dragging on map.
   // deleting textbox fails to enable dragging, so a click event has been placed to check
   // if edit mode is active. if so, dragging is enabled
-  checkEditModeStatus() {
+  checkEditModeStatus = () => {
     if (this.state.editModeActive === true) {
       this.props.changeDragState(true);
     }
-  }
+  };
 
   _onEditDeleteStart = () => {
     this.setState({ editModeActive: true });
@@ -333,6 +350,11 @@ class DrawTools extends Component {
                   id={id}
                   color={color}
                   icon={noIcon}
+                  onMouseOver={this.props.changeDragState.bind(this, false)}
+                  onMouseOut={this.props.changeDragState.bind(this, true)}
+                  onClick={this.checkEditModeStatus}
+                  onKeyUp={e => this.handleTextBoxKeyUp(e)}
+                  onBlur={e => this.makeGeoJSON("textbox", e.target)}
                 >
                   <Tooltip
                     direction="bottom"
@@ -344,6 +366,7 @@ class DrawTools extends Component {
                       <div
                         contentEditable="true"
                         placeholder="Click out to save"
+                        suppressContentEditableWarning={true}
                       >
                         {text}
                       </div>

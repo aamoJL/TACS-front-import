@@ -19,7 +19,6 @@ class UserMap extends Component {
       isDraggable: true
     };
 
-    this.changeDragState = this.changeDragState.bind(this);
     this.sendGeoJSON = this.sendGeoJSON.bind(this);
     this.fetchGeoJSON = this.fetchGeoJSON.bind(this);
     this.setCurrentPosition = this.setCurrentPosition.bind(this);
@@ -101,6 +100,13 @@ class UserMap extends Component {
         console.log(error);
       });
   }
+
+  changeDragState = status => {
+    console.log(status);
+    this.setState({
+      isDraggable: status
+    });
+  };
 
   componentWillUnmount() {
     if (this.watchPositionId != null) {

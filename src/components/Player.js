@@ -42,22 +42,7 @@ class Player extends Component {
     if (this.props.currentGameId === null) {
       return false;
     }
-    /*
-    if (this.props.socketSignal !== "tracking-update") {
-      return false;
-    }
-    */
     return true;
-    /*
-    if (nextProps.currentGameId === null) {
-      return false;
-    } else if (this.state.players === null) {
-      this.getPlayers();
-      return false;
-    } else {
-      return true;
-    }
-    */
   }
 
   componentDidUpdate(prevProps, prevState) {
