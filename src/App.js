@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
 import "./App.css";
-import ClientSocket from "./components/Socket";
 import {
   BrowserRouter as Router,
   Route,
@@ -46,21 +45,6 @@ export default class App extends Component {
     });
   };
 
-  // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
-  // setting socketSignal to null immediately after to avoid multiple database fetches
-  getSocketSignal = type => {
-    console.log(type);
-    this.setState(
-      {
-        socketSignal: type
-      },
-      () => {
-        this.setState({
-          socketSignal: null
-        });
-      }
-    );
-  };
   handleState = data => {
     sessionStorage.setItem("name", data.name);
     sessionStorage.setItem("token", data.token);
@@ -148,13 +132,6 @@ export default class App extends Component {
 
     return (
       <div>
-        {this.state.currentGameId && (
-          <ClientSocket
-            gameId={this.state.currentGameId}
-            getSocketSignal={this.getSocketSignal}
-          />
-        )}
-
         <Router>
           <div>
             {/* Debug Sign out button ------------------------ */}
