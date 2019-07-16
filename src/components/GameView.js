@@ -60,6 +60,7 @@ export default class GameView extends React.Component {
 
   handleLeaveFaction = e => {
     let token = sessionStorage.getItem("token");
+    let error = false;
     fetch(
       `${process.env.REACT_APP_API_URL}/faction/leave/${
         this.state.gameInfo.id
@@ -72,11 +73,10 @@ export default class GameView extends React.Component {
       }
     )
       .then(res => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw Error(res.statusText);
+        if (!res.ok) {
+          error = true;
         }
+        return res.json();
       })
       .then(res => {
         alert(res.message);
