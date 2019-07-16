@@ -15,6 +15,8 @@ export default class ReplayMap extends React.Component {
     this.state = {
       // stores the playback object
       playback: null,
+      // stores player locations from backend
+      data: null,
       // stores all drawings from backend
       allGeoJSON: [],
       // stores all active drawings on the map
@@ -38,7 +40,7 @@ export default class ReplayMap extends React.Component {
     await fetch(
       `${
         process.env.REACT_APP_API_URL
-      }/replay/players/a1231e2b-aa29-494d-b687-ea2d48cc23df`,
+      }/replay/players/15e9563b-e621-4ba1-a440-1b21c7774923`,
       {
         method: "GET"
       }
@@ -59,10 +61,9 @@ export default class ReplayMap extends React.Component {
 
   fetchDrawingData = async () => {
     await fetch(
-      /*       `${
+      `${
         process.env.REACT_APP_API_URL
-      }/replay/a1231e2b-aa29-494d-b687-ea2d48cc23df`, */
-      `http://localhost:5000/replay/15e9563b-e621-4ba1-a440-1b21c7774923`,
+      }/replay/a1231e2b-aa29-494d-b687-ea2d48cc23df`,
       {
         method: "GET"
       }
@@ -114,7 +115,7 @@ export default class ReplayMap extends React.Component {
         // whether to use an image to display target, if false, the program provides a default
         useImg: true,
         // if useImg is true, provide the imgUrl
-        imgUrl: "../infantry-red.svg",
+        imgUrl: "../light-infantry.svg",
         // the width of target, unit: px
         width: 60,
         // the height of target, unit: px
@@ -160,11 +161,9 @@ export default class ReplayMap extends React.Component {
           <DrawGeoJSON geoJSONLayer={this.state.activeGeoJSON} />
         )}
       </Map> */
-      <div className="map" ref="map">
-        {/*         {this.state.activeGeoJSON.features && (
-          <DrawGeoJSON geoJSONLayer={this.state.activeGeoJSON} />
-        )} */}
-      </div>
+      <React.Fragment>
+        <div className="map" ref="map" />
+      </React.Fragment>
     );
   }
 }

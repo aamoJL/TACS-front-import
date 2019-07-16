@@ -176,8 +176,9 @@ export const Draw = L.Class.extend({
     }
     // 画船
     let targetPoint = trackpoints[trackpoints.length - 1];
+    let info = trackpoints[0].info;
     if (this.targetOptions.useImg && this._targetImg) {
-      this._drawShipImage(targetPoint);
+      this._drawShipImage(targetPoint, info);
     } else {
       this._drawShipCanvas(targetPoint);
     }
@@ -292,7 +293,27 @@ export const Draw = L.Class.extend({
     this._ctx.restore();
   },
 
-  _drawShipImage: function(trackpoint) {
+  _drawShipImage: function(trackpoint, info) {
+    let point = this._getLayerPoint(trackpoint);
+    let width = this.targetOptions.width;
+    let height = this.targetOptions.height;
+    let offset = {
+      x: width / 2,
+      y: height / 2
+    };
+    this._ctx.save();
+    this._ctx.translate(point.x, point.y);
+    let svg = document.createElementNS(`../${info[0]["value"]}`, "svg");
+    let img = new Image();
+    img.onload = () => {
+      this._ctx.drawImage(img, 0 - offset.x, 0 - offset.y, width, height);
+    };
+    img.src = `../${info[0]["value"]}`;
+    console.log(img);
+    this._ctx.restore();
+  },
+
+  /*   _drawShipImage: function(trackpoint) {
     let point = this._getLayerPoint(trackpoint);
     let width = this.targetOptions.width;
     let height = this.targetOptions.height;
@@ -310,7 +331,7 @@ export const Draw = L.Class.extend({
       height
     );
     this._ctx.restore();
-  },
+  }, */
 
   _getTooltipText: function(targetobj) {
     let content = [];
