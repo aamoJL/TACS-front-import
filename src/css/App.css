@@ -1,3 +1,5 @@
+/* Globals */
+
 body {
   background-color: #1d1d1b;
   color: #ffffff;
@@ -102,18 +104,69 @@ input {
 /* UserMap */
 /* .map {
   position: absolute;
-  margin-top: 50px;
-  height: 95vh;
+  height: 100vh;
   width: 100vw;
 } */
 
+/* Score Counter */
+div.scoreContainer {
+  border-radius: 8px;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  color: white;
+  background-color: #1d1d1b;
+  opacity: 0.9;
+  height: 50px;
+  max-width: 400px;
+  margin: auto;
+  top: 5px;
+  left: calc(50vw - 100px);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+div.scoreBlock {
+  flex: 1;
+  padding: 5px;
+  max-width: 120px;
+  text-align: center;
+  justify-content: center;
+  letter-spacing: 0.05em;
+  font-size: 1.5em;
+}
+
+div.scoreDivider {
+  background-color: white;
+  float: left;
+  flex: 1;
+  width: 2px;
+  height: 70%;
+  margin: 5px;
+}
+
+span.scoreCircle {
+  margin: 10px;
+  height: 25px;
+  width: 25px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 /* Header */
-/* div.header {
+div.header {
+  transition-property: width, opacity;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
   position: absolute;
   top: 0;
-  height: 50px;
-  width: 100%;
-  background: white;
+  right: 0;
+  height: 100vh;
+  width: 100px;
+  opacity: 0.95;
+  background: #1d1d1b;
   z-index: 1000;
 }
 
@@ -121,22 +174,28 @@ div.header button {
   transition-property: background-color;
   transition-duration: 0.5s;
   transition-timing-function: ease;
-  background-color: #279fd9;
+  background-color: #1d1d1b;
   color: white;
   font-weight: bold;
   border: 0px;
-  padding: 0.5em;
-  margin: 0em 1em;
-  width: 10%;
-  height: 100%;
+  width: 100%;
+  height: 10%;
   font-size: 18px;
-  float: right;
+}
+
+div.header:hover {
+  transition-property: width, opacity;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  opacity: 1;
+  width: 200px;
 }
 
 div.header button:hover {
-  background-color: darkblue;
+  background-color: #556023;
   cursor: pointer;
-} */
+}
+*/
 
 /* Login&RegisterForm */
 div.fade-main {
