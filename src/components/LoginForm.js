@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import logo from "../icons/placeholderlogo.PNG";
 
@@ -20,25 +21,6 @@ export class LoginForm extends React.Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
-  };
-
-  // show/hide this form
-  handleView = e => {
-    this.props.toggleView(this.props.view);
-  };
-
-  // toggles the login/register view
-  toggleView = view => {
-    this.setState({
-      form: view
-    });
-  };
-
-  // remove login view with ESC
-  handleEsc = e => {
-    if (e.keyCode === 27) {
-      this.handleView();
-    }
   };
 
   handleLogin = e => {
@@ -63,7 +45,6 @@ export class LoginForm extends React.Component {
         result => {
           if (result.name) {
             this.props.handleState(result);
-            this.handleView();
           } else {
             this.handleError(result.message);
           }
@@ -76,14 +57,6 @@ export class LoginForm extends React.Component {
         }
       );
   };
-
-  componentDidMount() {
-    document.addEventListener("keyup", this.handleEsc);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keyup", this.handleEsc);
-  }
 
   render() {
     return (
@@ -134,12 +107,9 @@ export class LoginForm extends React.Component {
                 )}
               </form>
               {!this.state.username && (
-                <div
-                  id="registerButton"
-                  onClick={() => this.toggleView("register")}
-                >
-                  Don't have account yet? Register!
-                </div>
+                <Link to="/register">
+                  <button id="registerButton">Create account</button>
+                </Link>
               )}
             </div>
           </div>
