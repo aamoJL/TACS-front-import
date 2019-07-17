@@ -100,11 +100,33 @@ export const TrackPlayBackControl = L.Control.extend({
       "sliderContainer",
       this._container
     );
-    this._lineCbx = this._createCheckbox(
+    this._filterContainer = this._createContainer(
+      "filterContainer",
+      this._container
+    );
+    /*     this._lineCbx = this._createCheckbox(
       "show trackLine",
       "show-trackLine",
       this._optionsContainer,
       this._showTrackLine
+    ); */
+    this._filterInfantry = this._createCheckbox(
+      "show infantry units",
+      "show-infantry",
+      this._filterContainer,
+      this._showInfantry
+    );
+    this._filterRecon = this._createCheckbox(
+      "show recon units",
+      "show-recon",
+      this._filterContainer,
+      this._showRecon
+    );
+    this._filterMechanized = this._createCheckbox(
+      "show mechanized units",
+      "show-mechanized",
+      this._filterContainer,
+      this._showMechanized
     );
 
     this._playBtn = this._createButton(
@@ -120,13 +142,13 @@ export const TrackPlayBackControl = L.Control.extend({
       this._restart
     );
     this._slowSpeedBtn = this._createButton(
-      "slow",
+      "decrease speed",
       "btn-slow",
       this._buttonContainer,
       this._slow
     );
     this._quickSpeedBtn = this._createButton(
-      "quick",
+      "increase speed",
       "btn-quick",
       this._buttonContainer,
       this._quick
@@ -187,6 +209,7 @@ export const TrackPlayBackControl = L.Control.extend({
     let inputId = `trackplayback-input-${L.Util.stamp(inputEle)}`;
     inputEle.setAttribute("type", "checkbox");
     inputEle.setAttribute("id", inputId);
+    inputEle.checked = true;
 
     let labelEle = L.DomUtil.create("label", "trackplayback-label", divEle);
     labelEle.setAttribute("for", inputId);
@@ -248,6 +271,18 @@ export const TrackPlayBackControl = L.Control.extend({
     } else {
       this.trackPlayBack.hideTrackLine();
     }
+  },
+
+  _showInfantry(e) {
+    this.trackPlayBack.toggleInfantry(e.target.checked);
+  },
+
+  _showRecon(e) {
+    this.trackPlayBack.toggleRecon(e.target.checked);
+  },
+
+  _showMechanized(e) {
+    this.trackPlayBack.toggleMechanized(e.target.checked);
   },
 
   _play: function() {
