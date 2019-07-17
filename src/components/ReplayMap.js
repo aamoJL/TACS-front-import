@@ -1,6 +1,7 @@
 // https://github.com/linghuam/Leaflet.TrackPlayBack
 
 import React from "react";
+import { Link } from "react-router-dom";
 import L from "leaflet";
 import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
 import "../track-playback/src/leaflet.trackplayback/clock";
@@ -26,51 +27,36 @@ export default class ReplayMap extends React.Component {
   }
 
   async componentDidMount() {
+    await this.setState({
+      gameId: await new URL(window.location.href).searchParams.get("id")
+    });
     await this.fetchPlayerData();
     //await this.fetchDrawingData();
     //this.tickDrawings();
-    this.replay();
+    this.state.data.length > 1
+      ? this.replay()
+      : alert("No replay data was found");
   }
 
   componentWillReceiveProps(nextProps) {}
 
-  // cloud game a1231e2b-aa29-494d-b687-ea2d48cc23df
-  // local game wimma 314338f9-b0bb-4bf7-9554-769c7b409bce
-  // local game vbox 16977b13-c419-48b4-b7d6-e7620f27bf39
-  // fetch player locations from the game
   fetchPlayerData = async () => {
-    await fetch(
-      `${
-        process.env.REACT_APP_API_URL
-      }/replay/players/314338f9-b0bb-4bf7-9554-769c7b409bce`,
-      {
-        method: "GET"
-      }
-    )
-      .then(async res => await res.json())
-      .then(
-        async res => {
-          await this.setState({ data: res });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          console.log(error);
-        }
-      );
+    let res = await fetch(
+      `${process.env.REACT_APP_API_URL}/replay/players/${this.state.gameId}`
+    );
+
+    if (res.ok) {
+      await this.setState({ data: res.json() });
+    } else {
+      alert("Game not found");
+      window.document.location.href = "/";
+    }
   };
 
   fetchDrawingData = async () => {
-    await fetch(
-      `${process.env.REACT_APP_API_URL}/replay/{
-		"lng": 25.72588,
-		"lat": 62.23147
-}`,
-      {
-        method: "GET"
-      }
-    )
+    await fetch(`${process.env.REACT_APP_API_URL}/replay/${this.gameId}`, {
+      method: "GET"
+    })
       .then(async res => await res.json())
       .then(
         async res => {
@@ -170,6 +156,9 @@ export default class ReplayMap extends React.Component {
         )}
       </Map> */
       <React.Fragment>
+        <Link to="/">
+          <button>Game selection</button>
+        </Link>
         <div className="map" ref="map" />
       </React.Fragment>
     );
