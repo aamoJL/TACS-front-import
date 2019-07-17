@@ -3,12 +3,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import L from "leaflet";
-import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
 import "../track-playback/src/leaflet.trackplayback/clock";
 import "../track-playback/src/leaflet.trackplayback/index";
 import "../track-playback/src/control.trackplayback/control.playback";
 import "../track-playback/src/control.trackplayback/index";
-import DrawGeoJSON from "./DrawGeoJSON";
 
 export default class ReplayMap extends React.Component {
   constructor(props) {
@@ -23,30 +21,38 @@ export default class ReplayMap extends React.Component {
       // stores all active drawings on the map
       activeGeoJSON: []
     };
-    this.map = React.createRef();
   }
 
   async componentDidMount() {
+    // set gameId to state from URL
     await this.setState({
       gameId: await new URL(window.location.href).searchParams.get("id")
     });
-    await this.fetchPlayerData();
-    //await this.fetchDrawingData();
-    //this.tickDrawings();
+    // fetch player data with gameId
+    // throws error if game is not found and redirects back to game selection
+    await this.setState({
+      data: await this.fetchPlayerData()
+    });
+    // fetch drawings with gameId
+    await this.setState({
+      allGeoJSON: await this.fetchDrawingData()
+    });
+    // WIP, map only active drawings to activeGeoJSON state
+    await this.setState({
+      activeGeoJSON: this.tickDrawings()
+    });
+    // if game was found but game has no replay data, alert the user
     this.state.data.length > 1
       ? this.replay()
       : alert("No replay data was found");
   }
 
-  componentWillReceiveProps(nextProps) {}
-
   fetchPlayerData = async () => {
     let res = await fetch(
       `${process.env.REACT_APP_API_URL}/replay/players/${this.state.gameId}`
     );
-
-    if (res.ok) {
-      await this.setState({ data: res.json() });
+    if (await res.ok) {
+      return await res.json();
     } else {
       alert("Game not found");
       window.document.location.href = "/";
@@ -54,30 +60,19 @@ export default class ReplayMap extends React.Component {
   };
 
   fetchDrawingData = async () => {
-    await fetch(`${process.env.REACT_APP_API_URL}/replay/${this.gameId}`, {
-      method: "GET"
-    })
-      .then(async res => await res.json())
-      .then(
-        async res => {
-          await this.setState({ allGeoJSON: res });
-        },
-        error => {
-          console.log(error);
-        }
-      );
+    let res = await fetch(
+      `${process.env.REACT_APP_API_URL}/replay/${this.state.gameId}`
+    );
+    if (await res.ok) {
+      return await res.json();
+    } else {
+      alert(res.statusText);
+    }
   };
 
   tickDrawings = () => {
-    let activeDrawings = [];
-    this.state.allGeoJSON.map(drawing => {
-      activeDrawings.push(drawing[0]);
-      this.setState({
-        activeGeoJSON: {
-          type: "FeatureCollection",
-          features: [...activeDrawings]
-        }
-      });
+    return this.state.allGeoJSON.map(drawing => {
+      return drawing[0];
     });
   };
 
