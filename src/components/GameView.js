@@ -9,6 +9,7 @@ import NotificationView from "./NotificationView";
 import GameStateButtons from "./GameStateButtons";
 import ClientSocket from "./Socket";
 import NotificationPopup from "./NotificationPopup";
+import GameInfoView from "./GameInfoView";
 
 export default class GameView extends React.Component {
   state = {
@@ -133,14 +134,18 @@ export default class GameView extends React.Component {
             {this.state.role !== "" && (
               <div>Your role in this game: {this.state.role}</div>
             )}
-            {this.state.role === "admin" && (
-              <button
-                id="editGameButton"
-                onClick={() => this.setState({ form: "edit" })}
-              >
-                Edit
-              </button>
-            )}
+            {this.state.role === "admin" &&
+              this.state.gameInfo.state === "CREATED" && (
+                <button
+                  id="editGameButton"
+                  onClick={() => this.setState({ form: "edit" })}
+                >
+                  Edit
+                </button>
+              )}
+            <button onClick={() => this.setState({ form: "info" })}>
+              Game Info
+            </button>
             {this.state.role === "" && (
               <button
                 id="joinGameButton"
@@ -223,6 +228,12 @@ export default class GameView extends React.Component {
                     ? this.state.gameInfo.state
                     : ""
                 }
+              />
+            )}
+            {this.state.form === "info" && (
+              <GameInfoView
+                gameInfo={this.state.gameInfo}
+                toggleView={() => this.setState({ form: "" })}
               />
             )}
           </div>
