@@ -189,9 +189,9 @@ export default class App extends Component {
                 <Redirect from="*" to="/" />
               </Switch>
             )}
-
             {this.state.logged && (
               <Switch>
+                <Route exact path="/replay" component={this.replay} />
                 <Route
                   path="/game"
                   component={() => {
