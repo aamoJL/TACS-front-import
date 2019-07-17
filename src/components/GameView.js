@@ -8,6 +8,7 @@ import PlayerlistView from "./PlayerlistView";
 import NotificationView from "./NotificationView";
 import GameStateButtons from "./GameStateButtons";
 import ClientSocket from "./Socket";
+import GrouplistView from "./GrouplistView";
 
 export default class GameView extends React.Component {
   state = {
@@ -205,6 +206,19 @@ export default class GameView extends React.Component {
             {this.state.form === "notifications" && (
               <NotificationView
                 gameId={this.state.gameInfo.id}
+                toggleView={() => this.setState({ form: "" })}
+              />
+            )}
+            <button
+              id="groupButton"
+              onClick={() => this.setState({ form: "groups" })}
+            >
+              Groups
+            </button>
+            {this.state.form === "groups" && (
+              <GrouplistView
+                gameId={this.state.gameInfo.id}
+                role={this.state.role}
                 toggleView={() => this.setState({ form: "" })}
               />
             )}
