@@ -9,14 +9,12 @@ class TaskList extends React.Component {
       taskNameInput: "", // >= 3
       taskDescriptionInput: "", // no limits
       tasks: [],
-      factionlist: [],
       selectedFactionId: ""
     };
   }
 
   componentDidMount() {
     this.getTasks(this.props.gameId);
-    this.getFactionlist(this.props.gameId); // TODO: remove if the user is not admin?
   }
 
   getTasks(gameId) {
@@ -37,25 +35,6 @@ class TaskList extends React.Component {
       .then(result => {
         this.setState({
           tasks: result
-        });
-      })
-      .catch(error => console.log(error));
-  }
-
-  getFactionlist(gameId) {
-    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`, {
-      method: "GET"
-    })
-      .then(result => {
-        if (!result.ok) {
-          throw Error(result.responseText);
-        } else {
-          return result.json();
-        }
-      })
-      .then(result => {
-        this.setState({
-          factionlist: result.factions
         });
       })
       .catch(error => console.log(error));
@@ -206,10 +185,10 @@ class TaskList extends React.Component {
       }
     }
 
-    let factionlistItems = this.state.factionlist.map(item => {
+    let factionlistItems = this.props.factions.map(faction => {
       return (
-        <option key={item.factionId} value={item.factionId}>
-          {item.factionName}
+        <option key={faction.factionId} value={faction.factionId}>
+          {faction.factionName}
         </option>
       );
     });

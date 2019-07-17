@@ -45,7 +45,11 @@ export default class TaskListButton extends React.Component {
           Tasks
         </button>
         {this.state.open && (
-          <TaskList gameId={this.props.gameId} role={this.props.role} />
+          <TaskList
+            gameId={this.props.gameId}
+            role={this.props.role}
+            factions={this.props.factions}
+          />
         )}
       </Fragment>
     );

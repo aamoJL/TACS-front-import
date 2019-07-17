@@ -167,6 +167,7 @@ export default class GameView extends React.Component {
               <TaskListButton
                 gameId={this.state.gameInfo.id}
                 role={this.state.role}
+                factions={this.state.gameInfo.factions}
               />
             )}
             {this.state.role !== "admin" && this.state.role !== "" && (
