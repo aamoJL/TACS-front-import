@@ -30,12 +30,15 @@ export default class NotificationView extends React.Component {
 
     if (this.state.notificationInput === "") {
       alert("notification message can't be empty");
-    } else {
+    } else if (
+      window.confirm("Are you sure you want to send the notification")
+    ) {
       this.props.socket.emit("game-info", {
         type: this.state.notificationTypeInput,
         message: this.state.notificationInput,
         game: this.props.gameId
       });
+      alert("Notification sent");
       this.getNotifications(this.props.gameId);
       this.setState({ notificationInput: "" });
     }

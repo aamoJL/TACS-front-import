@@ -30,7 +30,8 @@ export default class EditGameForm extends React.Component {
       objectivePoints: [],
       capture_time: 300,
       confirmation_time: 60,
-      displayColorPicker: false
+      displayColorPicker: false,
+      saved: false
     };
 
     this.handleMapDrag = this.handleMapDrag.bind(this);
@@ -185,7 +186,12 @@ export default class EditGameForm extends React.Component {
 
   // show/hide this form
   handleView = e => {
-    this.props.toggleView(this.props.view);
+    if (
+      this.state.saved ||
+      window.confirm("Are you sure you want to leave without saving?")
+    ) {
+      this.props.toggleView(this.props.view);
+    }
   };
 
   // remove view with ESC
@@ -248,6 +254,7 @@ export default class EditGameForm extends React.Component {
     }
 
     let token = sessionStorage.getItem("token");
+    let error = false;
 
     // Send Game info to the server
     fetch(`${process.env.REACT_APP_API_URL}/game/edit/${this.props.gameId}`, {
@@ -261,15 +268,23 @@ export default class EditGameForm extends React.Component {
     })
       .then(res => {
         if (!res.ok) {
-          throw Error(res.statusMessage);
-        } else {
-          return res.json();
+          error = true;
         }
+        return res.json();
       })
       .then(result => {
         alert(result.message);
-        this.props.onEditSave();
-        this.handleView();
+        if (!error) {
+          this.setState(
+            {
+              saved: true
+            },
+            () => {
+              this.handleView();
+              this.props.onEditSave();
+            }
+          );
+        }
       })
       .catch(error => console.log("Error: ", error));
   };
