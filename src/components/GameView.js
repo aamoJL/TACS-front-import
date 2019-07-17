@@ -25,8 +25,11 @@ export default class GameView extends React.Component {
 
   componentDidMount() {
     let gameId = new URL(window.location.href).searchParams.get("id");
-    let token = sessionStorage.getItem("token");
+    this.getGameInfo(gameId);
+  }
 
+  getGameInfo(gameId) {
+    let token = sessionStorage.getItem("token");
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
       .then(res => {
         if (!res.ok) {
@@ -191,16 +194,14 @@ export default class GameView extends React.Component {
               <EditGameForm
                 gameId={this.state.gameInfo.id}
                 toggleView={() => this.setState({ form: "" })}
-                onEditSave={() => {
-                  this.getGameInfo();
-                }}
+                onEditSave={() => this.getGameInfo(this.state.gameInfo.id)}
               />
             )}
             {this.state.form === "join" && (
               <JoinGameForm
                 gameId={this.state.gameInfo.id}
                 toggleView={() => this.setState({ form: "" })}
-                onJoin={() => console.log("joinde")}
+                onJoin={() => console.log("joined")}
               />
             )}
             {this.state.form === "players" && (

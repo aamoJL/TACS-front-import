@@ -31,19 +31,13 @@ export default class EditGameForm extends React.Component {
       capture_time: 300,
       confirmation_time: 60,
       displayColorPicker: false,
-      saved: false
+      saved: true
     };
-
-    this.handleMapDrag = this.handleMapDrag.bind(this);
   }
-
-  handleError = error => {
-    this.setState({ errorMsg: error });
-  };
 
   handleChange = e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, saved: false });
   };
 
   handleFactionAdd = e => {
@@ -201,17 +195,7 @@ export default class EditGameForm extends React.Component {
     }
   };
 
-  handleMapDrag = e => {
-    this.setState({
-      mapCenter: e.target.getCenter()
-    });
-  };
-
-  handleMapScroll = e => {
-    this.setState({
-      zoom: e.target.getZoom()
-    });
-  };
+  handleMapScroll = e => {};
 
   handleGameSave = e => {
     e.preventDefault();
@@ -461,7 +445,7 @@ export default class EditGameForm extends React.Component {
             onSubmit={this.handleObjectivePointAdd}
           />
 
-          <h1>Demo Game Editor</h1>
+          <h1>Game Editor</h1>
           <br />
           <input
             placeholder="Game name"
@@ -635,8 +619,8 @@ export default class EditGameForm extends React.Component {
             zoom={this.state.zoom}
             maxZoom="13"
             style={{ height: "400px", width: "400px" }}
-            onmoveend={this.handleMapDrag}
-            onzoomend={this.handleMapScroll}
+            onmoveend={e => this.setState({ mapCenter: e.target.getCenter() })}
+            onzoomend={e => this.setState({ zoom: e.target.getZoom() })}
           >
             <TileLayer
               attribution="Maanmittauslaitoksen kartta"
