@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
 import "./App.css";
+
+import ClientSocket from "./components/Socket";
 import {
   BrowserRouter as Router,
   Route,
@@ -11,6 +13,7 @@ import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import GameSelection from "./components/GameSelection";
 import GameView from "./components/GameView";
+import ReplayMap from "./components/ReplayMap";
 
 export default class App extends Component {
   constructor() {
@@ -124,6 +127,11 @@ export default class App extends Component {
       />
     );
   };
+
+  replay = () => {
+    return <ReplayMap />;
+  };
+
   render() {
     // TODO: think better solution to wait for authenticator
     if (!this.state.authenticateComplete) {
@@ -159,9 +167,9 @@ export default class App extends Component {
                 <Redirect from="*" to="/" />
               </Switch>
             )}
-
             {this.state.logged && (
               <Switch>
+                <Route exact path="/replay" component={this.replay} />
                 <Route
                   path="/game"
                   component={() => {
