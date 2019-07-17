@@ -1,9 +1,11 @@
 import React from "react";
+import NotificationCard from "./NotificationCard";
 
 export default class NotificationView extends React.Component {
   state = {
     notifications: [],
-    notificationInput: ""
+    notificationInput: "",
+    notificationTypeInput: "note"
   };
 
   componentDidMount() {
@@ -19,39 +21,59 @@ export default class NotificationView extends React.Component {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
-        //this.setState({ notifications: res });
+        this.setState({ notifications: res.reverse() });
       });
   }
 
   handleSend = e => {
     e.preventDefault();
 
-    console.log(this.props.socket);
-
-    this.props.socket.emit(this.props.gameId, {
-      type: "alert",
-      message: "asd"
-    });
+    if (this.state.notificationInput === "") {
+      alert("notification message can't be empty");
+    } else {
+      this.props.socket.emit("game-info", {
+        type: this.state.notificationTypeInput,
+        message: this.state.notificationInput,
+        game: this.props.gameId
+      });
+      this.getNotifications(this.props.gameId);
+      this.setState({ notificationInput: "" });
+    }
   };
 
   render() {
+    let notifications = this.state.notifications.map(notification => (
+      <NotificationCard key={notification.id} notification={notification} />
+    ));
+
     return (
       <div className="fade-main">
         <button onClick={() => this.props.toggleView()}>Close</button>
         <div>
-          <form onSubmit={this.handleSend}>
-            <input
-              type="text"
-              value={this.state.notificationInput}
-              onChange={e =>
-                this.setState({ notificationInput: e.target.value })
-              }
-              placeholder="Notification text..."
-            />
-            <button type="submit">Send Notification</button>
-          </form>
+          {this.props.role === "admin" && this.props.gameState !== "ENDED" && (
+            <form onSubmit={this.handleSend}>
+              <select
+                value={this.state.notificationTypeInput}
+                onChange={e =>
+                  this.setState({ notificationTypeInput: e.target.value })
+                }
+              >
+                <option value="note">Note</option>
+                <option value="alert">Alert</option>
+              </select>
+              <input
+                type="text"
+                value={this.state.notificationInput}
+                onChange={e =>
+                  this.setState({ notificationInput: e.target.value })
+                }
+                placeholder="Notification message..."
+              />
+              <button type="submit">Send Notification</button>
+            </form>
+          )}
         </div>
+        {notifications}
       </div>
     );
   }

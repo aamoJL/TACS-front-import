@@ -64,7 +64,6 @@ export default class GameView extends React.Component {
 
   handleLeaveFaction = e => {
     let token = sessionStorage.getItem("token");
-    let error = false;
     fetch(
       `${process.env.REACT_APP_API_URL}/faction/leave/${
         this.state.gameInfo.id
@@ -78,7 +77,6 @@ export default class GameView extends React.Component {
     )
       .then(res => {
         if (!res.ok) {
-          error = true;
         }
         return res.json();
       })
@@ -91,7 +89,6 @@ export default class GameView extends React.Component {
   // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
   // setting socketSignal to null immediately after to avoid multiple database fetches
   getSocketSignal = data => {
-    console.log(data);
     this.setState(
       {
         socketSignal: data
@@ -112,7 +109,6 @@ export default class GameView extends React.Component {
 
   render() {
     const initialPosition = [this.state.lat, this.state.lng];
-
     return (
       <div>
         <Link to="/">
@@ -186,13 +182,11 @@ export default class GameView extends React.Component {
               zoom={this.state.zoom}
               mapUrl={this.state.mapUrl}
               currentGameId={this.state.gameInfo.id}
-              socketSignal={
-                this.state.socketSignal !== null
-                  ? this.state.socketSignal
-                  : null
-              }
-            />
-            <NotificationPopup socketSignal={this.state.socketSignal} />
+              socketSignal={this.state.socketSignal}
+            >
+              <NotificationPopup socketSignal={this.state.socketSignal} />
+            </UserMap>
+
             {this.state.form === "edit" && (
               <EditGameForm
                 gameId={this.state.gameInfo.id}
@@ -221,6 +215,12 @@ export default class GameView extends React.Component {
                 gameId={this.state.gameInfo.id}
                 toggleView={() => this.setState({ form: "" })}
                 socket={this.state.socket}
+                role={this.state.role}
+                gameState={
+                  this.state.gameInfo !== undefined
+                    ? this.state.gameInfo.state
+                    : ""
+                }
               />
             )}
           </div>

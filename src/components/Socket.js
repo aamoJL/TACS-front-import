@@ -17,7 +17,7 @@ export default class ClientSocket extends React.Component {
 
   // initiate the socket on component mount
   async componentWillMount() {
-    console.log("hi socket");
+    // console.log("hi socket");
     // need to explicitly update drawings and trackings when gameID first becomes available
     if (this.props.gameId !== null) {
       await this.props.getSocketSignal("drawing-update");
@@ -38,7 +38,7 @@ export default class ClientSocket extends React.Component {
 
   // disconnect the socket on component dismount
   componentWillUnmount() {
-    console.log("bye socket");
+    // console.log("bye socket");
     this.state.sock.disconnect();
   }
 
@@ -47,7 +47,6 @@ export default class ClientSocket extends React.Component {
 
     // set the socket to listen gameId-thread
     socket.on(this.props.gameId, data => {
-      console.log("on " + data);
       this.props.getSocketSignal(data);
       // check socket update type
       this.setState({ update: data.type });

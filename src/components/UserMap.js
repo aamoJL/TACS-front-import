@@ -149,38 +149,41 @@ class UserMap extends Component {
 
   render() {
     return (
-      <Map
-        className="map"
-        center={this.props.position}
-        zoom={this.props.zoom}
-        minZoom="7"
-        maxZoom="17"
-        zoomControl={false}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
-          url={this.props.mapUrl}
-        />
-        <ZoomControl position="topright" />
-        <DrawTools
-          position={this.props.position}
-          sendGeoJSON={this.sendGeoJSON}
-          geoJSONLayer={this.state.geoJSONLayer}
-          currentGameId={this.props.currentGameId}
-        />
-        {this.state.ownLat !== null && (
-          <Marker position={[this.state.ownLat, this.state.ownLng]}>
-            <Popup>
-              User's real position.
-              <br />
-            </Popup>
-          </Marker>
-        )}
-        <Player
-          currentGameId={this.props.currentGameId}
-          socketSignal={this.props.socketSignal}
-        />
-      </Map>
+      <div>
+        <Map
+          className="map"
+          center={this.props.position}
+          zoom={this.props.zoom}
+          minZoom="7"
+          maxZoom="17"
+          zoomControl={false}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
+            url={this.props.mapUrl}
+          />
+          <ZoomControl position="topright" />
+          <DrawTools
+            position={this.props.position}
+            sendGeoJSON={this.sendGeoJSON}
+            geoJSONLayer={this.state.geoJSONLayer}
+            currentGameId={this.props.currentGameId}
+          />
+          {this.state.ownLat !== null && (
+            <Marker position={[this.state.ownLat, this.state.ownLng]}>
+              <Popup>
+                User's real position.
+                <br />
+              </Popup>
+            </Marker>
+          )}
+          <Player
+            currentGameId={this.props.currentGameId}
+            socketSignal={this.props.socketSignal}
+          />
+        </Map>
+        {this.props.children}
+      </div>
     );
   }
 }

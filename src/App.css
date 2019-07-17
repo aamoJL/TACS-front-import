@@ -13,7 +13,7 @@ body {
 /* UserMap */
 .map {
   position: absolute;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   height: 95vh;
   width: 100vw;
 }
@@ -232,4 +232,18 @@ div.login button:hover {
 .task-form {
   display: flex;
   flex-direction: column;
+}
+
+.notification-popup {
+  position: absolute;
+  z-index: 1010;
+}
+
+.notification-popup.warning {
+  background-color: yellow;
+  color: black;
+}
+
+.notification-popup.alert {
+  background-color: red;
 }
