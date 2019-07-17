@@ -275,3 +275,8 @@ div.login button:hover {
 }
 .leaflet-control-playback .sliderContainer {
 }
+
+.leaflet-tooltip {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+}

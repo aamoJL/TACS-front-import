@@ -51,6 +51,7 @@ export const Draw = L.Class.extend({
     this._showTrackLine = this.trackLineOptions.isDraw;
 
     this._map = map;
+    this._map.on("click", this._onmouseclickEvt, this);
     this._map.on("mousemove", this._onmousemoveEvt, this);
 
     this._trackLayer = new TrackLayer().addTo(map);
@@ -65,18 +66,8 @@ export const Draw = L.Class.extend({
       this._trackPointFeatureGroup = L.featureGroup([]).addTo(map);
     }
 
-    // 目标如果使用图片，先加载图片
-    if (this.targetOptions.useImg) {
-      /*       let img2 = new Image();
-            img2.onload = () => {
-              this._targetImg2 = img2;
-            };
-            img2.onerror = () => {
-              throw new Error("img load error!");
-            };
-            img2.src = this.targetOptions.imgUrl; */
-      this._targetImg = [];
-    }
+    // setup array for images
+    this._targetImg = [];
   },
 
   update: function() {
@@ -111,6 +102,7 @@ export const Draw = L.Class.extend({
   remove: function() {
     this._bufferTracks = [];
     this._trackLayer.off("update", this._trackLayerUpdate, this);
+    this._map.off("click", this._onmouseclickEvt, this);
     this._map.off("mousemove", this._onmousemoveEvt, this);
     if (this._map.hasLayer(this._trackLayer)) {
       this._map.removeLayer(this._trackLayer);
@@ -146,6 +138,25 @@ export const Draw = L.Class.extend({
         for (let j = 0, len = this._bufferTracks[i].length; j < len; j++) {
           let tpoint = this._getLayerPoint(this._bufferTracks[i][j]);
           if (point.distanceTo(tpoint) <= this.trackPointOptions.radius) {
+            this._canvas.style.cursor = "pointer";
+            return;
+          }
+        }
+      }
+    }
+    this._canvas.style.cursor = "grab";
+  },
+
+  _onmouseclickEvt: function(e) {
+    if (!this._showTrackPoint) {
+      return;
+    }
+    let point = e.layerPoint;
+    if (this._bufferTracks.length) {
+      for (let i = 0, leni = this._bufferTracks.length; i < leni; i++) {
+        for (let j = 0, len = this._bufferTracks[i].length; j < len; j++) {
+          let tpoint = this._getLayerPoint(this._bufferTracks[i][j]);
+          if (point.distanceTo(tpoint) <= this.trackPointOptions.radius) {
             this._opentoolTip(this._bufferTracks[i][j]);
             return;
           }
@@ -162,7 +173,7 @@ export const Draw = L.Class.extend({
     if (this._map.hasLayer(this._tooltip)) {
       this._map.removeLayer(this._tooltip);
     }
-    this._canvas.style.cursor = "default";
+    //this._canvas.style.cursor = "default";
     let latlng = L.latLng(trackpoint.lat, trackpoint.lng);
     let tooltip = (this._tooltip = L.tooltip(this.toolTipOptions));
     tooltip.setLatLng(latlng);
@@ -223,40 +234,34 @@ export const Draw = L.Class.extend({
 
   _drawTrackPointsCanvas: function(trackpoints) {
     let options = this.trackPointOptions;
+    let i = trackpoints.length - 1;
     this._ctx.save();
-    for (let i = 0, len = trackpoints.length; i < len; i++) {
-      if (trackpoints[i].isOrigin) {
-        let latLng = L.latLng(trackpoints[i].lat, trackpoints[i].lng);
-        let radius = options.radius;
-        let point = this._map.latLngToLayerPoint(latLng);
-        this._ctx.beginPath();
-        this._ctx.arc(point.x, point.y, radius, 0, Math.PI * 2, false);
-        this._ctx.globalAlpha = options.opacity;
-        if (options.stroke) {
-          this._ctx.strokeStyle = options.color;
-          this._ctx.stroke();
-        }
-        if (options.fill) {
-          this._ctx.fillStyle = options.fillColor;
-          this._ctx.fill();
-        }
-      }
+    let latLng = L.latLng(trackpoints[i].lat, trackpoints[i].lng);
+    let radius = options.radius;
+    let point = this._map.latLngToLayerPoint(latLng);
+    this._ctx.beginPath();
+    this._ctx.arc(point.x, point.y, radius, 0, Math.PI * 2, false);
+    this._ctx.globalAlpha = options.opacity;
+    if (options.stroke) {
+      this._ctx.strokeStyle = options.color;
+      this._ctx.stroke();
+    }
+    if (options.fill) {
+      this._ctx.fillStyle = options.fillColor;
+      this._ctx.fill();
     }
     this._ctx.restore();
   },
 
   _drawTrackPointsSvg: function(trackpoints) {
-    for (let i = 0, len = trackpoints.length; i < len; i++) {
-      if (trackpoints[i].isOrigin) {
-        let latLng = L.latLng(trackpoints[i].lat, trackpoints[i].lng);
-        let cricleMarker = L.circleMarker(latLng, this.trackPointOptions);
-        cricleMarker.bindTooltip(
-          this._getTooltipText(trackpoints[i]),
-          this.toolTipOptions
-        );
-        this._trackPointFeatureGroup.addLayer(cricleMarker);
-      }
-    }
+    let i = trackpoints.length - 1;
+    let latLng = L.latLng(trackpoints[i].lat, trackpoints[i].lng);
+    let cricleMarker = L.circleMarker(latLng, this.trackPointOptions);
+    cricleMarker.bindTooltip(
+      this._getTooltipText(trackpoints[0]),
+      this.toolTipOptions
+    );
+    this._trackPointFeatureGroup.addLayer(cricleMarker);
   },
 
   _drawtxt: function(text, trackpoint) {
@@ -322,7 +327,6 @@ export const Draw = L.Class.extend({
       img.icon = info[0]["value"];
       image = img;
     }
-    //let svg = document.createElementNS(`../${info[0]["value"]}`, "svg"); //http://www.sclance.com/pngs/random-png/random_png_1136179.png
     this._ctx.drawImage(image, 0 - offset.x, 0 - offset.y, width, height);
     this._ctx.strokeStyle = info[1]["value"];
     this._ctx.lineWidth = 3;
@@ -330,43 +334,13 @@ export const Draw = L.Class.extend({
     this._ctx.restore();
   },
 
-  // _createImage: async function() {
-  //   const newimg = await new Image();
-  //   newimg.onload = async () => {};
-  //   newimg.onerror = async () => {
-  //     throw new Error("img load error!");
-  //   };
-  //   return await newimg;
-  // },
-
-  /*   _drawShipImage: function(trackpoint, info) {
-    let point = this._getLayerPoint(trackpoint);
-    let width = this.targetOptions.width;
-    let height = this.targetOptions.height;
-    let offset = {
-      x: width / 2,
-      y: height / 2
-    };
-    this._ctx.save();
-    this._ctx.translate(point.x, point.y);
-    this._ctx.drawImage(
-      this._targetImg,
-      0 - offset.x,
-      0 - offset.y,
-      width,
-      height
-    );
-    console.log(this._targetImg);
-    this._ctx.restore();
-  }, */
-
   _getTooltipText: function(targetobj) {
     let content = [];
     content.push("<table>");
     if (targetobj.info && targetobj.info.length) {
-      for (let i = 0, len = targetobj.info.length; i < len; i++) {
+      // skip first two as they're icon and faction colour
+      for (let i = 2, len = targetobj.info.length; i < len; i++) {
         content.push("<tr>");
-        content.push("<td>" + targetobj.info[i].key + "</td>");
         content.push("<td>" + targetobj.info[i].value + "</td>");
         content.push("</tr>");
       }

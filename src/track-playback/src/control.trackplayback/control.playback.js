@@ -100,13 +100,6 @@ export const TrackPlayBackControl = L.Control.extend({
       "sliderContainer",
       this._container
     );
-
-    this._pointCbx = this._createCheckbox(
-      "show trackPoint",
-      "show-trackpoint",
-      this._optionsContainer,
-      this._showTrackPoint
-    );
     this._lineCbx = this._createCheckbox(
       "show trackLine",
       "show-trackLine",
@@ -247,14 +240,6 @@ export const TrackPlayBackControl = L.Control.extend({
       .on(sliderEle, "mousemove", fn, this);
 
     return sliderEle;
-  },
-
-  _showTrackPoint(e) {
-    if (e.target.checked) {
-      this.trackPlayBack.showTrackPoint();
-    } else {
-      this.trackPlayBack.hideTrackPoint();
-    }
   },
 
   _showTrackLine(e) {

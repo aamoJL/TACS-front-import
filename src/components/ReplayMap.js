@@ -104,15 +104,15 @@ export default class ReplayMap extends React.Component {
     this.trackplayback = new L.TrackPlayBack(this.state.data, this.map, {
       trackPointOptions: {
         // whether to draw track point
-        isDraw: false,
+        isDraw: true,
         // whether to use canvas to draw it, if false, use leaflet api `L.circleMarker`
-        useCanvas: true,
+        useCanvas: false,
         stroke: true,
-        color: "#ef0300",
+        color: "#000000",
         fill: true,
-        fillColor: "#ef0300",
-        opacity: 0.3,
-        radius: 4
+        fillColor: "rgba(0,0,0,0)",
+        opacity: 0,
+        radius: 12
       },
       targetOptions: {
         // whether to use an image to display target, if false, the program provides a default
@@ -135,6 +135,11 @@ export default class ReplayMap extends React.Component {
         speed: 10,
         // the max speed
         maxSpeed: 100
+      },
+      toolTipOptions: {
+        offset: [0, 0],
+        direction: "top",
+        permanent: false
       }
     });
     this.setState({
