@@ -15,12 +15,11 @@ Empty Username And Password      ${EMPTY}         ${EMPTY}              ${SHORT_
 *** Keywords ***
 Login With Invalid Credentials Should Fail
     [Arguments]    ${username}    ${password}   ${error_text}
-    Open Login
     Input Username    ${username}
     Input Password    ${password}
     Submit Credentials Login
     Login Should Have Failed    ${error_text}
-    Close Login Screen
+    Reload Page
 
 Login Should Have Failed        #Checks the error message.
     [Arguments]     ${error_text}

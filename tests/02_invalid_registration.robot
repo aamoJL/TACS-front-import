@@ -38,7 +38,7 @@ Registration With Invalid Options Should Fail
     Run Keyword     ${gene_passwords}       ${GNUM_P}
     Submit Credentials Registration
     Registration Should Have Failed     ${error_text}
-    Close Registration Screen
+    Back To Login Screen
 
 Registration Should Have Failed        #Checks the error message.
     [Arguments]     ${error_text}
@@ -51,7 +51,7 @@ Differing Password
     Generate Differing Password     8
     Submit Credentials Registration
     Element Text Should Be      css=h2      ${P_NOMATCH}
-    Close Registration Screen
+    Back To Login Screen
 
 Existing Account Correct Password
     Open Registration
@@ -59,7 +59,7 @@ Existing Account Correct Password
     Input Valid Password
     Submit Credentials Registration
     Element Text Should Be      css=h2      ${ACC_EXISTS}
-    Close Registration Screen
+    Back To Login Screen
 
 Existing Account New Password
     Open Registration
@@ -67,7 +67,7 @@ Existing Account New Password
     Generate Password  4
     Submit Credentials Registration
     Element Text Should Be      css=h2      ${ACC_EXISTS}
-    Close Registration Screen
+    Back To Login Screen
 
 
 

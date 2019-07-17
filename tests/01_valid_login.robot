@@ -6,10 +6,8 @@ Resource        resource.robot
 *** Test Cases ***
 Valid Login
     Open Browser To Login Page
-    Open Login
     Input Username      ${VALID USER}
     Input Password      ${VALID PASSWORD}
     Submit Credentials Login
-    Wait For Log Out Button To Appear
     Log Out
     [Teardown]      Close Browser

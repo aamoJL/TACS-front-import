@@ -7,7 +7,7 @@ Library     DateTime
 *** Variables ***
 ${SERVER}           %{SITE_URL}
 ${BROWSER}          ff
-${DELAY}            0.2
+${DELAY}            0.5
 #${VALID USER} =     ville
 ${VALID PASSWORD} =     koira
 ${LOGIN URL}        https://${SERVER}/
@@ -69,7 +69,7 @@ Go To Login Page
     Go To       ${LOGIN URL}
     Login Page Should be Open
 
-Open Login
+Open Login      #No need anymore since the new website.
     Click Button       id=loginButton
 
 Input Username
@@ -87,19 +87,19 @@ Welcome Page Should Be Open     #You can use this if there's a different page af
     Location Should Be      ${WELCOME URL}
 
 Log Out
-    Click Button        id=logoutButton
+    Click Button        id=signOutButton
 
 Close Login Screen
     Click Element        id=closeLoginFormX
 
-Wait For Log Out Button To Appear
+Wait For Log Out Button To Appear       #not in use
     Wait Until Page Contains Element        id=logoutButton      1
 
 
 
 #Registration
 Open Registration
-    Click Button        id=registerButton
+    Click Button        id=openRegisterFormButton
 
 Generate Valid Username     #Generates new username for every test rotation in gitlab. Used in test suite 00.
     ${GENE_username} =      Generate Random String      12       [LETTERS][NUMBERS]
@@ -133,8 +133,11 @@ Generate Differing Password
 Submit Credentials Registration
     Click Button        id=submitRegisterButton
 
-Close Registration Screen
+Close Registration Screen       #not in use
     Click Element       id=closeRegisterFormX
+
+Back To Login Screen
+    Click Element       id=openLoginFormButton
 
 
 
@@ -256,6 +259,59 @@ Map Movement
     Drag And Drop By Offset    css=div[class=leaflet-control-container]     800     800
     Drag And Drop By Offset    css=div[class=leaflet-control-container]     -50     -50
     Log To Console             Map movement tested
+
+# Leaflet write text
+
+Write Text
+#    Select Game
+    Click Element       css=a[class=leaflet-draw-draw-textbox]
+    Click Element At Coordinates    css=div[class=leaflet-control-container]        100        300
+    Input Text      css=div[placeholder="Click out to save"]        Hello
+    Click Element At Coordinates    css=div[class=leaflet-control-container]        100        400
+    Element Text Should Be      css=div[placeholder="Click out to save"]        Hello       #Tarkistaa onko teksti oikein.
+    Sleep       2
+
+    Click Element       css=a[class=leaflet-draw-draw-textbox]
+    Click Element At Coordinates    css=div[class=leaflet-control-container]        100        500
+    Sleep       4
+    Input Text      css=div[placeholder="Click out to save"]       12345
+    Click Element At Coordinates    css=div[class=leaflet-control-container]        100        400
+    Element Text Should Be      css=div[placeholder="Click out to save"]        12345
+    :FOR        ${i}        IN RANGE        1000
+    \       ${status}       ${value} =  Run Keyword And Ignore Error    Page Should Contain Element     id={i}
+    \       Run Keyword if      '${status}'=='PASS'     Log     {i}
+#    :FOR    ${i}        IN RANGE        1000
+#    \       Run Keyword if      'id={i}'=='PASS'
+#    \       Run Keyword if       '{i}'=='5'        Log     ${i}
+#    Click Element       css=a[class=leaflet-draw-edit-edit]
+#    Mouse Down      class:leaflet-marker-icon:first-of-type
+#    Sleep       2
+#    Mouse Up        class:leaflet-tile-loaded:nth-child(4)
+#    Sleep       2
+#    Click Leaflet Panel     Save changes
+#    Sleep       2
+#    Click Element       css=a[class=leaflet-draw-edit-edit]
+#    Mouse Down      class:leaflet-marker-icon:first-of-type
+#    Mouse Up        class:leaflet-tile-loaded:nth-child(1)
+#    Sleep       2
+#    Click Leaflet Panel     Cancel editing, discards all changes
+#    Sleep       2
+
+# ------------------------------------------------------------------------------
+
+# Adding New Task
+
+Click Tasks
+    Click Element       id=tasklistButton
+
+Generate Task Name/Description
+    [Arguments]     ${TASK_NAME}      ${TASK_DESCRIPTION}
+    ${TASK_N} =     Generate Random String      ${TASK_NAME}            [LETTERS][NUMBERS]
+    ${TASK_D} =     Generate Random String      ${TASK_DESCRIPTION}     [LETTERS][NUMBERS]
+    Input Text      id=taskNameInput            ${TASK_N}
+    Input Text      id=taskDescriptionInput     ${TASK_D}
+    
+
 
 
 
