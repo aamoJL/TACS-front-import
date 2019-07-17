@@ -128,6 +128,7 @@ export const Draw = L.Class.extend({
     }
   },
 
+  // changes cursor icon to pointer and shows information about tracked player
   _onmousemoveEvt: function(e) {
     if (!this._showTrackPoint) {
       return;
@@ -147,6 +148,7 @@ export const Draw = L.Class.extend({
     this._canvas.style.cursor = "grab";
   },
 
+  // on click event that shows popup about tracked player
   _onmouseclickEvt: function(e) {
     if (!this._showTrackPoint) {
       return;
@@ -173,7 +175,6 @@ export const Draw = L.Class.extend({
     if (this._map.hasLayer(this._tooltip)) {
       this._map.removeLayer(this._tooltip);
     }
-    //this._canvas.style.cursor = "default";
     let latlng = L.latLng(trackpoint.lat, trackpoint.lng);
     let tooltip = (this._tooltip = L.tooltip(this.toolTipOptions));
     tooltip.setLatLng(latlng);
@@ -299,6 +300,7 @@ export const Draw = L.Class.extend({
     this._ctx.restore();
   },
 
+  // used to draw image for tracking data
   _drawShipImage: function(trackpoint, info) {
     let point = this._getLayerPoint(trackpoint);
     let width = this.targetOptions.width;
@@ -310,11 +312,13 @@ export const Draw = L.Class.extend({
     this._ctx.save();
     this._ctx.translate(point.x, point.y);
     let image;
+    // use an existing image if it has the same icon as the new data
     this._targetImg.map(img => {
       if (img.icon == info[0]["value"]) {
         image = img;
       }
     });
+    // else create a new global image with new icon
     if (!image) {
       let img = new Image();
       img.onload = () => {
@@ -328,6 +332,7 @@ export const Draw = L.Class.extend({
       image = img;
     }
     this._ctx.drawImage(image, 0 - offset.x, 0 - offset.y, width, height);
+    // draw rect based on faction colour
     this._ctx.strokeStyle = info[1]["value"];
     this._ctx.lineWidth = 3;
     this._ctx.strokeRect(0 - offset.x, 0 - offset.y, width, height);
