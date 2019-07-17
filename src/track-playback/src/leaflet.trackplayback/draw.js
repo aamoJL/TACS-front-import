@@ -324,6 +324,9 @@ export const Draw = L.Class.extend({
     }
     //let svg = document.createElementNS(`../${info[0]["value"]}`, "svg"); //http://www.sclance.com/pngs/random-png/random_png_1136179.png
     this._ctx.drawImage(image, 0 - offset.x, 0 - offset.y, width, height);
+    this._ctx.strokeStyle = info[1]["value"];
+    this._ctx.lineWidth = 3;
+    this._ctx.strokeRect(0 - offset.x, 0 - offset.y, width, height);
     this._ctx.restore();
   },
 

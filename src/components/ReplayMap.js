@@ -35,14 +35,14 @@ export default class ReplayMap extends React.Component {
   componentWillReceiveProps(nextProps) {}
 
   // cloud game a1231e2b-aa29-494d-b687-ea2d48cc23df
-  // local game wimma 15e9563b-e621-4ba1-a440-1b21c7774923
+  // local game wimma 314338f9-b0bb-4bf7-9554-769c7b409bce
   // local game vbox 16977b13-c419-48b4-b7d6-e7620f27bf39
   // fetch player locations from the game
   fetchPlayerData = async () => {
     await fetch(
       `${
         process.env.REACT_APP_API_URL
-      }/replay/players/16977b13-c419-48b4-b7d6-e7620f27bf39`,
+      }/replay/players/314338f9-b0bb-4bf7-9554-769c7b409bce`,
       {
         method: "GET"
       }
