@@ -80,20 +80,21 @@ class GameList extends React.Component {
   };
 
   render() {
-    let gamelistItems = this.props.games.map(game => {
-      return (
-        <GameCard
-          key={game.id}
-          gameId={game.id}
-          onEditSave={this.props.onEditSave}
-        />
-      );
-    });
+    let gamelistItems = this.props.games.map(game => (
+      <GameCard
+        key={game.id}
+        gameId={game.id}
+        onEditSave={this.props.onEditSave}
+      />
+    ));
 
     return (
-      <Fragment>
-        <div className="gamelist">{gamelistItems}</div>
-      </Fragment>
+      <div
+        className="gamelist"
+        style={{ maxHeight: "500px", overflow: "scroll" }}
+      >
+        <div className="gamelist-item">{gamelistItems}</div>
+      </div>
     );
   }
 }
