@@ -9,7 +9,14 @@ Suite Teardown      Close Browser
 Edit Existing Game
     Valid Login
     Select Game
-    #Edit Game
+    Edit Game Time
+    Edit Factions
+    Edit Objective Points
+
+    ##
+    ## Syystä X ei pysty painamaan 'save changes' nappii
+    ## Mut muuten tää toimii
+    Save Game
     Log Out
 
 *** Keywords ***
@@ -17,7 +24,7 @@ Edit Existing Game
 #   USE THE COMMENTED VARIABLES WHEN RUNNING ALL TESTS
 #
 Valid Login
-    Open Login
-    Input Username      ${VALID USER}
+    Input Username      ville   #${VALID USER}
     Input Password      ${VALID PASSWORD}
     Submit Credentials Login
+

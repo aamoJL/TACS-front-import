@@ -9,7 +9,7 @@ Suite Teardown      Close Browser
 Create A New Game
     Valid Login
     Create Game
-    Refresh Browser
+#    Refresh Browser
     Check Game List
     Log Out
 
@@ -18,7 +18,6 @@ Create A New Game
 #   USE THE COMMENTED VARIABLES WHEN RUNNING ALL TESTS
 #
 Valid Login
-    Open Login
     Input Username      ville   # ${VALID USER}
     Input Password      koira   # ${VALID PASSWORD}
     Submit Credentials Login

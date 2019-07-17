@@ -37,10 +37,12 @@ ${B_EDITGAME}       id=editGameButton
 ${I_NGAMENAME}      id=newGameNameInput
 ${I_NGAMEDESC}      id=newGameDescriptionInput
 ${I_NGAMESTART}     id=newGameDateStartInput
+
 ${I_NSTARTTIME}     id=newGameTimeStartInput
 ${I_NGAMESTOP}      id=newGameDateEndInput
 ${I_NSTOPTIME}      id=newGameTimeEndInput
 ${B_NSUBMIT}        id=newGameSubmitButton
+
 ${L_GAMELIST}       id=changeActiveGameList
 ${START}
 
@@ -49,8 +51,19 @@ ${I_EGAMENAME}      id=editGameNameInput
 ${I_EGAMEDESC}      id=editGameDescriptionInput
 ${I_EGAMESTART}     id=editGameDateStartInput
 ${I_ESTARTTIME}     id=editGameTimeStartInput
+
 ${I_EGAMESTOP}      id=editGameDateEndInput
 ${I_ESTOPTIME}      id=editGameTimeEndInput
+${I_FACTIONNAME}    id=factionNameInput
+${I_FACTIONPASS}    id=factionPasswordInput
+${B_FACTIONADD}     id=factionAddButton
+
+${I_FLAGNAME}       id=objectivePointDescriptionInput
+${I_FLAGMULTI}      id=objectivePointMultiplierInput
+${B_FLAGADD}        id=objectivePointAddButton
+${I_CAPTURE}        id=captureTimeInput
+${I_CONF}           id=confirmationTimeInput
+
 ${B_ESUBMIT}        id=editGameSubmitButton
 
 *** Keywords ***
@@ -340,6 +353,16 @@ Generate Task Name/Description
 #${I_ESTOPTIME}      id=editGameTimeEndInput
 #${B_ESUBMIT}        id=editGameSubmitButton
 
+#${I_FACTIONNAME}    id=factionNameInput
+#${I_FACTIONPASS}    id=factionPasswordInput
+#${B_FACTIONADD}     id=factionAddButton
+#
+#${I_FLAGNAME}       id=objectivePointDescriptionInput
+#${I_FLAGMULTI}      id=objectivePointMultiplierInput
+#${B_FLAGADD}        id=objectivePointAddButton
+#${I_CAPTURE}        id=captureTimeInput
+#${I_CONF}           id=confirmationTimeInput
+
 Create Game
     Wait Until Page Contains Element        id=newGameButton      1
     Generate Valid Gamename
@@ -362,12 +385,14 @@ Create Game
     Log             end tadedime ok
 
     Click Button    ${B_NSUBMIT}
+    Handle Alert
 
 Select Game
-    Select From List By Label    ${L_GAMELIST}   ${VALID_GAME}
+    ${x} =              Format String           select{}     ${VALID_GAME}
+    Click Button        id=${x}
     Log                 Game Selected
 
-Edit Game
+Edit Game Time
     Wait Until Page Contains Element        id=editGameButton      1
     Click Button    ${B_EDITGAME}
     Input Text      ${I_EGAMENAME}   ${VALID_GAME}  #test_bINk5V
@@ -385,8 +410,32 @@ Edit Game
     Generate Game End Date And Time
     Input Text      ${I_EGAMESTOP}   ${ENDDATE}
     Input Text      ${I_ESTOPTIME}   ${ENDTIME}
-    Click Button    ${B_ESUBMIT}
     Log             end edited
+
+Edit Factions
+    Input Text      ${I_FACTIONNAME}    Faction1
+    Input Text      ${I_FACTIONPASS}    Pass1
+    Click Button    ${B_FACTIONADD}
+
+    Input Text      ${I_FACTIONNAME}    Faction2
+    Input Text      ${I_FACTIONPASS}    Pass2
+    Click Button    ${B_FACTIONADD}
+
+Edit Objective Points
+    Input Text      ${I_FLAGNAME}       1234567
+    Input Text      ${I_FLAGMULTI}      3
+    Click Button    ${B_FLAGADD}
+
+    Input Text      ${I_CAPTURE}        240
+    Input Text      ${I_CONF}           30
+
+Save Game
+    # Joku vika
+    Press Keys          None    PAGE_DOWN
+    Submit Form
+
+    Click Button        id=closeEditGameFormX
+#    Handle Alert
 
 Generate Valid Gamename     #Generates new name for every test rotation in gitlab. Used in test suite xx.
     ${g_name} =     Generate Random String      6       [LETTERS][NUMBERS]
