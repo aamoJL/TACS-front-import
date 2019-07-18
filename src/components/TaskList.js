@@ -6,8 +6,8 @@ class TaskList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      taskNameInput: "", // >= 3
-      taskDescriptionInput: "", // no limits
+      taskNameInput: "", // 3-31 chars
+      taskDescriptionInput: "", // 0-255
       tasks: [],
       factionlist: [],
       selectedFactionId: ""
@@ -232,6 +232,7 @@ class TaskList extends React.Component {
               type="text"
               placeholder="Task name"
               minLength="3"
+              maxLength="31"
               value={this.state.taskNameInput}
               onChange={e => this.setState({ taskNameInput: e.target.value })}
             />
@@ -239,6 +240,7 @@ class TaskList extends React.Component {
               id="taskDescriptionInput"
               placeholder="Task description"
               value={this.state.taskDescriptionInput}
+              maxLength="255"
               onChange={e =>
                 this.setState({ taskDescriptionInput: e.target.value })
               }
