@@ -40,12 +40,19 @@ export const Draw = L.Class.extend({
     direction: "top",
     permanent: false
   },
+  filterOptions: {
+    infantry: true,
+    recon: true,
+    mechanized: true,
+    factions: []
+  },
 
   initialize: function(map, options) {
     L.extend(this.trackPointOptions, options.trackPointOptions);
     L.extend(this.trackLineOptions, options.trackLineOptions);
     L.extend(this.targetOptions, options.targetOptions);
     L.extend(this.toolTipOptions, options.toolTipOptions);
+    L.extend(this.filterOptions, options.filterOptions);
 
     this._showTrackPoint = this.trackPointOptions.isDraw;
     this._showTrackLine = this.trackLineOptions.isDraw;
@@ -189,12 +196,26 @@ export const Draw = L.Class.extend({
     }
     // 画船
     let targetPoint = trackpoints[trackpoints.length - 1];
+    // get info from first trackpoint
     let info = trackpoints[0].info;
-    if (this.targetOptions.useImg && this._targetImg) {
+    let skip = false;
+    // check if faction has been filtered and skip drawing if it is
+    this.filterOptions.factions.forEach(faction => {
+      if (
+        !faction.active &&
+        trackpoints[0].info[1]["value"] === faction.colour
+      ) {
+        skip = true;
+      }
+    });
+
+    // compare icon to filter, draw if true else skip
+    if (!skip && this.filterOptions[info[0]["value"].slice(0, -4)]) {
       this._drawShipImage(targetPoint, info);
-    } else {
-      this._drawShipCanvas(targetPoint);
     }
+    /*     else {
+      this._drawShipCanvas(targetPoint);
+    } */
     // 画标注信息
     if (this.targetOptions.showText) {
       this._drawtxt(`航向：${parseInt(targetPoint.dir)}度`, targetPoint);
