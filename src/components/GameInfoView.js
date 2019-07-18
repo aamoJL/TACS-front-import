@@ -24,7 +24,7 @@ export default class GameInfoView extends React.Component {
       <div className="fade-main">
         <div className="sticky">
           <span
-            id="closeEditGameFormX"
+            id="closeGameInfoX"
             className="close"
             onClick={this.props.toggleView}
           >

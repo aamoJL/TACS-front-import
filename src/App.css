@@ -214,6 +214,8 @@ div.login button:hover {
 .gamelist {
   border: 2px solid white;
   max-width: 800px;
+  max-height: 500px;
+  overflow: scroll;
 }
 
 .gamelist-item {

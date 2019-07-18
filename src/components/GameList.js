@@ -89,10 +89,7 @@ class GameList extends React.Component {
     ));
 
     return (
-      <div
-        className="gamelist"
-        style={{ maxHeight: "500px", overflow: "scroll" }}
-      >
+      <div className="gamelist">
         <div className="gamelist-item">{gamelistItems}</div>
       </div>
     );

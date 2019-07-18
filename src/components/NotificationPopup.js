@@ -37,6 +37,7 @@ export default class NotificationPopup extends React.Component {
           }
         >
           <button
+            id="NotificationPopupCloseButton"
             onClick={() => {
               this.setState({ visible: false });
             }}

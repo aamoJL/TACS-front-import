@@ -51,11 +51,17 @@ export default class NotificationView extends React.Component {
 
     return (
       <div className="fade-main">
-        <button onClick={() => this.props.toggleView()}>Close</button>
+        <button
+          id="notificationViewCloseButton"
+          onClick={() => this.props.toggleView()}
+        >
+          Close
+        </button>
         <div>
           {this.props.role === "admin" && this.props.gameState !== "ENDED" && (
             <form onSubmit={this.handleSend}>
               <select
+                id="notificationViewTypeSelect"
                 value={this.state.notificationTypeInput}
                 onChange={e =>
                   this.setState({ notificationTypeInput: e.target.value })
@@ -65,6 +71,7 @@ export default class NotificationView extends React.Component {
                 <option value="alert">Alert</option>
               </select>
               <input
+                id="notificationViewMessageInput"
                 type="text"
                 value={this.state.notificationInput}
                 onChange={e =>
@@ -72,7 +79,9 @@ export default class NotificationView extends React.Component {
                 }
                 placeholder="Notification message..."
               />
-              <button type="submit">Send Notification</button>
+              <button id="notificationSubmitButton" type="submit">
+                Send Notification
+              </button>
             </form>
           )}
         </div>

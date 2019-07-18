@@ -47,15 +47,30 @@ export default class GameStateButtons extends React.Component {
   render() {
     if (this.state.gameState === "CREATED") {
       return (
-        <button onClick={() => this.setGameState("STARTED")}>Start</button>
+        <button
+          id="gameStateStartButton"
+          onClick={() => this.setGameState("STARTED")}
+        >
+          Start
+        </button>
       );
     }
 
     if (this.state.gameState === "STARTED") {
       return (
         <Fragment>
-          <button onClick={() => this.setGameState("PAUSED")}>Pause</button>
-          <button onClick={() => this.setGameState("ENDED")}>Stop</button>
+          <button
+            id="gameStatePauseButton"
+            onClick={() => this.setGameState("PAUSED")}
+          >
+            Pause
+          </button>
+          <button
+            id="gameStateStopButton"
+            onClick={() => this.setGameState("ENDED")}
+          >
+            Stop
+          </button>
         </Fragment>
       );
     }
@@ -63,8 +78,18 @@ export default class GameStateButtons extends React.Component {
     if (this.state.gameState === "PAUSED") {
       return (
         <Fragment>
-          <button onClick={() => this.setGameState("STARTED")}>Continue</button>
-          <button onClick={() => this.setGameState("ENDED")}>Stop</button>
+          <button
+            id="gameStateContinueButton"
+            onClick={() => this.setGameState("STARTED")}
+          >
+            Continue
+          </button>
+          <button
+            id="gameStateStopButton"
+            onClick={() => this.setGameState("ENDED")}
+          >
+            Stop
+          </button>
         </Fragment>
       );
     }

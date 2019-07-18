@@ -116,7 +116,7 @@ export default class GameView extends React.Component {
     return (
       <div>
         <Link to="/">
-          <button>Game selection</button>
+          <button id="gameViewGameSelectionButton">Game selection</button>
         </Link>
         {this.state.gameInfo !== null && (
           <div>
@@ -143,7 +143,10 @@ export default class GameView extends React.Component {
                   Edit
                 </button>
               )}
-            <button onClick={() => this.setState({ form: "info" })}>
+            <button
+              id="gameInfoButton"
+              onClick={() => this.setState({ form: "info" })}
+            >
               Game Info
             </button>
             {this.state.role === "" && (
