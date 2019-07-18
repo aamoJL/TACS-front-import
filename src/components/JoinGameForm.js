@@ -117,6 +117,7 @@ export default class JoinGameForm extends React.Component {
               onChange={e =>
                 this.setState({ factionPasswordInput: e.target.value })
               }
+              type="password"
               placeholder="Password"
               minLength="3"
               required

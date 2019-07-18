@@ -29,22 +29,19 @@ export default class GameView extends React.Component {
       .then(res => {
         if (!res.ok) {
           throw Error();
+        } else {
+          return res.json();
         }
       })
-      .catch(error => {
-        alert("Game not found");
-        window.document.location.href = "/";
-      });
-
-    // Get game info
-    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
-      .then(res => res.json())
       .then(res => {
         this.setState({
           gameInfo: res
         });
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        alert("Game not found");
+        window.document.location.href = "/";
+      });
 
     // Get Role
     fetch(`${process.env.REACT_APP_API_URL}/faction/check-faction/${gameId}`, {
