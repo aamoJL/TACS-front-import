@@ -23,10 +23,15 @@ export const TrackPlayBack = L.Class.extend({
       targetOptions: options.targetOptions,
       toolTipOptions: options.toolTipOptions,
       filterOptions: options.filterOptions
+      //scoreOptions: options.scoreOptions
     };
     this.tracks = this._initTracks(data);
     this.draw = new Draw(map, drawOptions);
-    this.trackController = new TrackController(this.tracks, this.draw);
+    this.trackController = new TrackController(
+      this.tracks,
+      this.draw,
+      options.scoreOptions
+    );
     this.clock = new Clock(this.trackController, options.clockOptions);
 
     this.clock.on("tick", this._tick, this);
@@ -117,6 +122,9 @@ export const TrackPlayBack = L.Class.extend({
   // pass the factions to control playback to show faction names on the control panel
   passFactions: function() {
     return this.draw.filterOptions.factions;
+  },
+  passScores: function(i) {
+    return this.trackController._activeScores[i];
   },
   dispose: function() {
     this.clock.off("tick", this._tick);

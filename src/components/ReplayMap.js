@@ -15,9 +15,11 @@ export default class ReplayMap extends React.Component {
       // stores the playback object
       playback: null,
       // stores player locations from backend
-      data: null,
+      players: [],
       // stores all factions from the game
       factions: [],
+      // stores all scores from the game
+      scores: [],
       // stores all drawings from backend
       allGeoJSON: [],
       // stores all active drawings on the map
@@ -30,68 +32,25 @@ export default class ReplayMap extends React.Component {
     await this.setState({
       gameId: await new URL(window.location.href).searchParams.get("id")
     });
-    // fetch player data with gameId
-    // throws error if game is not found and redirects back to game selection
+    // fetch all data and set it to state
+    let replaydata = await this.fetchReplayData();
     await this.setState({
-      data: await this.fetchPlayerData()
+      players: replaydata.players,
+      factions: replaydata.factions,
+      scores: replaydata.scores
     });
-    // fetch factions from the game
-    await this.setState({
-      factions: await this.fetchFactions()
-    });
-    // fetch drawings with gameId
-    await this.setState({
-      allGeoJSON: await this.fetchDrawingData()
-    });
-    // WIP, map only active drawings to activeGeoJSON state
-    await this.setState({
-      activeGeoJSON: this.tickDrawings()
-    });
-    // if game was found but game has no replay data, alert the user
-    this.state.data.length > 1
-      ? this.replay()
-      : alert("No replay data was found");
+    replaydata ? this.replay() : alert("No replay data was found");
   }
 
-  fetchPlayerData = async () => {
-    let res = await fetch(
-      `${process.env.REACT_APP_API_URL}/replay/players/${this.state.gameId}`
-    );
-    if (await res.ok) {
-      return await res.json();
-    } else {
-      alert("Game not found");
-      window.document.location.href = "/";
-    }
-  };
-
-  fetchFactions = async () => {
-    let res = await fetch(
-      `${process.env.REACT_APP_API_URL}/game/${this.state.gameId}`
-    );
-    if (await res.ok) {
-      let data = await res.json();
-      let factions = data.factions.map(faction => {
-        return {
-          name: faction.factionName,
-          colour: faction.colour,
-          active: true
-        };
-      });
-      return await factions;
-    } else {
-      alert(res.statusText);
-    }
-  };
-
-  fetchDrawingData = async () => {
+  fetchReplayData = async () => {
     let res = await fetch(
       `${process.env.REACT_APP_API_URL}/replay/${this.state.gameId}`
     );
     if (await res.ok) {
       return await res.json();
     } else {
-      alert(res.statusText);
+      alert("Game not found");
+      window.document.location.href = "/";
     }
   };
 
@@ -107,7 +66,7 @@ export default class ReplayMap extends React.Component {
       attribution:
         '&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
     }).addTo(this.map);
-    this.trackplayback = new L.TrackPlayBack(this.state.data, this.map, {
+    this.trackplayback = new L.TrackPlayBack(this.state.players, this.map, {
       trackPointOptions: {
         // whether to draw track point
         isDraw: true,
@@ -149,6 +108,9 @@ export default class ReplayMap extends React.Component {
       },
       filterOptions: {
         factions: this.state.factions
+      },
+      scoreOptions: {
+        scores: this.state.scores
       }
     });
     this.setState({

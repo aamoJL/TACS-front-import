@@ -8,10 +8,11 @@ import { Track } from "./track";
  * 控制轨迹和绘制
  */
 export const TrackController = L.Class.extend({
-  initialize: function(tracks = [], draw, options) {
+  initialize: function(tracks = [], draw, allScores, options) {
     L.setOptions(this, options);
-
+    this._activeScores = [0, 0];
     this._tracks = [];
+    this._scores = allScores.scores;
     this.addTrack(tracks);
 
     this._draw = draw;
@@ -48,6 +49,18 @@ export const TrackController = L.Class.extend({
       let track = this._tracks[i];
       let tps = track.getTrackPointsBeforeTime(time);
       if (tps && tps.length) this._draw.drawTrack(tps);
+    }
+    for (let i = 0; i < this._scores.length; i++) {
+      let scores = this._scores[i];
+      for (let j = 0; j < scores.length; j++) {
+        if (
+          scores[j].timestamp - 5000 < time &&
+          this._activeScores[i] < scores[j].score
+        ) {
+          this._activeScores[i] = scores[j].score;
+          console.log(this._activeScores);
+        }
+      }
     }
   },
 

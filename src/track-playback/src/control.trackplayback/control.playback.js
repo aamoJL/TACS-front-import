@@ -136,17 +136,29 @@ export const TrackPlayBackControl = L.Control.extend({
       "faction-text-filter",
       this._filterContainer
     );
-    // create checkboxes for filtering persons based on their faction
+    // get factions in replay
     let factions = this.trackPlayBack.passFactions();
-    let factionCheckboxes = [];
-    factions.map(faction => {
-      factionCheckboxes.push(
-        this._createCheckbox(
-          `show ${faction.name}`,
-          `show-${faction.name}`,
-          this._filterContainer,
-          this._showFaction
-        )
+    // create checkboxes for filtering persons based on their faction
+    this._factionCheckboxes = factions.map(faction => {
+      return this._createCheckbox(
+        `show ${faction.name}`,
+        `show-${faction.name}`,
+        this._filterContainer,
+        this._showFaction
+      );
+    });
+    // create a div container for score replay
+    this._scoreContainer = this._createContainer(
+      "scoreContainer",
+      this._container
+    );
+    // create score blocks for each faction
+    this._factionScoreboxes = factions.map(faction => {
+      return this._createInfo(
+        `${faction.name}: `,
+        this.trackPlayBack.passScores(0),
+        "scoreBlock",
+        this._scoreContainer
       );
     });
 
