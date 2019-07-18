@@ -43,7 +43,8 @@ export const Draw = L.Class.extend({
   filterOptions: {
     infantry: true,
     recon: true,
-    mechanized: true
+    mechanized: true,
+    factions: []
   },
 
   initialize: function(map, options) {
@@ -51,6 +52,7 @@ export const Draw = L.Class.extend({
     L.extend(this.trackLineOptions, options.trackLineOptions);
     L.extend(this.targetOptions, options.targetOptions);
     L.extend(this.toolTipOptions, options.toolTipOptions);
+    L.extend(this.filterOptions, options.filterOptions);
 
     this._showTrackPoint = this.trackPointOptions.isDraw;
     this._showTrackLine = this.trackLineOptions.isDraw;
@@ -196,8 +198,19 @@ export const Draw = L.Class.extend({
     let targetPoint = trackpoints[trackpoints.length - 1];
     // get info from first trackpoint
     let info = trackpoints[0].info;
+    let skip = false;
+    // check if faction has been filtered and skip drawing if it is
+    this.filterOptions.factions.forEach(faction => {
+      if (
+        !faction.active &&
+        trackpoints[0].info[1]["value"] === faction.colour
+      ) {
+        skip = true;
+      }
+    });
+
     // compare icon to filter, draw if true else skip
-    if (this.filterOptions[info[0]["value"].slice(0, -4)]) {
+    if (!skip && this.filterOptions[info[0]["value"].slice(0, -4)]) {
       this._drawShipImage(targetPoint, info);
     }
     /*     else {

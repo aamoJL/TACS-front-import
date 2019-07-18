@@ -110,6 +110,7 @@ export const TrackPlayBackControl = L.Control.extend({
       this._optionsContainer,
       this._showTrackLine
     ); */
+    // create checkboxes for filtering persons based on their class
     this._filterInfantry = this._createCheckbox(
       "show infantry units",
       "show-infantry",
@@ -128,6 +129,26 @@ export const TrackPlayBackControl = L.Control.extend({
       this._filterContainer,
       this._showMechanized
     );
+    // show some text between class based and faction based filtering
+    this._factionText = this._createInfo(
+      "Faction filtering:",
+      "",
+      "faction-text-filter",
+      this._filterContainer
+    );
+    // create checkboxes for filtering persons based on their faction
+    let factions = this.trackPlayBack.passFactions();
+    let factionCheckboxes = [];
+    factions.map(faction => {
+      factionCheckboxes.push(
+        this._createCheckbox(
+          `show ${faction.name}`,
+          `show-${faction.name}`,
+          this._filterContainer,
+          this._showFaction
+        )
+      );
+    });
 
     this._playBtn = this._createButton(
       "play",
@@ -283,6 +304,15 @@ export const TrackPlayBackControl = L.Control.extend({
 
   _showMechanized(e) {
     this.trackPlayBack.toggleMechanized(e.target.checked);
+  },
+  _showFaction(e) {
+    this.trackPlayBack.toggleFactions(
+      e.target.checked,
+      e.target.parentNode.className.substring(
+        5,
+        e.target.parentNode.className.indexOf(" ")
+      )
+    );
   },
 
   _play: function() {

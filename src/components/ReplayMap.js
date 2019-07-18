@@ -16,6 +16,8 @@ export default class ReplayMap extends React.Component {
       playback: null,
       // stores player locations from backend
       data: null,
+      // stores all factions from the game
+      factions: [],
       // stores all drawings from backend
       allGeoJSON: [],
       // stores all active drawings on the map
@@ -32,6 +34,10 @@ export default class ReplayMap extends React.Component {
     // throws error if game is not found and redirects back to game selection
     await this.setState({
       data: await this.fetchPlayerData()
+    });
+    // fetch factions from the game
+    await this.setState({
+      factions: await this.fetchFactions()
     });
     // fetch drawings with gameId
     await this.setState({
@@ -56,6 +62,25 @@ export default class ReplayMap extends React.Component {
     } else {
       alert("Game not found");
       window.document.location.href = "/";
+    }
+  };
+
+  fetchFactions = async () => {
+    let res = await fetch(
+      `${process.env.REACT_APP_API_URL}/game/${this.state.gameId}`
+    );
+    if (await res.ok) {
+      let data = await res.json();
+      let factions = data.factions.map(faction => {
+        return {
+          name: faction.factionName,
+          colour: faction.colour,
+          active: true
+        };
+      });
+      return await factions;
+    } else {
+      alert(res.statusText);
     }
   };
 
@@ -121,6 +146,9 @@ export default class ReplayMap extends React.Component {
         offset: [0, 0],
         direction: "top",
         permanent: false
+      },
+      filterOptions: {
+        factions: this.state.factions
       }
     });
     this.setState({

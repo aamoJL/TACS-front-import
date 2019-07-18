@@ -21,7 +21,8 @@ export const TrackPlayBack = L.Class.extend({
       trackPointOptions: options.trackPointOptions,
       trackLineOptions: options.trackLineOptions,
       targetOptions: options.targetOptions,
-      toolTipOptions: options.toolTipOptions
+      toolTipOptions: options.toolTipOptions,
+      filterOptions: options.filterOptions
     };
     this.tracks = this._initTracks(data);
     this.draw = new Draw(map, drawOptions);
@@ -89,17 +90,33 @@ export const TrackPlayBack = L.Class.extend({
     this.draw.hideTrackLine();
     return this;
   },
+  // toggles the visibility of infantry units on the map
   toggleInfantry: function(e) {
     this.draw.filterOptions.infantry = e;
     return this;
   },
+  // toggles the visibility of recon units on the map
   toggleRecon: function(e) {
     this.draw.filterOptions.recon = e;
     return this;
   },
+  // toggles the visibility of mechanized units on the map
   toggleMechanized: function(e) {
     this.draw.filterOptions.mechanized = e;
     return this;
+  },
+  // toggles the visibility of faction units on the map
+  toggleFactions: function(e, target) {
+    for (let faction of this.draw.filterOptions.factions) {
+      if (faction.name === target) {
+        faction.active = e;
+        break;
+      }
+    }
+  },
+  // pass the factions to control playback to show faction names on the control panel
+  passFactions: function() {
+    return this.draw.filterOptions.factions;
   },
   dispose: function() {
     this.clock.off("tick", this._tick);
