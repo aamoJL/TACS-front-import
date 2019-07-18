@@ -1,13 +1,12 @@
 // https://github.com/linghuam/Leaflet.TrackPlayBack
 
 import React from "react";
+import { Link } from "react-router-dom";
 import L from "leaflet";
-import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
 import "../track-playback/src/leaflet.trackplayback/clock";
 import "../track-playback/src/leaflet.trackplayback/index";
 import "../track-playback/src/control.trackplayback/control.playback";
 import "../track-playback/src/control.trackplayback/index";
-import DrawGeoJSON from "./DrawGeoJSON";
 
 export default class ReplayMap extends React.Component {
   constructor(props) {
@@ -17,81 +16,88 @@ export default class ReplayMap extends React.Component {
       playback: null,
       // stores player locations from backend
       data: null,
+      // stores all factions from the game
+      factions: [],
       // stores all drawings from backend
       allGeoJSON: [],
       // stores all active drawings on the map
       activeGeoJSON: []
     };
-    this.map = React.createRef();
   }
 
   async componentDidMount() {
-    await this.fetchPlayerData();
-    //await this.fetchDrawingData();
-    //this.tickDrawings();
-    this.replay();
+    // set gameId to state from URL
+    await this.setState({
+      gameId: await new URL(window.location.href).searchParams.get("id")
+    });
+    // fetch player data with gameId
+    // throws error if game is not found and redirects back to game selection
+    await this.setState({
+      data: await this.fetchPlayerData()
+    });
+    // fetch factions from the game
+    await this.setState({
+      factions: await this.fetchFactions()
+    });
+    // fetch drawings with gameId
+    await this.setState({
+      allGeoJSON: await this.fetchDrawingData()
+    });
+    // WIP, map only active drawings to activeGeoJSON state
+    await this.setState({
+      activeGeoJSON: this.tickDrawings()
+    });
+    // if game was found but game has no replay data, alert the user
+    this.state.data.length > 1
+      ? this.replay()
+      : alert("No replay data was found");
   }
 
-  componentWillReceiveProps(nextProps) {}
-
-  // cloud game a1231e2b-aa29-494d-b687-ea2d48cc23df
-  // local game wimma 314338f9-b0bb-4bf7-9554-769c7b409bce
-  // local game vbox 16977b13-c419-48b4-b7d6-e7620f27bf39
-  // fetch player locations from the game
   fetchPlayerData = async () => {
-    await fetch(
-      `${
-        process.env.REACT_APP_API_URL
-      }/replay/players/314338f9-b0bb-4bf7-9554-769c7b409bce`,
-      {
-        method: "GET"
-      }
-    )
-      .then(async res => await res.json())
-      .then(
-        async res => {
-          await this.setState({ data: res });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          console.log(error);
-        }
-      );
+    let res = await fetch(
+      `${process.env.REACT_APP_API_URL}/replay/players/${this.state.gameId}`
+    );
+    if (await res.ok) {
+      return await res.json();
+    } else {
+      alert("Game not found");
+      window.document.location.href = "/";
+    }
+  };
+
+  fetchFactions = async () => {
+    let res = await fetch(
+      `${process.env.REACT_APP_API_URL}/game/${this.state.gameId}`
+    );
+    if (await res.ok) {
+      let data = await res.json();
+      let factions = data.factions.map(faction => {
+        return {
+          name: faction.factionName,
+          colour: faction.colour,
+          active: true
+        };
+      });
+      return await factions;
+    } else {
+      alert(res.statusText);
+    }
   };
 
   fetchDrawingData = async () => {
-    await fetch(
-      `${process.env.REACT_APP_API_URL}/replay/{
-		"lng": 25.72588,
-		"lat": 62.23147
-}`,
-      {
-        method: "GET"
-      }
-    )
-      .then(async res => await res.json())
-      .then(
-        async res => {
-          await this.setState({ allGeoJSON: res });
-        },
-        error => {
-          console.log(error);
-        }
-      );
+    let res = await fetch(
+      `${process.env.REACT_APP_API_URL}/replay/${this.state.gameId}`
+    );
+    if (await res.ok) {
+      return await res.json();
+    } else {
+      alert(res.statusText);
+    }
   };
 
   tickDrawings = () => {
-    let activeDrawings = [];
-    this.state.allGeoJSON.map(drawing => {
-      activeDrawings.push(drawing[0]);
-      this.setState({
-        activeGeoJSON: {
-          type: "FeatureCollection",
-          features: [...activeDrawings]
-        }
-      });
+    return this.state.allGeoJSON.map(drawing => {
+      return drawing[0];
     });
   };
 
@@ -140,6 +146,9 @@ export default class ReplayMap extends React.Component {
         offset: [0, 0],
         direction: "top",
         permanent: false
+      },
+      filterOptions: {
+        factions: this.state.factions
       }
     });
     this.setState({
@@ -170,6 +179,9 @@ export default class ReplayMap extends React.Component {
         )}
       </Map> */
       <React.Fragment>
+        <Link to="/">
+          <button>Game selection</button>
+        </Link>
         <div className="map" ref="map" />
       </React.Fragment>
     );

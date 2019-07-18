@@ -100,12 +100,55 @@ export const TrackPlayBackControl = L.Control.extend({
       "sliderContainer",
       this._container
     );
-    this._lineCbx = this._createCheckbox(
+    this._filterContainer = this._createContainer(
+      "filterContainer",
+      this._container
+    );
+    /*     this._lineCbx = this._createCheckbox(
       "show trackLine",
       "show-trackLine",
       this._optionsContainer,
       this._showTrackLine
+    ); */
+    // create checkboxes for filtering persons based on their class
+    this._filterInfantry = this._createCheckbox(
+      "show infantry units",
+      "show-infantry",
+      this._filterContainer,
+      this._showInfantry
     );
+    this._filterRecon = this._createCheckbox(
+      "show recon units",
+      "show-recon",
+      this._filterContainer,
+      this._showRecon
+    );
+    this._filterMechanized = this._createCheckbox(
+      "show mechanized units",
+      "show-mechanized",
+      this._filterContainer,
+      this._showMechanized
+    );
+    // show some text between class based and faction based filtering
+    this._factionText = this._createInfo(
+      "Faction filtering:",
+      "",
+      "faction-text-filter",
+      this._filterContainer
+    );
+    // create checkboxes for filtering persons based on their faction
+    let factions = this.trackPlayBack.passFactions();
+    let factionCheckboxes = [];
+    factions.map(faction => {
+      factionCheckboxes.push(
+        this._createCheckbox(
+          `show ${faction.name}`,
+          `show-${faction.name}`,
+          this._filterContainer,
+          this._showFaction
+        )
+      );
+    });
 
     this._playBtn = this._createButton(
       "play",
@@ -120,13 +163,13 @@ export const TrackPlayBackControl = L.Control.extend({
       this._restart
     );
     this._slowSpeedBtn = this._createButton(
-      "slow",
+      "decrease speed",
       "btn-slow",
       this._buttonContainer,
       this._slow
     );
     this._quickSpeedBtn = this._createButton(
-      "quick",
+      "increase speed",
       "btn-quick",
       this._buttonContainer,
       this._quick
@@ -187,6 +230,7 @@ export const TrackPlayBackControl = L.Control.extend({
     let inputId = `trackplayback-input-${L.Util.stamp(inputEle)}`;
     inputEle.setAttribute("type", "checkbox");
     inputEle.setAttribute("id", inputId);
+    inputEle.checked = true;
 
     let labelEle = L.DomUtil.create("label", "trackplayback-label", divEle);
     labelEle.setAttribute("for", inputId);
@@ -248,6 +292,27 @@ export const TrackPlayBackControl = L.Control.extend({
     } else {
       this.trackPlayBack.hideTrackLine();
     }
+  },
+
+  _showInfantry(e) {
+    this.trackPlayBack.toggleInfantry(e.target.checked);
+  },
+
+  _showRecon(e) {
+    this.trackPlayBack.toggleRecon(e.target.checked);
+  },
+
+  _showMechanized(e) {
+    this.trackPlayBack.toggleMechanized(e.target.checked);
+  },
+  _showFaction(e) {
+    this.trackPlayBack.toggleFactions(
+      e.target.checked,
+      e.target.parentNode.className.substring(
+        5,
+        e.target.parentNode.className.indexOf(" ")
+      )
+    );
   },
 
   _play: function() {
