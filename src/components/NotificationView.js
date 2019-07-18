@@ -86,6 +86,11 @@ export default class NotificationView extends React.Component {
                 </button>
               </form>
             )}
+          {this.props.role === "admin" &&
+            (this.props.gameState === "ENDED" ||
+              this.props.gameState === "CREATED") && (
+              <p>Notifications can only be sent if the game is ongoing</p>
+            )}
         </div>
         {notifications}
       </div>
