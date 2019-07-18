@@ -51,16 +51,14 @@ export const TrackController = L.Class.extend({
       if (tps && tps.length) this._draw.drawTrack(tps);
     }
     for (let i = 0; i < this._scores.length; i++) {
+      let newScore = 0;
       let scores = this._scores[i];
       for (let j = 0; j < scores.length; j++) {
-        if (
-          scores[j].timestamp - 5000 < time &&
-          this._activeScores[i] < scores[j].score
-        ) {
-          this._activeScores[i] = scores[j].score;
-          console.log(this._activeScores);
+        if (scores[j].timestamp < time) {
+          newScore = scores[j].score;
         }
       }
+      this._activeScores[i] = newScore;
     }
   },
 
