@@ -14,7 +14,7 @@ export default class JoinGameForm extends React.Component {
   }
 
   // Get game info
-  //TODO: from props
+  //TODO: gameinfo from props
   componentDidMount() {
     if (this.props.gameId === undefined) {
       alert("game not selected");
