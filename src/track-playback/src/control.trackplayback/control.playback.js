@@ -156,7 +156,7 @@ export const TrackPlayBackControl = L.Control.extend({
     this._factionScoreboxes = factions.map(faction => {
       return this._createInfo(
         `${faction.name}: `,
-        this.trackPlayBack.passScores(0),
+        0,
         "scoreBlock",
         this._scoreContainer
       );
@@ -379,6 +379,10 @@ export const TrackPlayBackControl = L.Control.extend({
     // 更新时间
     let time = this.getTimeStrFromUnix(e.time);
     this._infoCurTime.innerHTML = time;
+    // tick scores
+    for (let i = 0; i < this._factionScoreboxes.length; i++) {
+      this._factionScoreboxes[i].innerHTML = this.trackPlayBack.passScores(i);
+    }
     // 更新时间轴
     this._slider.value = e.time;
     // 播放结束后改变播放按钮样式
