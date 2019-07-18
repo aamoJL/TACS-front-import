@@ -1,53 +1,85 @@
 import React from "react";
-import GrouplistGroupCard from "./GroupCard";
+import GrouplistFaction from "./GrouplistFaction";
 
 export default class GrouplistView extends React.Component {
   state = {
+    factions: null,
     factionGroups: null
   };
 
-  // get faction members
+  // get faction groups
   componentDidMount() {
-    this.getFactionGroups();
+    // Add event to close the playerlist if "esc" is pressed
+    document.addEventListener("keyup", this.handleEsc);
+
+    let token = sessionStorage.getItem("token");
+
+    if (this.props.role !== "soldier" && this.props.role !== "factionleader") {
+      // get all factions in the game
+      fetch(`${process.env.REACT_APP_API_URL}/game/${this.props.gameId}`)
+        .then(res => res.json())
+        .then(res => {
+          this.setState({ factions: res.factions });
+        })
+        .catch(error => console.log(error));
+    } else {
+      // get player's faction
+      fetch(
+        `${process.env.REACT_APP_API_URL}/faction/check-faction/${
+          this.props.gameId
+        }`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(res => {
+          this.setState({ factions: [res] });
+        })
+        .catch(error => console.log(error));
+    }
   }
 
-  getFactionGroups() {
-    fetch(
-      `${process.env.REACT_APP_API_URL}/faction/get-groups/${
-        this.props.faction.factionId
-      }`
-    )
-      .then(res => res.json())
-      .then(res => {
-        this.setState({ factionGroups: res });
-      })
-      .catch(error => console.log(error));
+  // remove view with "ESC"
+  handleEsc = e => {
+    if (e.keyCode === 27) {
+      this.props.toggleView();
+    }
+  };
+
+  componentWillUnmount() {
+    document.removeEventListener("keyup", this.handleEsc);
   }
 
   render() {
-    if (this.state.factionGroups === null) {
+    if (this.state.factions === null) {
       return false;
     }
 
-    let groups = this.state.factionGroups.map(group => {
+    let grouplistItems = this.state.factions.map(faction => {
       return (
-        <GrouplistGroupCard
-          key={group.groupId}
-          group={group}
-          gameId={this.props.gameId}
-          onChange={() => this.getFactionGroups()}
-        />
+        <div>
+          <GrouplistFaction faction={faction} />
+        </div>
       );
     });
 
     return (
-      //   <div>
-      //     <br />
-      //     <div>{this.props.faction.factionName}</div>
-      //     <br />
-      //     <div>{groups}</div>
-      //   </div>
-      <div>hello</div>
+      <div className="fade-main">
+        <div className="sticky">
+          <span
+            id="closeEditGameFormX"
+            className="close"
+            onClick={() => this.props.toggleView()}
+          >
+            ×
+          </span>
+        </div>
+        {grouplistItems}
+      </div>
     );
   }
 }
