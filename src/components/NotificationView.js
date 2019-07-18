@@ -58,32 +58,34 @@ export default class NotificationView extends React.Component {
           Close
         </button>
         <div>
-          {this.props.role === "admin" && this.props.gameState !== "ENDED" && (
-            <form onSubmit={this.handleSend}>
-              <select
-                id="notificationViewTypeSelect"
-                value={this.state.notificationTypeInput}
-                onChange={e =>
-                  this.setState({ notificationTypeInput: e.target.value })
-                }
-              >
-                <option value="note">Note</option>
-                <option value="alert">Alert</option>
-              </select>
-              <input
-                id="notificationViewMessageInput"
-                type="text"
-                value={this.state.notificationInput}
-                onChange={e =>
-                  this.setState({ notificationInput: e.target.value })
-                }
-                placeholder="Notification message..."
-              />
-              <button id="notificationSubmitButton" type="submit">
-                Send Notification
-              </button>
-            </form>
-          )}
+          {this.props.role === "admin" &&
+            this.props.gameState !== "ENDED" &&
+            this.props.gameState !== "CREATED" && (
+              <form onSubmit={this.handleSend}>
+                <select
+                  id="notificationViewTypeSelect"
+                  value={this.state.notificationTypeInput}
+                  onChange={e =>
+                    this.setState({ notificationTypeInput: e.target.value })
+                  }
+                >
+                  <option value="note">Note</option>
+                  <option value="alert">Alert</option>
+                </select>
+                <input
+                  id="notificationViewMessageInput"
+                  type="text"
+                  value={this.state.notificationInput}
+                  onChange={e =>
+                    this.setState({ notificationInput: e.target.value })
+                  }
+                  placeholder="Notification message..."
+                />
+                <button id="notificationSubmitButton" type="submit">
+                  Send Notification
+                </button>
+              </form>
+            )}
         </div>
         {notifications}
       </div>

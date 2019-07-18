@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
 import "./App.css";
-
-import ClientSocket from "./components/Socket";
 import {
   BrowserRouter as Router,
   Route,
