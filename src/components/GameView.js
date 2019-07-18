@@ -27,32 +27,12 @@ export default class GameView extends React.Component {
   componentDidMount() {
     let gameId = new URL(window.location.href).searchParams.get("id");
     this.getGameInfo(gameId);
+    this.getPlayerRole(gameId);
   }
 
-  getGameInfo(gameId) {
+  getPlayerRole(gameId) {
     let token = sessionStorage.getItem("token");
-    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
-      .then(res => {
-        if (!res.ok) {
-          throw Error();
-        }
-      })
-      .catch(error => {
-        alert("Game not found");
-        window.document.location.href = "/";
-      });
 
-    // Get game info
-    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          gameInfo: res
-        });
-      })
-      .catch(error => console.log(error));
-
-    // Get Role
     fetch(`${process.env.REACT_APP_API_URL}/faction/check-faction/${gameId}`, {
       method: "GET",
       headers: {
@@ -64,6 +44,26 @@ export default class GameView extends React.Component {
         this.setState({ role: res.role });
       })
       .catch(error => console.log(error));
+  }
+
+  getGameInfo(gameId) {
+    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
+      .then(res => {
+        if (!res.ok) {
+          throw Error();
+        } else {
+          return res.json();
+        }
+      })
+      .then(res => {
+        this.setState({
+          gameInfo: res
+        });
+      })
+      .catch(error => {
+        alert("Game not found");
+        window.document.location.href = "/";
+      });
   }
 
   handleLeaveFaction = e => {
@@ -87,6 +87,7 @@ export default class GameView extends React.Component {
         })
         .then(res => {
           alert(res.message);
+          this.getPlayerRole(this.state.gameInfo.id);
         })
         .catch(error => console.log(error));
     }
@@ -197,10 +198,10 @@ export default class GameView extends React.Component {
               mapUrl={this.state.mapUrl}
               currentGameId={this.state.gameInfo.id}
               socketSignal={this.state.socketSignal}
+              role={this.state.role}
             >
               <NotificationPopup socketSignal={this.state.socketSignal} />
             </UserMap>
-
             {this.state.form === "edit" && (
               <EditGameForm
                 gameId={this.state.gameInfo.id}
@@ -212,7 +213,7 @@ export default class GameView extends React.Component {
               <JoinGameForm
                 gameId={this.state.gameInfo.id}
                 toggleView={() => this.setState({ form: "" })}
-                onJoin={() => console.log("joined")}
+                onJoin={() => this.getPlayerRole(this.state.gameInfo.id)}
               />
             )}
             {this.state.form === "players" && (
