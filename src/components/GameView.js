@@ -67,27 +67,29 @@ export default class GameView extends React.Component {
   }
 
   handleLeaveFaction = e => {
-    let token = sessionStorage.getItem("token");
-    fetch(
-      `${process.env.REACT_APP_API_URL}/faction/leave/${
-        this.state.gameInfo.id
-      }`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: "Bearer " + token
+    if (window.confirm("Are you sure you want to leave your faction?")) {
+      let token = sessionStorage.getItem("token");
+      fetch(
+        `${process.env.REACT_APP_API_URL}/faction/leave/${
+          this.state.gameInfo.id
+        }`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + token
+          }
         }
-      }
-    )
-      .then(res => {
-        if (!res.ok) {
-        }
-        return res.json();
-      })
-      .then(res => {
-        alert(res.message);
-      })
-      .catch(error => console.log(error));
+      )
+        .then(res => {
+          if (!res.ok) {
+          }
+          return res.json();
+        })
+        .then(res => {
+          alert(res.message);
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
