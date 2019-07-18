@@ -47,7 +47,6 @@ export default class ClientSocket extends React.Component {
 
     // set the socket to listen gameId-thread
     socket.on(this.props.gameId, data => {
-      console.log(data);
       this.props.getSocketSignal(data.type);
       // check socket update type
       this.setState({ update: data.type });

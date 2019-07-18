@@ -178,6 +178,7 @@ export default class GameView extends React.Component {
               mapUrl={this.state.mapUrl}
               currentGameId={this.state.gameInfo.id}
               socketSignal={this.state.socketSignal}
+              role={this.state.role}
             />
             {this.state.form === "edit" && (
               <EditGameForm
