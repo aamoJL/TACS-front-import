@@ -532,6 +532,7 @@ export default class EditGameForm extends React.Component {
             minLength="3"
             onChange={this.handleChange}
             placeholder="Faction password"
+            type="password"
             form="factionAddFrom"
           />
           <div
