@@ -85,6 +85,7 @@ export default class GameView extends React.Component {
       })
       .then(res => {
         alert(res.message);
+        this.getPlayerRole(this.state.gameInfo.id);
       })
       .catch(error => console.log(error));
   };
