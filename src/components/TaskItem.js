@@ -70,15 +70,11 @@ class TaskItem extends React.Component {
   };
 
   render() {
-    let factionlistItems = [];
-    for (let i = 0; i < this.state.factions.length; i++) {
-      const faction = this.state.factions[i];
-      factionlistItems.push(
-        <option key={faction.factionId} value={faction.factionId}>
-          {faction.factionName}
-        </option>
-      );
-    }
+    let factionlistItems = this.state.factions.map(faction => (
+      <option key={faction.factionId} value={faction.factionId}>
+        {faction.factionName}
+      </option>
+    ));
 
     return (
       <div className="tasklist-item">

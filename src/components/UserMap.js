@@ -163,7 +163,6 @@ class UserMap extends Component {
           url={this.props.mapUrl}
         />
         <ZoomControl position="topright" />
-
         <DrawTools
           position={this.props.position}
           sendGeoJSON={this.sendGeoJSON}
@@ -171,7 +170,6 @@ class UserMap extends Component {
           currentGameId={this.props.currentGameId}
           role={this.props.role}
         />
-
         {this.state.ownLat !== null && (
           <Marker position={[this.state.ownLat, this.state.ownLng]}>
             <Popup>

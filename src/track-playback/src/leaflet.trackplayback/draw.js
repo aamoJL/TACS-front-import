@@ -53,6 +53,7 @@ export const Draw = L.Class.extend({
     L.extend(this.targetOptions, options.targetOptions);
     L.extend(this.toolTipOptions, options.toolTipOptions);
     L.extend(this.filterOptions, options.filterOptions);
+    L.extend(this.scoreOptions, options.scoreOptions);
 
     this._showTrackPoint = this.trackPointOptions.isDraw;
     this._showTrackLine = this.trackLineOptions.isDraw;

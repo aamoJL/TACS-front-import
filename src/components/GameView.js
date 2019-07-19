@@ -67,6 +67,37 @@ export default class GameView extends React.Component {
   }
 
   handleLeaveFaction = e => {
+    let token = sessionStorage.getItem("token");
+    let error = false;
+    fetch(
+      `${process.env.REACT_APP_API_URL}/faction/leave/${
+        this.state.gameInfo.id
+      }`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      }
+    )
+      .then(res => {
+        if (!res.ok) {
+          throw Error();
+        } else {
+          return res.json();
+        }
+      })
+      .then(res => {
+        alert(res.message);
+        this.getPlayerRole(this.state.gameInfo.id);
+      })
+      .catch(error => {
+        alert("Game not found");
+        window.document.location.href = "/";
+      });
+  };
+
+  handleLeaveFaction = e => {
     if (window.confirm("Are you sure you want to leave your faction?")) {
       let token = sessionStorage.getItem("token");
       fetch(
