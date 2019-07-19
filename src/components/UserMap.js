@@ -102,10 +102,15 @@ class UserMap extends Component {
   }
 
   changeDragState = status => {
-    console.log(status);
-    this.setState({
-      isDraggable: status
-    });
+    // for some reason React's onMouseOver event fires gazillion times in a second
+    // evading by checking if the isDraggable state is the same as what's coming. still fires two or three times, though
+    if (status === this.state.isDraggable) {
+      return;
+    } else {
+      this.setState({
+        isDraggable: status
+      });
+    }
   };
 
   componentWillUnmount() {
