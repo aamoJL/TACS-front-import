@@ -40,6 +40,7 @@ class UserMap extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps.socketSignal);
     if (prevProps.socketSignal === "drawing-update") {
       this.fetchGeoJSON();
     }
@@ -182,6 +183,7 @@ class UserMap extends Component {
           geoJSONLayer={this.state.geoJSONLayer}
           currentGameId={this.props.currentGameId}
           changeDragState={this.changeDragState}
+          role={this.props.role}
         />
         {this.state.ownLat !== null && (
           <Marker position={[this.state.ownLat, this.state.ownLng]}>
@@ -195,6 +197,7 @@ class UserMap extends Component {
           currentGameId={this.props.currentGameId}
           socketSignal={this.props.socketSignal}
         />
+        {this.props.children}
       </Map>
     );
   }

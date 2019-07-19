@@ -35,8 +35,6 @@ class GameList extends React.Component {
               ? games[0].id
               : undefined
         });
-        // taking the initialized gameID to App.js (GameList.js -> GameSidebar.js -> Header.js -> App.js)
-        this.props.handleGameChange(games[0].id);
       })
       .catch(error => {
         console.log(error);
@@ -80,20 +78,18 @@ class GameList extends React.Component {
   };
 
   render() {
-    let gamelistItems = this.props.games.map(game => {
-      return (
-        <GameCard
-          key={game.id}
-          gameId={game.id}
-          onEditSave={this.props.onEditSave}
-        />
-      );
-    });
+    let gamelistItems = this.props.games.map(game => (
+      <GameCard
+        key={game.id}
+        gameId={game.id}
+        onEditSave={this.props.onEditSave}
+      />
+    ));
 
     return (
-      <Fragment>
-        <div className="gamelist">{gamelistItems}</div>
-      </Fragment>
+      <div className="gamelist">
+        <div className="gamelist-item">{gamelistItems}</div>
+      </div>
     );
   }
 }

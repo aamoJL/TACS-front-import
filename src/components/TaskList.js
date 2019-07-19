@@ -6,17 +6,15 @@ class TaskList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      taskNameInput: "", // >= 3
-      taskDescriptionInput: "", // no limits
+      taskNameInput: "", // 3-31 chars
+      taskDescriptionInput: "", // 0-255
       tasks: [],
-      factionlist: [],
       selectedFactionId: ""
     };
   }
 
   componentDidMount() {
     this.getTasks(this.props.gameId);
-    this.getFactionlist(this.props.gameId); // TODO: remove if the user is not admin?
   }
 
   getTasks(gameId) {
@@ -37,25 +35,6 @@ class TaskList extends React.Component {
       .then(result => {
         this.setState({
           tasks: result
-        });
-      })
-      .catch(error => console.log(error));
-  }
-
-  getFactionlist(gameId) {
-    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`, {
-      method: "GET"
-    })
-      .then(result => {
-        if (!result.ok) {
-          throw Error(result.responseText);
-        } else {
-          return result.json();
-        }
-      })
-      .then(result => {
-        this.setState({
-          factionlist: result.factions
         });
       })
       .catch(error => console.log(error));
@@ -206,10 +185,10 @@ class TaskList extends React.Component {
       }
     }
 
-    let factionlistItems = this.state.factionlist.map(item => {
+    let factionlistItems = this.props.factions.map(faction => {
       return (
-        <option key={item.factionId} value={item.factionId}>
-          {item.factionName}
+        <option key={faction.factionId} value={faction.factionId}>
+          {faction.factionName}
         </option>
       );
     });
@@ -232,6 +211,7 @@ class TaskList extends React.Component {
               type="text"
               placeholder="Task name"
               minLength="3"
+              maxLength="31"
               value={this.state.taskNameInput}
               onChange={e => this.setState({ taskNameInput: e.target.value })}
             />
@@ -239,6 +219,7 @@ class TaskList extends React.Component {
               id="taskDescriptionInput"
               placeholder="Task description"
               value={this.state.taskDescriptionInput}
+              maxLength="255"
               onChange={e =>
                 this.setState({ taskDescriptionInput: e.target.value })
               }

@@ -14,12 +14,6 @@ class TaskItem extends React.Component {
     this.getFactionlist(this.props.gameId);
   }
 
-  onEditClick = e => {
-    this.setState({
-      edit: !this.state.edit
-    });
-  };
-
   getFactionlist(gameId) {
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`, {
       method: "GET"
@@ -70,15 +64,11 @@ class TaskItem extends React.Component {
   };
 
   render() {
-    let factionlistItems = [];
-    for (let i = 0; i < this.state.factions.length; i++) {
-      const faction = this.state.factions[i];
-      factionlistItems.push(
-        <option key={faction.factionId} value={faction.factionId}>
-          {faction.factionName}
-        </option>
-      );
-    }
+    let factionlistItems = this.state.factions.map(faction => (
+      <option key={faction.factionId} value={faction.factionId}>
+        {faction.factionName}
+      </option>
+    ));
 
     return (
       <div className="tasklist-item">
@@ -100,11 +90,17 @@ class TaskItem extends React.Component {
           )}
         </div>
         {this.props.task.taskIsActive && this.props.role === "admin" && (
-          <button onClick={this.onEditClick}>Edit</button>
+          <button
+            id={"taskEditButton" + this.props.task.taskName}
+            onClick={() => this.setState({ edit: !this.state.edit })}
+          >
+            {this.state.edit ? "Cancel" : "Set Winner"}
+          </button>
         )}
         {this.state.edit && (
           <form onSubmit={this.onSaveSubmit}>
             <select
+              id={"taskWinnerSelect" + this.props.task.taskName}
               value={this.state.selectedFactionId}
               onChange={e =>
                 this.setState({ selectedFactionId: e.target.value })
@@ -117,6 +113,7 @@ class TaskItem extends React.Component {
         )}
         {this.props.role === "admin" && (
           <button
+            id={"taskDeleteButton" + this.props.task.taskName}
             onClick={this.onTaskDelete}
             style={{ backgroundColor: "red" }}
           >
