@@ -195,10 +195,6 @@ figure {
   margin: 0 0 1rem;
 }
 
-img {
-  vertical-align: middle;
-  border-style: none;
-}
 
 svg {
   overflow: hidden;
@@ -1854,21 +1850,7 @@ pre code {
   border: 0;
 }
 
-.form-control {
-  display: block;
-  width: 100%;
-  height: calc(1.5em + 0.75rem + 2px);
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #495057;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
+
 
 @media (prefers-reduced-motion: reduce) {
   .form-control {
@@ -2456,13 +2438,11 @@ fieldset:disabled a.btn {
 .btn-secondary {
   color: #fff;
   background-color: #6c757d;
-  border-color: #6c757d;
 }
 
 .btn-secondary:hover {
   color: #fff;
   background-color: #5a6268;
-  border-color: #545b62;
 }
 
 .btn-secondary:focus, .btn-secondary.focus {
@@ -4155,6 +4135,7 @@ input[type="button"].btn-block {
   -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 0.5rem 1rem;
+  background-color: #2c2c2c;
 }
 
 .navbar > .container,
@@ -6601,10 +6582,6 @@ button.bg-dark:focus {
 
 .border-top {
   border-top: 1px solid #dee2e6 !important;
-}
-
-.border-right {
-  border-right: 1px solid #dee2e6 !important;
 }
 
 .border-bottom {
