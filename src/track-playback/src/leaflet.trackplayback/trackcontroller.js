@@ -12,7 +12,7 @@ export const TrackController = L.Class.extend({
     L.setOptions(this, options);
     this._activeScores = [0, 0];
     this._tracks = [];
-    this._scores = allScores.scores;
+    this._scores = allScores;
     this.addTrack(tracks);
 
     this._draw = draw;

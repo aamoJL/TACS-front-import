@@ -22,15 +22,14 @@ export const TrackPlayBack = L.Class.extend({
       trackLineOptions: options.trackLineOptions,
       targetOptions: options.targetOptions,
       toolTipOptions: options.toolTipOptions,
-      filterOptions: options.filterOptions
-      //scoreOptions: options.scoreOptions
+      filterOptions: { factions: data.factions }
     };
-    this.tracks = this._initTracks(data);
+    this.tracks = this._initTracks(data.players);
     this.draw = new Draw(map, drawOptions);
     this.trackController = new TrackController(
       this.tracks,
       this.draw,
-      options.scoreOptions
+      data.scores
     );
     this.clock = new Clock(this.trackController, options.clockOptions);
 
@@ -155,5 +154,5 @@ export const TrackPlayBack = L.Class.extend({
 });
 
 export const trackplayback = function(data, map, options) {
-  return new TrackPlayBack(data, map, options);
+  return new TrackPlayBack(data.players, map, options);
 };
