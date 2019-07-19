@@ -211,6 +211,8 @@ export default class EditGameForm extends React.Component {
       objectivePoints = [];
     }
 
+    console.log(objectivePoints);
+
     // Object the form sends to server
     let gameObject = {
       name: this.state.gamename,
@@ -220,22 +222,18 @@ export default class EditGameForm extends React.Component {
       enddate: endDate,
       center: this.state.mapCenter,
       factions: this.state.factions,
-      objective_points: objectivePoints
-    };
-
-    // Add node settings to the game if the game has objective points
-    if (objectivePoints.length > 0) {
-      gameObject.nodesettings = {
+      objective_points: objectivePoints,
+      nodesettings: {
         node_settings: {
-          capture_time: this.state.capture_time,
-          confirmation_time: this.state.confirmation_time,
+          capture_time: parseInt(this.state.capture_time),
+          confirmation_time: parseInt(this.state.confirmation_time),
           owner: 0,
           capture: 0,
           buttons_available: 16,
           heartbeat_interval: 60
         }
-      };
-    }
+      }
+    };
 
     let token = sessionStorage.getItem("token");
     let error = false;
