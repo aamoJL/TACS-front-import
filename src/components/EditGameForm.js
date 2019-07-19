@@ -30,19 +30,14 @@ export default class EditGameForm extends React.Component {
       objectivePoints: [],
       capture_time: 300,
       confirmation_time: 60,
-      displayColorPicker: false
+      displayColorPicker: false,
+      saved: true
     };
-
-    this.handleMapDrag = this.handleMapDrag.bind(this);
   }
-
-  handleError = error => {
-    this.setState({ errorMsg: error });
-  };
 
   handleChange = e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, saved: false });
   };
 
   handleFactionAdd = e => {
@@ -185,7 +180,12 @@ export default class EditGameForm extends React.Component {
 
   // show/hide this form
   handleView = e => {
-    this.props.toggleView(this.props.view);
+    if (
+      this.state.saved ||
+      window.confirm("Are you sure you want to leave without saving?")
+    ) {
+      this.props.toggleView(this.props.view);
+    }
   };
 
   // remove view with ESC
@@ -195,17 +195,7 @@ export default class EditGameForm extends React.Component {
     }
   };
 
-  handleMapDrag = e => {
-    this.setState({
-      mapCenter: e.target.getCenter()
-    });
-  };
-
-  handleMapScroll = e => {
-    this.setState({
-      zoom: e.target.getZoom()
-    });
-  };
+  handleMapScroll = e => {};
 
   handleGameSave = e => {
     e.preventDefault();
@@ -248,6 +238,7 @@ export default class EditGameForm extends React.Component {
     }
 
     let token = sessionStorage.getItem("token");
+    let error = false;
 
     // Send Game info to the server
     fetch(`${process.env.REACT_APP_API_URL}/game/edit/${this.props.gameId}`, {
@@ -261,15 +252,23 @@ export default class EditGameForm extends React.Component {
     })
       .then(res => {
         if (!res.ok) {
-          throw Error(res.statusMessage);
-        } else {
-          return res.json();
+          error = true;
         }
+        return res.json();
       })
       .then(result => {
         alert(result.message);
-        this.props.onEditSave();
-        this.handleView();
+        if (!error) {
+          this.setState(
+            {
+              saved: true
+            },
+            () => {
+              this.handleView();
+              this.props.onEditSave();
+            }
+          );
+        }
       })
       .catch(error => console.log("Error: ", error));
   };
@@ -446,7 +445,7 @@ export default class EditGameForm extends React.Component {
             onSubmit={this.handleObjectivePointAdd}
           />
 
-          <h1>Demo Game Editor</h1>
+          <h1>Game Editor</h1>
           <br />
           <input
             placeholder="Game name"
@@ -515,10 +514,10 @@ export default class EditGameForm extends React.Component {
           />
           <br />
           <br />
-
           <label>Factions</label>
           <br />
           <input
+            id="editGameFactionNameInput"
             name="factionNameInput"
             value={this.state.factionNameInput}
             minLength="2"
@@ -527,6 +526,7 @@ export default class EditGameForm extends React.Component {
             form="factionAddFrom"
           />
           <input
+            id="editGameFactionPasswordInput"
             name="factionPasswordInput"
             value={this.state.factionPasswordInput}
             minLength="3"
@@ -536,6 +536,7 @@ export default class EditGameForm extends React.Component {
             form="factionAddFrom"
           />
           <div
+            id="editGameColorPickerButton"
             style={styles.swatch}
             onClick={() =>
               this.setState({
@@ -547,6 +548,7 @@ export default class EditGameForm extends React.Component {
           </div>
           {this.state.displayColorPicker && (
             <div
+              id="editGameColorPicker"
               style={styles.cover}
               onClick={() => this.setState({ displayColorPicker: false })}
             >
@@ -558,7 +560,11 @@ export default class EditGameForm extends React.Component {
               />
             </div>
           )}
-          <button type="submit" form="factionAddFrom">
+          <button
+            id="editGameFactionSubmitButton"
+            type="submit"
+            form="factionAddFrom"
+          >
             Add
           </button>
           <ul>{factions}</ul>
@@ -567,6 +573,7 @@ export default class EditGameForm extends React.Component {
           <label>Objective points</label>
           <br />
           <input
+            id="editGameObjectivePointDescriptionInput"
             name="objectivePointDescriptionInput"
             type="number"
             value={this.state.objectivePointDescriptionInput}
@@ -576,6 +583,7 @@ export default class EditGameForm extends React.Component {
             form="objectivePointAddFrom"
           />
           <input
+            id="editGameObjectivePointMultiplierInput"
             name="objectivePointMultiplierInput"
             type="number"
             value={this.state.objectivePointMultiplierInput}
@@ -583,7 +591,11 @@ export default class EditGameForm extends React.Component {
             placeholder="Objective point multiplier"
             form="objectivePointAddFrom"
           />
-          <button type="submit" form="objectivePointAddFrom">
+          <button
+            id="editGameObjectivePointSubmitButton"
+            type="submit"
+            form="objectivePointAddFrom"
+          >
             Add
           </button>
           <ul>{objectivePoints}</ul>
@@ -596,6 +608,7 @@ export default class EditGameForm extends React.Component {
             Capture time:
           </label>
           <input
+            id="editGameCaptureTimeInput"
             name="capture_time"
             type="number"
             value={this.state.capture_time}
@@ -604,6 +617,7 @@ export default class EditGameForm extends React.Component {
           />
           <label className="">Confimation time:</label>
           <input
+            id="editGameConfirmationTimeInput"
             name="confirmation_time"
             type="number"
             value={this.state.confirmation_time}
@@ -621,8 +635,8 @@ export default class EditGameForm extends React.Component {
             zoom={this.state.zoom}
             maxZoom="13"
             style={{ height: "400px", width: "400px" }}
-            onmoveend={this.handleMapDrag}
-            onzoomend={this.handleMapScroll}
+            onmoveend={e => this.setState({ mapCenter: e.target.getCenter() })}
+            onzoomend={e => this.setState({ zoom: e.target.getZoom() })}
           >
             <TileLayer
               attribution="Maanmittauslaitoksen kartta"
@@ -631,6 +645,7 @@ export default class EditGameForm extends React.Component {
           </Map>
           <br />
           <button
+            id="editGameDeleteGameButton"
             style={{ backgroundColor: "red" }}
             type="submit"
             form="gameDeletionForm"

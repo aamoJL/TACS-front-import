@@ -105,6 +105,7 @@ export default class JoinGameForm extends React.Component {
             <h1>Join game: {this.state.gameJSON.name}</h1>
             <h2>Description: {this.state.gameJSON.desc}</h2>
             <select
+              id="selectFactionList"
               onChange={e =>
                 this.setState({ selectedFactionId: e.target.value })
               }

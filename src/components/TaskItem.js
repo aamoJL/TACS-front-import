@@ -96,11 +96,17 @@ class TaskItem extends React.Component {
           )}
         </div>
         {this.props.task.taskIsActive && this.props.role === "admin" && (
-          <button onClick={this.onEditClick}>Edit</button>
+          <button
+            id={"taskEditButton" + this.props.task.taskName}
+            onClick={this.onEditClick}
+          >
+            Edit
+          </button>
         )}
         {this.state.edit && (
           <form onSubmit={this.onSaveSubmit}>
             <select
+              id={"taskWinnerSelect" + this.props.task.taskName}
               value={this.state.selectedFactionId}
               onChange={e =>
                 this.setState({ selectedFactionId: e.target.value })
@@ -113,6 +119,7 @@ class TaskItem extends React.Component {
         )}
         {this.props.role === "admin" && (
           <button
+            id={"taskDeleteButton" + this.props.task.taskName}
             onClick={this.onTaskDelete}
             style={{ backgroundColor: "red" }}
           >

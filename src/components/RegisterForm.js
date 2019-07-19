@@ -72,6 +72,7 @@ export class RegisterForm extends React.Component {
             <h1>Register</h1>
             <br />
             <input
+              id="registerUsernameInput"
               placeholder="Enter Username"
               name="username"
               value={this.state.username}
@@ -81,6 +82,7 @@ export class RegisterForm extends React.Component {
             />
             <br />
             <input
+              id="registerPasswordInput"
               placeholder="Enter password"
               type="password"
               name="password"
@@ -90,6 +92,7 @@ export class RegisterForm extends React.Component {
             />
             <br />
             <input
+              id="registerPasswordVerifyInput"
               placeholder="Verify password"
               type="password"
               name="password2"
@@ -98,11 +101,13 @@ export class RegisterForm extends React.Component {
               //required
             />
             <br />
-            <button type="submit">Submit</button>
+            <button id="submitRegisterButton" type="submit">
+              Submit
+            </button>
             <h2>{this.state.errorMsg}</h2>
           </form>
           <Link to="/">
-            <button>Login</button>
+            <button id="openLoginFormButton">Login</button>
           </Link>
         </div>
       </div>

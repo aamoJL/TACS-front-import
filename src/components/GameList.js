@@ -35,8 +35,6 @@ class GameList extends React.Component {
               ? games[0].id
               : undefined
         });
-        // taking the initialized gameID to App.js (GameList.js -> GameSidebar.js -> Header.js -> App.js)
-        this.props.handleGameChange(games[0].id);
       })
       .catch(error => {
         console.log(error);
@@ -89,10 +87,7 @@ class GameList extends React.Component {
     ));
 
     return (
-      <div
-        className="gamelist"
-        style={{ maxHeight: "500px", overflow: "scroll" }}
-      >
+      <div className="gamelist">
         <div className="gamelist-item">{gamelistItems}</div>
       </div>
     );

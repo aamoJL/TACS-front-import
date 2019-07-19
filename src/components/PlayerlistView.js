@@ -71,7 +71,7 @@ export default class PlayerlistView extends React.Component {
       <div className="fade-main">
         <div className="sticky">
           <span
-            id="closeEditGameFormX"
+            id="closePlayerlistX"
             className="close"
             onClick={() => this.props.toggleView()}
           >
