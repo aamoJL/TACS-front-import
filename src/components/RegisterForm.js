@@ -72,6 +72,7 @@ export class RegisterForm extends React.Component {
             <h1>Register</h1>
             <br />
             <input
+              id="registerUsernameInput"
               placeholder="Enter Username"
               name="username"
               value={this.state.username}
@@ -82,6 +83,7 @@ export class RegisterForm extends React.Component {
             />
             <br />
             <input
+              id="registerPasswordInput"
               placeholder="Enter password"
               type="password"
               name="password"
@@ -91,6 +93,7 @@ export class RegisterForm extends React.Component {
             />
             <br />
             <input
+              id="registerPasswordVerifyInput"
               placeholder="Verify password"
               type="password"
               name="password2"

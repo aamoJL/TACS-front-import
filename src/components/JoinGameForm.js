@@ -14,7 +14,7 @@ export default class JoinGameForm extends React.Component {
   }
 
   // Get game info
-  //TODO: from props
+  //TODO: gameinfo from props
   componentDidMount() {
     if (this.props.gameId === undefined) {
       alert("game not selected");
@@ -122,6 +122,7 @@ export default class JoinGameForm extends React.Component {
               onChange={e =>
                 this.setState({ factionPasswordInput: e.target.value })
               }
+              type="password"
               placeholder="Password"
               minLength="3"
               required

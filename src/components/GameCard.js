@@ -58,6 +58,13 @@ export default class GameCard extends React.Component {
             Select
           </button>
         </Link>
+        <Link
+          to={{ pathname: "/replay", search: "?id=" + this.state.gameInfo.id }}
+        >
+          <button id={`replay${this.state.gameInfo.name}`} type="button">
+            Replay
+          </button>
+        </Link>
       </div>
     );
   }

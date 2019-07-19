@@ -87,7 +87,7 @@ export class LoginForm extends React.Component {
             <h2>{this.state.errorMsg}</h2>
           </form>
           <Link to="/register">
-            <button id="openRegisterFormButton">Create account</button>
+            <button id="loginRegisterButton">Create account</button>
           </Link>
         </div>
       </div>
