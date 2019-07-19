@@ -146,7 +146,10 @@ export default class GameView extends React.Component {
   };
 
   render() {
-    const initialPosition = [this.state.lat, this.state.lng];
+    console.log(this.state.gameInfo);
+    const initialPosition = this.state.gameInfo
+      ? [this.state.gameInfo.center.lat, this.state.gameInfo.center.lng]
+      : null;
     return (
       <div>
         <Link to="/">
@@ -223,20 +226,22 @@ export default class GameView extends React.Component {
                 gameId={this.state.gameInfo.id}
               />
             )}
-            <UserMap
-              position={initialPosition}
-              zoom={this.state.zoom}
-              mapUrl={this.state.mapUrl}
-              currentGameId={this.state.gameInfo.id}
-              socketSignal={
-                this.state.socketSignal === null
-                  ? null
-                  : this.state.socketSignal.type
-              }
-              role={this.state.role}
-            >
-              <NotificationPopup socketSignal={this.state.socketSignal} />
-            </UserMap>
+            {initialPosition && (
+              <UserMap
+                position={initialPosition}
+                zoom={this.state.zoom}
+                mapUrl={this.state.mapUrl}
+                currentGameId={this.state.gameInfo.id}
+                socketSignal={
+                  this.state.socketSignal === null
+                    ? null
+                    : this.state.socketSignal.type
+                }
+                role={this.state.role}
+              >
+                <NotificationPopup socketSignal={this.state.socketSignal} />
+              </UserMap>
+            )}
             {this.state.form === "edit" && (
               <EditGameForm
                 gameId={this.state.gameInfo.id}
