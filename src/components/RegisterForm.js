@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../icons/placeholderlogo.PNG";
+import logo from "../icons/tacs-logo-neg.png";
 import { Link } from "react-router-dom";
 
 export class RegisterForm extends React.Component {
@@ -67,46 +67,45 @@ export class RegisterForm extends React.Component {
   // UNCOMMENT "REQUIRED" FOR PRODUCTION
   render() {
     return (
-      <div className="row content">
-        <Link to="/">
-          <button>Login</button>
-        </Link>
-        <div className="d-flex flexbox-container flex-fill justify-content-around border-right">
-          <img className="img" src={logo} />
+      <div className="container">
+        <div className="row">
+          <div className="d-flex flexbox-container flex-fill justify-content-around">
+            <img className="tacs-logo-neg" src={logo} />
+          </div>
         </div>
+        <div className="row">
         <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
-          <div className="login">
+          <div className="tacs-register">
             <form onSubmit={this.handleRegister}>
-              <h1>Register</h1>
-
+              <p className="register-text">Register</p><br/>
               <input
-                className="form-control"
-                placeholder="Enter Username"
+                className="form-control1"
+                placeholder="Enter username"
                 name="username"
                 value={this.state.username}
                 onChange={this.handleChange}
                 autoFocus
                 required
-              />
+              /><br/>
               <input
-                className="form-control"
+                className="form-control2"
                 placeholder="Enter password"
                 type="password"
                 name="password"
                 value={this.state.password}
                 onChange={this.handleChange}
                 required
-              />
+              /><br/>
               <input
-                className="form-control"
+                className="form-control3"
                 placeholder="Verify password"
                 type="password"
                 name="password2"
                 value={this.state.password2}
                 onChange={this.handleChange}
                 required
-              />
-
+              /><br/>
+              
               <button
                 type="button"
                 className="btn btn-secondary"
@@ -120,11 +119,16 @@ export class RegisterForm extends React.Component {
                   {this.state.errorMsg}
                 </div>
               )}
-            </form>
+            </form><br/>
+            Back to
+            <Link to="/">
+          <a id="loginButton"> Login </a>
+        </Link>
           </div>
         </div>
+        </div>
         <div className="row copyright">
-          <div className="d-flex flex-fill justify-content-center text-center">
+          <div className="d-flex flex-fill justify-content-center text-center footer text-muted">
             <div>&copy; 2019 TACS</div>
           </div>
         </div>

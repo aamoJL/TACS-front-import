@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import logo from "../icons/placeholderlogo.PNG";
+import logo from "../icons/tacs-logo-neg.png";
 
 export class LoginForm extends React.Component {
   constructor(props) {
@@ -63,26 +63,26 @@ export class LoginForm extends React.Component {
       <div className="container">
         <div className="row">
           <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
-            <img className="img" src={logo} />
+            <img className="tacs-logo-neg" src={logo} />
           </div>
         </div>
         <div className="row">
           <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
-            <div className="login">
+            <div className="tacs-login">
               <form onSubmit={this.handleLogin}>
-                <h1>Login</h1>
+                <p className="login-text">Login</p><br/>
                 <input
-                  className="form-control"
-                  placeholder="Enter Username"
+                  className="form-control1"
+                  placeholder="Enter username"
                   name="username"
                   value={this.state.username}
                   onChange={this.handleChange}
                   id="loginUsernameInput"
                   autoFocus
                   required
-                />
+                /><br/>
                 <input
-                  className="form-control"
+                  className="form-control2"
                   placeholder="Enter password"
                   type="password"
                   name="password"
@@ -90,7 +90,7 @@ export class LoginForm extends React.Component {
                   onChange={this.handleChange}
                   id="loginPasswordInput"
                   required
-                />
+                /><br/><br></br>
 
                 <button
                   type="button"
@@ -105,17 +105,17 @@ export class LoginForm extends React.Component {
                     {this.state.errorMsg}
                   </div>
                 )}
-              </form>
-              {!this.state.username && (
+              </form><br></br>
+              Need an account? 
                 <Link to="/register">
-                  <a id="registerButton">Create account</a>
+                 <a id="registerButton"> Register</a>
                 </Link>
-              )}
+              
             </div>
           </div>
         </div>
         <div className="row">
-          <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+          <div className=" justify-content-center text-center footer text-muted">
             &copy; 2019 TACS
           </div>
         </div>
