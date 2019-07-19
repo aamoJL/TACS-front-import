@@ -98,7 +98,7 @@ export default class GameView extends React.Component {
   getSocketSignal = data => {
     this.setState(
       {
-        socketSignal: data
+        socketSignal: data // TODO: change to data
       },
       () => {
         this.setState({

@@ -39,6 +39,7 @@ class UserMap extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps.socketSignal);
     if (prevProps.socketSignal === "drawing-update") {
       this.fetchGeoJSON();
     }
@@ -162,15 +163,15 @@ class UserMap extends Component {
           url={this.props.mapUrl}
         />
         <ZoomControl position="topright" />
-        {(this.props.role === "admin" ||
-          this.props.role === "factionleader") && (
-          <DrawTools
-            position={this.props.position}
-            sendGeoJSON={this.sendGeoJSON}
-            geoJSONLayer={this.state.geoJSONLayer}
-            currentGameId={this.props.currentGameId}
-          />
-        )}
+
+        <DrawTools
+          position={this.props.position}
+          sendGeoJSON={this.sendGeoJSON}
+          geoJSONLayer={this.state.geoJSONLayer}
+          currentGameId={this.props.currentGameId}
+          role={this.props.role}
+        />
+
         {this.state.ownLat !== null && (
           <Marker position={[this.state.ownLat, this.state.ownLng]}>
             <Popup>

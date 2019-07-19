@@ -246,51 +246,54 @@ class DrawTools extends Component {
       // The elements you draw will be added to this FeatureGroup layer,
       // when you hit edit button only items in this layer will be edited."
       <FeatureGroup>
-        <EditControl
-          position="topright"
-          onCreated={this._onCreated}
-          onEdited={this._onEdited}
-          onEditStart={this._onEditDeleteStart}
-          onEditStop={this._onEditDeleteStop}
-          onDeleted={this._onDeleted}
-          onDeleteStart={this._onEditDeleteStart}
-          onDeleteStop={this._onEditDeleteStop}
-          draw={{
-            circle: {
-              repeatMode: false, // allows using the tool again after finishing the previous shape
-              shapeOptions: {
-                color: "#f9f10c",
-                opacity: 1 // affects the outline only. for some reason it wasn't at full opacity, so this is needed for more clarity
-              }
-            },
-            rectangle: {
-              repeatMode: false
-            },
-            polygon: {
-              repeatMode: true,
-              allowIntersection: false, // Restricts shapes to simple polygons
-              drawError: {
-                color: "#e1e100", // Color the shape will turn when intersects
-                message: "<strong>Oh snap!<strong> you can't draw that!" // Message that will show when intersect
+        {(this.props.role === "admin" ||
+          this.props.role === "factionleader") && (
+          <EditControl
+            position="topright"
+            onCreated={this._onCreated}
+            onEdited={this._onEdited}
+            onEditStart={this._onEditDeleteStart}
+            onEditStop={this._onEditDeleteStop}
+            onDeleted={this._onDeleted}
+            onDeleteStart={this._onEditDeleteStart}
+            onDeleteStop={this._onEditDeleteStop}
+            draw={{
+              circle: {
+                repeatMode: false, // allows using the tool again after finishing the previous shape
+                shapeOptions: {
+                  color: "#f9f10c",
+                  opacity: 1 // affects the outline only. for some reason it wasn't at full opacity, so this is needed for more clarity
+                }
               },
-              shapeOptions: {
-                color: "#ed2572",
-                opacity: 1
-              }
-            },
-            polyline: {
-              repeatMode: true,
-              shapeOptions: {
-                color: "#ed2572",
-                opacity: 1
-              }
-            },
-            marker: {
-              repeatMode: false
-            },
-            circlemarker: false
-          }}
-        />
+              rectangle: {
+                repeatMode: false
+              },
+              polygon: {
+                repeatMode: true,
+                allowIntersection: false, // Restricts shapes to simple polygons
+                drawError: {
+                  color: "#e1e100", // Color the shape will turn when intersects
+                  message: "<strong>Oh snap!<strong> you can't draw that!" // Message that will show when intersect
+                },
+                shapeOptions: {
+                  color: "#ed2572",
+                  opacity: 1
+                }
+              },
+              polyline: {
+                repeatMode: true,
+                shapeOptions: {
+                  color: "#ed2572",
+                  opacity: 1
+                }
+              },
+              marker: {
+                repeatMode: false
+              },
+              circlemarker: false
+            }}
+          />
+        )}
 
         {/* iterate through every element fetched from back-end */}
         {this.props.geoJSONLayer.features.map(feature => {
