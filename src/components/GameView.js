@@ -98,7 +98,7 @@ export default class GameView extends React.Component {
   getSocketSignal = data => {
     this.setState(
       {
-        socketSignal: data // TODO: change to data
+        socketSignal: data
       },
       () => {
         this.setState({
@@ -197,7 +197,11 @@ export default class GameView extends React.Component {
               zoom={this.state.zoom}
               mapUrl={this.state.mapUrl}
               currentGameId={this.state.gameInfo.id}
-              socketSignal={this.state.socketSignal}
+              socketSignal={
+                this.state.socketSignal === null
+                  ? null
+                  : this.state.socketSignal.type
+              }
               role={this.state.role}
             >
               <NotificationPopup socketSignal={this.state.socketSignal} />
