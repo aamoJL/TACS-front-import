@@ -22,15 +22,17 @@ export const TrackPlayBack = L.Class.extend({
       trackLineOptions: options.trackLineOptions,
       targetOptions: options.targetOptions,
       toolTipOptions: options.toolTipOptions,
-      filterOptions: options.filterOptions
-      //scoreOptions: options.scoreOptions
+      filterOptions: { factions: data.factions }
     };
-    this.tracks = this._initTracks(data);
+    this.tracks = this._initTracks(data.players);
     this.draw = new Draw(map, drawOptions);
     this.trackController = new TrackController(
-      this.tracks,
-      this.draw,
-      options.scoreOptions
+      {
+        tracks: this.tracks,
+        scores: data.scores,
+        drawings: data.drawings
+      },
+      this.draw
     );
     this.clock = new Clock(this.trackController, options.clockOptions);
 
@@ -123,8 +125,13 @@ export const TrackPlayBack = L.Class.extend({
   passFactions: function() {
     return this.draw.filterOptions.factions;
   },
+  // pass current scores to control panel
   passScores: function(i) {
     return this.trackController._activeScores[i];
+  },
+  // pass current drawings to control panel
+  passDrawings: function() {
+    return this.trackController._activeDrawings;
   },
   dispose: function() {
     this.clock.off("tick", this._tick);
@@ -155,5 +162,5 @@ export const TrackPlayBack = L.Class.extend({
 });
 
 export const trackplayback = function(data, map, options) {
-  return new TrackPlayBack(data, map, options);
+  return new TrackPlayBack(data.players, map, options);
 };

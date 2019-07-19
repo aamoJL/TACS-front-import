@@ -9,10 +9,71 @@ export const TrackPlayBackControl = L.Control.extend({
     autoPlay: false
   },
 
-  initialize: function(trackplayback, options) {
+  initialize: function(trackplayback, map, options) {
+    this.map = map;
     L.Control.prototype.initialize.call(this, options);
     this.trackPlayBack = trackplayback;
     this.trackPlayBack.on("tick", this._tickCallback, this);
+    this.leafletDrawings = [];
+  },
+
+  // absolutely disgusting, never use geojson
+  // init object to pass drawing data to right function
+  _drawFunction: function(data) {
+    // create leaflet objects
+    var createMarker = data => {
+      data.geometry.coordinates = [
+        data.geometry.coordinates[1],
+        data.geometry.coordinates[0]
+      ];
+      return L.marker(data.geometry.coordinates).addTo(this.map);
+    };
+    var createPolyline = data => {
+      data.geometry.coordinates = data.geometry.coordinates.map(cords => {
+        return [cords[1], cords[0]];
+      });
+      return L.polyline(data.geometry.coordinates, {
+        color: data.properties.color
+      }).addTo(this.map);
+    };
+    var createPolygon = data => {
+      // geoJSON has lat lng wrong way so turn them around
+      data.geometry.coordinates = data.geometry.coordinates[0].map(cords => {
+        return [cords[1], cords[0]];
+      });
+      return L.polygon(data.geometry.coordinates, {
+        color: data.properties.color
+      }).addTo(this.map);
+    };
+    var createRectangle = data => {
+      return L.rectangle(data.geometry.coordinates, {
+        color: data.properties.color
+      }).addTo(this.map);
+    };
+    var createCircle = data => {
+      data.geometry.coordinates = [
+        data.geometry.coordinates[1],
+        data.geometry.coordinates[0]
+      ];
+      return L.circle(data.geometry.coordinates, {
+        radius: data.properties.radius
+      }).addTo(this.map);
+    };
+    // handle faulty cords
+    if (!data.geometry.coordinates[0][0] && !data.geometry.type === "Point") {
+      return null;
+    }
+    if (data.geometry.type === "Point" && !data.properties.radius) {
+      data.geometry.type = "Marker";
+    }
+    var obj = {
+      Marker: createMarker,
+      LineString: createPolyline,
+      Polygon: createPolygon,
+      Rectangle: createRectangle,
+      Point: createCircle
+    };
+    return obj[data.geometry.type](data);
   },
 
   onAdd: function(map) {
@@ -379,11 +440,6 @@ export const TrackPlayBackControl = L.Control.extend({
     // 更新时间
     let time = this.getTimeStrFromUnix(e.time);
     this._infoCurTime.innerHTML = time;
-    // tick scores
-    for (let i = 0; i < this._factionScoreboxes.length; i++) {
-      this._factionScoreboxes[i].innerHTML = this.trackPlayBack.passScores(i);
-    }
-    // 更新时间轴
     this._slider.value = e.time;
     // 播放结束后改变播放按钮样式
     if (e.time >= this.trackPlayBack.getEndTime()) {
@@ -392,9 +448,37 @@ export const TrackPlayBackControl = L.Control.extend({
       this._playBtn.setAttribute("title", "play");
       this.trackPlayBack.stop();
     }
+    // tick scores
+    for (let i = 0; i < this._factionScoreboxes.length; i++) {
+      this._factionScoreboxes[i].innerHTML = this.trackPlayBack.passScores(i);
+    }
+    // tick drawings
+    let drawings = this.trackPlayBack.passDrawings();
+    for (let i = 0; i < drawings.length; i++) {
+      // skip if undefined
+      if (!drawings[i] && this.leafletDrawings[i]) {
+        this.map.removeLayer(this.leafletDrawings[i]);
+        this.leafletDrawings[i] = null;
+        return;
+      }
+      if (!drawings[i]) return;
+      // remove if it's not active
+      if (!drawings[i].drawingIsActive && this.leafletDrawings[i]) {
+        this.map.removeLayer(this.leafletDrawings[i]);
+        this.leafletDrawings[i] = null;
+        return;
+      }
+      // else draw the marker if it's not drawn
+      if (drawings[i].drawingIsActive && !this.leafletDrawings[i]) {
+        this.leafletDrawings[i] = this._drawFunction(drawings[i].data);
+        console.log(this.leafletDrawings[i]);
+      }
+    }
+    //
+    // 更新时间轴
   }
 });
 
-export const trackplaybackcontrol = function(trackplayback, options) {
-  return new TrackPlayBackControl(trackplayback, options);
+export const trackplaybackcontrol = function(trackplayback, map, options) {
+  return new TrackPlayBackControl(trackplayback, map, options);
 };
