@@ -14,12 +14,6 @@ class TaskItem extends React.Component {
     this.getFactionlist(this.props.gameId);
   }
 
-  onEditClick = e => {
-    this.setState({
-      edit: !this.state.edit
-    });
-  };
-
   getFactionlist(gameId) {
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`, {
       method: "GET"
@@ -98,9 +92,9 @@ class TaskItem extends React.Component {
         {this.props.task.taskIsActive && this.props.role === "admin" && (
           <button
             id={"taskEditButton" + this.props.task.taskName}
-            onClick={this.onEditClick}
+            onClick={() => this.setState({ edit: !this.state.edit })}
           >
-            Edit
+            {this.state.edit ? "Cancel" : "Set Winner"}
           </button>
         )}
         {this.state.edit && (
