@@ -66,13 +66,13 @@ export const TrackController = L.Class.extend({
     }
     // draw mapdrawings to map
     for (let i = 0; i < this._drawings.length; i++) {
-      let drawing;
+      let drawing = null;
       for (let j = 0; j < this._drawings[i].length; j++) {
         if (this._drawings[i][j].timestamp < time) {
           drawing = this._drawings[i][j];
         }
       }
-      if (drawing) this._activeDrawings[i] = drawing;
+      this._activeDrawings[i] = drawing;
     }
   },
 
