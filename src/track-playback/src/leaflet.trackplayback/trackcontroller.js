@@ -8,12 +8,14 @@ import { Track } from "./track";
  * 控制轨迹和绘制
  */
 export const TrackController = L.Class.extend({
-  initialize: function(tracks = [], draw, allScores, options) {
+  initialize: function(data, draw, options) {
     L.setOptions(this, options);
-    this._activeScores = [0, 0];
-    this._tracks = [];
-    this._scores = allScores;
-    this.addTrack(tracks);
+    this._activeScores = [];
+    this._activeDrawings = [];
+    this._tracks = data.tracks;
+    this._scores = data.scores;
+    this._drawings = data.drawings;
+    this.addTrack(data.tracks || []);
 
     this._draw = draw;
 
@@ -45,11 +47,13 @@ export const TrackController = L.Class.extend({
 
   drawTracksByTime: function(time) {
     this._draw.clear();
+    // draw player locations
     for (let i = 0, len = this._tracks.length; i < len; i++) {
       let track = this._tracks[i];
       let tps = track.getTrackPointsBeforeTime(time);
       if (tps && tps.length) this._draw.drawTrack(tps);
     }
+    // add scores to counter
     for (let i = 0; i < this._scores.length; i++) {
       let newScore = 0;
       let scores = this._scores[i];
@@ -59,6 +63,16 @@ export const TrackController = L.Class.extend({
         }
       }
       this._activeScores[i] = newScore;
+    }
+    // draw mapdrawings to map
+    for (let i = 0; i < this._drawings.length; i++) {
+      let drawing;
+      for (let j = 0; j < this._drawings[i].length; j++) {
+        if (this._drawings[i][j].timestamp < time) {
+          drawing = this._drawings[i][j];
+        }
+      }
+      if (drawing) this._activeDrawings[i] = drawing;
     }
   },
 

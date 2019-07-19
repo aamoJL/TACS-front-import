@@ -73,7 +73,10 @@ export default class ReplayMap extends React.Component {
     }).addTo(this.map);
     // import options from ReplayConfig.js
     this.trackplayback = new L.TrackPlayBack(this.state, this.map, options);
-    this.trackplaybackControl = L.trackplaybackcontrol(this.trackplayback);
+    this.trackplaybackControl = L.trackplaybackcontrol(
+      this.trackplayback,
+      this.map
+    );
     this.trackplaybackControl.addTo(this.map);
   };
 
