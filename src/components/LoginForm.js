@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import logo from "../icons/tacs-logo-neg.png";
+import logo from "../icons/placeholderlogo.PNG";
 
 export class LoginForm extends React.Component {
   constructor(props) {

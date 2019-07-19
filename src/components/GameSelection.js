@@ -3,7 +3,6 @@ import GameList from "./GameList";
 import NewGameForm from "./NewGameForm";
 
 import logo from "../icons/tacs-icon-neg.png";
-
 export default class GameSelection extends React.Component {
   state = {
     newGameForm: false,

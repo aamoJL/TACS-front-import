@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import img from "../icons/ehasa-monitor.jpeg";
-
 export default class GameCard extends React.Component {
   state = {
     editForm: false,
