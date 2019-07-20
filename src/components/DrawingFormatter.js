@@ -51,13 +51,21 @@ const textFormat = data => {
   };
 };
 
+const flagboxFormat = data => {
+  return {
+    type: "flagbox",
+    coordinates: [data._latlng.lat, data._latlng.lng]
+  };
+};
+
 var DrawingFormatter = {
   polyline: polylineFormat,
   polygon: polygonFormat,
   rectangle: rectangleFromat,
   circle: circleFormat,
   marker: markerFormat,
-  textbox: textFormat
+  textbox: textFormat,
+  flagbox: flagboxFormat
 };
 
 export const initialTextSetup = e => {
