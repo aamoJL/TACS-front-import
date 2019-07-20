@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { FeatureGroup } from "react-leaflet";
 import "leaflet-draw";
-import { Draw } from "leaflet-draw";
 import DrawingFormatter, { initialTextSetup } from "./DrawingFormatter";
 import DrawLeafletObjects from "./DrawLeafletObjects.js";
 import DrawToolsPanel from "./DrawToolsPanel";
@@ -10,7 +9,8 @@ class DrawTools extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editModeActive: false
+      editModeActive: false,
+      flagboxes: []
     };
   }
 
@@ -98,24 +98,28 @@ class DrawTools extends Component {
     this.setState({ editModeActive: false });
   };
 
+  // Second DrawLeafletObjects is outside of FeatureGroup to deny editing
   render() {
     return (
-      <FeatureGroup>
-        {(this.props.role === "admin" ||
-          this.props.role === "factionleader") && (
-          <DrawToolsPanel
-            onCreated={this._onCreated}
-            onEdited={this._onEdited}
-            onDeleted={this._onDeleted}
-            onEditStart={this._onEditDeleteStart}
-            onDeleteStart={this._onEditDeleteStart}
-            onEditStop={this._onEditDeleteStop}
-            onDeleteStop={this._onEditDeleteStop}
-            sendGeoJSON={this.props.sendGeoJSON}
-          />
-        )}
-        <DrawLeafletObjects drawings={this.props.drawings} />
-      </FeatureGroup>
+      <React.Fragment>
+        <FeatureGroup>
+          {(this.props.role === "admin" ||
+            this.props.role === "factionleader") && (
+            <DrawToolsPanel
+              onCreated={this._onCreated}
+              onEdited={this._onEdited}
+              onDeleted={this._onDeleted}
+              onEditStart={this._onEditDeleteStart}
+              onDeleteStart={this._onEditDeleteStart}
+              onEditStop={this._onEditDeleteStop}
+              onDeleteStop={this._onEditDeleteStop}
+              sendGeoJSON={this.props.sendGeoJSON}
+            />
+          )}
+          <DrawLeafletObjects drawings={this.props.drawings} />
+        </FeatureGroup>
+        <DrawLeafletObjects drawings={this.props.flagboxes} />
+      </React.Fragment>
     );
   }
 }
