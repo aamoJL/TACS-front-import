@@ -68,7 +68,6 @@ export default class GameView extends React.Component {
 
   handleLeaveFaction = e => {
     let token = sessionStorage.getItem("token");
-    let error = false;
     fetch(
       `${process.env.REACT_APP_API_URL}/faction/leave/${
         this.state.gameInfo.id
@@ -97,33 +96,6 @@ export default class GameView extends React.Component {
       });
   };
 
-  handleLeaveFaction = e => {
-    if (window.confirm("Are you sure you want to leave your faction?")) {
-      let token = sessionStorage.getItem("token");
-      fetch(
-        `${process.env.REACT_APP_API_URL}/faction/leave/${
-          this.state.gameInfo.id
-        }`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: "Bearer " + token
-          }
-        }
-      )
-        .then(res => {
-          if (!res.ok) {
-          }
-          return res.json();
-        })
-        .then(res => {
-          alert(res.message);
-          this.getPlayerRole(this.state.gameInfo.id);
-        })
-        .catch(error => console.log(error));
-    }
-  };
-
   // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
   // setting socketSignal to null immediately after to avoid multiple database fetches
   getSocketSignal = data => {
@@ -146,7 +118,6 @@ export default class GameView extends React.Component {
   };
 
   render() {
-    console.log(this.state.gameInfo);
     const initialPosition = this.state.gameInfo
       ? [this.state.gameInfo.center.lat, this.state.gameInfo.center.lng]
       : null;

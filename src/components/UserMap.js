@@ -11,16 +11,10 @@ class UserMap extends Component {
       ownLat: null,
       ownLng: null,
       mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg",
-      geoJSONLayer: {
-        type: "FeatureCollection",
-        features: []
-      },
+      drawings: [],
       currentGameId: null
     };
 
-    this.sendGeoJSON = this.sendGeoJSON.bind(this);
-    this.fetchGeoJSON = this.fetchGeoJSON.bind(this);
-    this.setCurrentPosition = this.setCurrentPosition.bind(this);
     this.watchPositionId = null;
   }
 
@@ -34,19 +28,17 @@ class UserMap extends Component {
     if (nextProps.currentGameId === null) {
       return false;
     }
-
     return true;
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps.socketSignal);
     if (prevProps.socketSignal === "drawing-update") {
       this.fetchGeoJSON();
     }
   }
 
   // Sends the players drawings to the backend (and database)
-  sendGeoJSON(layerToDatabase) {
+  sendGeoJSON = data => {
     fetch(
       `${process.env.REACT_APP_API_URL}/draw/mapdrawing/${
         this.props.currentGameId
@@ -55,51 +47,38 @@ class UserMap extends Component {
         method: "PUT",
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
-          Accept: "application/json",
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          type: "FeatureCollection",
-          drawingIsActive: layerToDatabase.drawingIsActive,
-          mapDrawingId: layerToDatabase.mapDrawingId,
-          data: layerToDatabase.data
-        })
+        body: JSON.stringify(data)
       }
     );
-  }
+  };
 
   // Get the drawings from the backend and add them to the state, so they can be drawn
-  fetchGeoJSON() {
+  fetchGeoJSON = _ => {
     fetch(
       `${process.env.REACT_APP_API_URL}/draw/map/${this.props.currentGameId}`,
       {
         method: "GET",
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
-          Accept: "application/json",
           "Content-Type": "application/json"
         }
       }
     )
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) return res.json();
+        else throw Error(res.statusText);
+      })
       .then(data => {
-        let newFeatures = [];
-        data.map(item => {
-          newFeatures.push(item);
-          return true;
-        });
-
         this.setState({
-          geoJSONLayer: {
-            type: "FeatureCollection",
-            features: [...newFeatures]
-          }
+          drawings: data
         });
       })
       .catch(error => {
         console.log(error);
       });
-  }
+  };
 
   componentWillUnmount() {
     if (this.watchPositionId != null) {
@@ -162,9 +141,10 @@ class UserMap extends Component {
           attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'
           url={this.props.mapUrl}
         />
-        <ZoomControl position="topright" />
+        <ZoomControl position="topleft" />
         <DrawTools
           position={this.props.position}
+          drawings={this.state.drawings}
           sendGeoJSON={this.sendGeoJSON}
           geoJSONLayer={this.state.geoJSONLayer}
           currentGameId={this.props.currentGameId}
@@ -178,10 +158,13 @@ class UserMap extends Component {
             </Popup>
           </Marker>
         )}
-        <Player
-          currentGameId={this.props.currentGameId}
-          socketSignal={this.props.socketSignal}
-        />
+        {(this.props.role === "admin" ||
+          this.props.role === "factionleader") && (
+          <Player
+            currentGameId={this.props.currentGameId}
+            socketSignal={this.props.socketSignal}
+          />
+        )}
         {this.props.children}
       </Map>
     );
