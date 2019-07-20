@@ -1,20 +1,14 @@
 import React from "react";
-import L from "leaflet";
 import {
   Circle,
   Marker,
+  Popup,
   Polygon,
   Polyline,
   Rectangle,
   Tooltip
 } from "react-leaflet";
-
-// an empty icon for textboxes
-let noIcon = L.divIcon({
-  className: "",
-  iconSize: [20, 20],
-  iconAnchor: [10, 20]
-});
+import { noIcon, flagboxIcon } from "./DrawToolsPanel";
 
 class DrawLeafletObjects extends React.Component {
   createPolyline = drawing => {
@@ -105,6 +99,25 @@ class DrawLeafletObjects extends React.Component {
     );
   };
 
+  createFlagbox = drawing => {
+    return (
+      <Marker
+        key={Math.random()}
+        position={drawing.data.coordinates}
+        id={drawing.objectivePointId}
+        icon={flagboxIcon}
+        type="flagbox"
+      >
+        <Popup>
+          NodeId: {drawing.objectivePointDescription} <br />
+          Value: {drawing.objectivePointMultiplier} <br />
+          Owner: {drawing.owner.factionName || "Neutral"} <br />
+          Status: {drawing.action.message}
+        </Popup>
+      </Marker>
+    );
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -115,7 +128,8 @@ class DrawLeafletObjects extends React.Component {
             rectangle: this.createRectangle,
             circle: this.createCircle,
             marker: this.createMarker,
-            textbox: this.createTextbox
+            textbox: this.createTextbox,
+            flagbox: this.createFlagbox
           }[drawing.data.type](drawing);
         })}
       </React.Fragment>
