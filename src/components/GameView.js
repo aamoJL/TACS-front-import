@@ -209,6 +209,7 @@ export default class GameView extends React.Component {
                     : this.state.socketSignal.type
                 }
                 role={this.state.role}
+                gameState={this.state.gameInfo.state}
               >
                 <NotificationPopup socketSignal={this.state.socketSignal} />
               </UserMap>
