@@ -17,63 +17,46 @@ export const TrackPlayBackControl = L.Control.extend({
     this.leafletDrawings = [];
   },
 
-  // absolutely disgusting, never use geojson
   // init object to pass drawing data to right function
-  _drawFunction: function(data) {
+  _drawFunction: function(data, time) {
     // create leaflet objects
     var createMarker = data => {
-      data.geometry.coordinates = [
-        data.geometry.coordinates[1],
-        data.geometry.coordinates[0]
-      ];
-      return L.marker(data.geometry.coordinates).addTo(this.map);
+      return L.marker(data.coordinates).addTo(this.map);
     };
     var createPolyline = data => {
-      data.geometry.coordinates = data.geometry.coordinates.map(cords => {
-        return [cords[1], cords[0]];
-      });
-      return L.polyline(data.geometry.coordinates, {
-        color: data.properties.color
+      return L.polyline(data.coordinates, {
+        color: data.color || "#0000ff",
+        time: time
       }).addTo(this.map);
     };
     var createPolygon = data => {
-      // geoJSON has lat lng wrong way so turn them around
-      data.geometry.coordinates = data.geometry.coordinates[0].map(cords => {
-        return [cords[1], cords[0]];
-      });
-      return L.polygon(data.geometry.coordinates, {
-        color: data.properties.color
+      return L.polygon(data.coordinates, {
+        color: data.color || "#0000ff",
+        time: time
       }).addTo(this.map);
     };
     var createRectangle = data => {
-      return L.rectangle(data.geometry.coordinates, {
-        color: data.properties.color
+      return L.rectangle(data.coordinates, {
+        color: data.color || "#0000ff",
+        time: time
       }).addTo(this.map);
     };
     var createCircle = data => {
-      data.geometry.coordinates = [
-        data.geometry.coordinates[1],
-        data.geometry.coordinates[0]
-      ];
-      return L.circle(data.geometry.coordinates, {
-        radius: data.properties.radius
+      return L.circle(data.coordinates, {
+        radius: data.radius,
+        color: data.color || "#0000ff",
+        time: time
       }).addTo(this.map);
     };
-    // handle faulty cords
-    if (!data.geometry.coordinates[0][0] && !data.geometry.type === "Point") {
-      return null;
-    }
-    if (data.geometry.type === "Point" && !data.properties.radius) {
-      data.geometry.type = "Marker";
-    }
     var obj = {
-      Marker: createMarker,
-      LineString: createPolyline,
-      Polygon: createPolygon,
-      Rectangle: createRectangle,
-      Point: createCircle
+      marker: createMarker,
+      polyline: createPolyline,
+      polygon: createPolygon,
+      rectangle: createRectangle,
+      circle: createCircle,
+      textbox: null
     };
-    return obj[data.geometry.type](data);
+    return obj[data.type](data);
   },
 
   onAdd: function(map) {
@@ -97,47 +80,6 @@ export const TrackPlayBackControl = L.Control.extend({
       ${new Date(time).toLocaleDateString("en-US")} 
       ${new Date(time * 1e3).toISOString().slice(-13, -5)}
     `;
-    /*     time = parseInt(time * 1000);
-    let newDate = new Date(time);
-    let year = newDate.getFullYear();
-    let month =
-      newDate.getMonth() + 1 < 10
-        ? "0" + (newDate.getMonth() + 1)
-        : newDate.getMonth() + 1;
-    let day =
-      newDate.getDate() < 10 ? "0" + newDate.getDate() : newDate.getDate();
-    let hours =
-      newDate.getHours() < 10 ? "0" + newDate.getHours() : newDate.getHours();
-    let minuts =
-      newDate.getMinutes() < 10
-        ? "0" + newDate.getMinutes()
-        : newDate.getMinutes();
-    let seconds =
-      newDate.getSeconds() < 10
-        ? "0" + newDate.getSeconds()
-        : newDate.getSeconds();
-    let ret;
-    if (accuracy === "d") {
-      ret = year + "-" + month + "-" + day;
-    } else if (accuracy === "h") {
-      ret = year + "-" + month + "-" + day + " " + hours;
-    } else if (accuracy === "m") {
-      ret = year + "-" + month + "-" + day + " " + hours + ":" + minuts;
-    } else {
-      ret =
-        year +
-        "-" +
-        month +
-        "-" +
-        day +
-        " " +
-        hours +
-        ":" +
-        minuts +
-        ":" +
-        seconds;
-    }
-    return ret; */
   },
 
   _initContainer: function() {
@@ -405,6 +347,10 @@ export const TrackPlayBackControl = L.Control.extend({
 
   _restart: function() {
     // 播放开始改变播放按钮样式
+    this.leafletDrawings.forEach(drawing => {
+      if (drawing) this.map.removeLayer(drawing);
+    });
+    this.leafletDrawings = [];
     L.DomUtil.removeClass(this._playBtn, "btn-stop");
     L.DomUtil.addClass(this._playBtn, "btn-start");
     this._playBtn.setAttribute("title", "stop");
@@ -432,6 +378,10 @@ export const TrackPlayBackControl = L.Control.extend({
   },
 
   _scrollchange: function(e) {
+    this.leafletDrawings.forEach(drawing => {
+      if (drawing) this.map.removeLayer(drawing);
+    });
+    this.leafletDrawings = [];
     let val = Number(e.target.value);
     this.trackPlayBack.setCursor(val);
   },
@@ -452,9 +402,48 @@ export const TrackPlayBackControl = L.Control.extend({
     for (let i = 0; i < this._factionScoreboxes.length; i++) {
       this._factionScoreboxes[i].innerHTML = this.trackPlayBack.passScores(i);
     }
+    this._tickDrawings(e.time);
+    //
+    // 更新时间轴
+  },
+
+  _tickDrawings: function(time) {
     // tick drawings
     let drawings = this.trackPlayBack.passDrawings();
     for (let i = 0; i < drawings.length; i++) {
+      // if the drawing is null, remove the layer from map if it exists
+      // if the drawing is not null, but set to inactive, remove the layer
+      if (!drawings[i] || !drawings[i].drawingIsActive) {
+        if (this.leafletDrawings[i]) {
+          this.map.removeLayer(this.leafletDrawings[i]);
+          this.leafletDrawings[i] = null;
+        }
+      }
+      // draw layer if it's active
+      else if (drawings[i].drawingIsActive && !this.leafletDrawings[i]) {
+        this.leafletDrawings[i] = this._drawFunction(
+          drawings[i].data,
+          drawings[i].timestamp
+        );
+      }
+      // draw the element again if it has been updated
+      else if (
+        this.leafletDrawings[i] &&
+        drawings[i].timestamp > this.leafletDrawings[i].options.time
+      ) {
+        this.map.removeLayer(this.leafletDrawings[i]);
+        this.leafletDrawings[i] = this._drawFunction(
+          drawings[i].data,
+          drawings[i].timestamp
+        );
+      }
+      // remove updated layers when resetting timer
+      /*       if (
+        this.leafletDrawings[i] &&
+        this.leafletDrawings[i].options.time > time
+      ) {
+        this.map.removeLayer(this.leafletDrawings[i]);
+      }
       // skip if undefined
       if (!drawings[i] && this.leafletDrawings[i]) {
         this.map.removeLayer(this.leafletDrawings[i]);
@@ -470,12 +459,23 @@ export const TrackPlayBackControl = L.Control.extend({
       }
       // else draw the marker if it's not drawn
       if (drawings[i].drawingIsActive && !this.leafletDrawings[i]) {
-        this.leafletDrawings[i] = this._drawFunction(drawings[i].data);
-        console.log(this.leafletDrawings[i]);
+        this.leafletDrawings[i] = this._drawFunction(
+          drawings[i].data,
+          drawings[i].timestamp
+        );
       }
+      // draw the element again if it has been updated
+      if (
+        this.leafletDrawings[i] &&
+        drawings[i].timestamp > this.leafletDrawings[i].options.time
+      ) {
+        this.map.removeLayer(this.leafletDrawings[i]);
+        this.leafletDrawings[i] = this._drawFunction(
+          drawings[i].data,
+          drawings[i].timestamp
+        );
+      } */
     }
-    //
-    // 更新时间轴
   }
 });
 
