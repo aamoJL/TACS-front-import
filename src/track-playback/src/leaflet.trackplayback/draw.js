@@ -55,6 +55,13 @@ export const Draw = L.Class.extend({
     L.extend(this.filterOptions, options.filterOptions);
     L.extend(this.scoreOptions, options.scoreOptions);
 
+    // add admin faction to ease replay management
+    this.filterOptions.factions.push({
+      active: true,
+      colour: "#0000FF",
+      name: "admin"
+    });
+
     this._showTrackPoint = this.trackPointOptions.isDraw;
     this._showTrackLine = this.trackLineOptions.isDraw;
 

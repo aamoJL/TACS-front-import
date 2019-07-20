@@ -11,6 +11,7 @@ export const TrackPlayBackControl = L.Control.extend({
 
   initialize: function(trackplayback, map, options) {
     this.map = map;
+    this.factions = [];
     L.Control.prototype.initialize.call(this, options);
     this.trackPlayBack = trackplayback;
     this.trackPlayBack.on("tick", this._tickCallback, this);
@@ -140,9 +141,9 @@ export const TrackPlayBackControl = L.Control.extend({
       this._filterContainer
     );
     // get factions in replay
-    let factions = this.trackPlayBack.passFactions();
+    this.factions = this.trackPlayBack.passFactions();
     // create checkboxes for filtering persons based on their faction
-    this._factionCheckboxes = factions.map(faction => {
+    this._factionCheckboxes = this.factions.map(faction => {
       return this._createCheckbox(
         `show ${faction.name}`,
         `show-${faction.name}`,
@@ -156,14 +157,18 @@ export const TrackPlayBackControl = L.Control.extend({
       this._container
     );
     // create score blocks for each faction
-    this._factionScoreboxes = factions.map(faction => {
-      return this._createInfo(
-        `${faction.name}: `,
-        0,
-        "scoreBlock",
-        this._scoreContainer
-      );
+    // don't create an admin scorebox
+    this._factionScoreboxes = this.factions.map(faction => {
+      if (faction.name !== "admin")
+        return this._createInfo(
+          `${faction.name}: `,
+          0,
+          "scoreBlock",
+          this._scoreContainer
+        );
     });
+    // pop the admin faction
+    this._factionScoreboxes.pop();
 
     this._playBtn = this._createButton(
       "play",
@@ -321,13 +326,17 @@ export const TrackPlayBackControl = L.Control.extend({
     this.trackPlayBack.toggleMechanized(e.target.checked);
   },
   _showFaction(e) {
-    this.trackPlayBack.toggleFactions(
-      e.target.checked,
-      e.target.parentNode.className.substring(
-        5,
-        e.target.parentNode.className.indexOf(" ")
-      )
+    let target = e.target.parentNode.className.substring(
+      5,
+      e.target.parentNode.className.indexOf(" ")
     );
+    this.trackPlayBack.toggleFactions(e.target.checked, target);
+    for (let faction of this.factions) {
+      if (faction.name === target) {
+        faction.active = e.target.checked;
+        break;
+      }
+    }
   },
 
   _play: function() {
@@ -411,9 +420,19 @@ export const TrackPlayBackControl = L.Control.extend({
     // tick drawings
     let drawings = this.trackPlayBack.passDrawings();
     for (let i = 0; i < drawings.length; i++) {
+      let show = true;
+      // check if drawing is filtered by faction
+      // only if drawing is not null
+      if (drawings[i]) {
+        let index = this.factions.findIndex(
+          x => x.name === drawings[i].data.faction
+        );
+        show = this.factions[index].active;
+      }
       // if the drawing is null, remove the layer from map if it exists
       // if the drawing is not null, but set to inactive, remove the layer
-      if (!drawings[i] || !drawings[i].drawingIsActive) {
+      // if the faction has been filtered, remove the layer
+      if (!drawings[i] || !drawings[i].drawingIsActive || !show) {
         if (this.leafletDrawings[i]) {
           this.map.removeLayer(this.leafletDrawings[i]);
           this.leafletDrawings[i] = null;
