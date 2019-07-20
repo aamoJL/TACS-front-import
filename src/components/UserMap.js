@@ -12,6 +12,7 @@ class UserMap extends Component {
       ownLng: null,
       mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg",
       drawings: [],
+      flagboxes: [],
       currentGameId: null
     };
 
@@ -34,8 +35,31 @@ class UserMap extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.socketSignal === "drawing-update") {
       this.fetchGeoJSON();
+    } else if (prevProps.socketSignal === "flagbox-event") {
+      this.fetchFlagboxData();
     }
   }
+
+  // fetch all flagbox data
+  fetchFlagboxData = _ => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/game/flag-events/${
+        this.props.currentGameId
+      }`
+    )
+      .then(res => {
+        if (res.ok) return res.json();
+        else throw Error(res.statusText);
+      })
+      .then(data => {
+        this.setState({
+          flagboxes: data
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   // Sends the players drawings to the backend (and database)
   sendGeoJSON = data => {
@@ -127,6 +151,15 @@ class UserMap extends Component {
     }
   }
 
+  // permit fetching tracking data if user has admin or factionleader role
+  // and the game is in STARTED or PAUSED state
+  permitTrackingFetch = _ => {
+    return (
+      (this.props.role === "admin" || this.props.role === "factionleader") &&
+      ["STARTED", "PAUSED"].includes(this.props.gameState)
+    );
+  };
+
   render() {
     return (
       <Map
@@ -145,6 +178,7 @@ class UserMap extends Component {
         <DrawTools
           position={this.props.position}
           drawings={this.state.drawings}
+          flagboxes={this.state.flagboxes}
           sendGeoJSON={this.sendGeoJSON}
           geoJSONLayer={this.state.geoJSONLayer}
           currentGameId={this.props.currentGameId}
@@ -158,8 +192,7 @@ class UserMap extends Component {
             </Popup>
           </Marker>
         )}
-        {(this.props.role === "admin" ||
-          this.props.role === "factionleader") && (
+        {this.permitTrackingFetch() && (
           <Player
             currentGameId={this.props.currentGameId}
             socketSignal={this.props.socketSignal}
