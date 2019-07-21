@@ -2,7 +2,13 @@ import React, { Component } from "react";
 import { EditControl } from "react-leaflet-draw";
 import L from "leaflet";
 import "leaflet-draw";
-import { CreateFlagboxSvg } from "./CreateSVG";
+import {
+  RegularFlagboxSVG,
+  CapturingFlagboxSVG,
+  PlayerInfantrySVG,
+  PlayerReconSVG,
+  PlayerMechanizedSVG
+} from "./CreateSVG";
 
 // an empty icon for textboxes
 export const noIcon = L.divIcon({
@@ -22,6 +28,30 @@ export const flagboxIcon = (ownerColour, capturing) => {
   });
 };
 
+export const playerIcon = (type, colour) => {
+  return L.divIcon({
+    html: L.Util.template(CreatePlayerSVG(type, colour)),
+    className: "player-marker",
+    iconSize: [10, 10],
+    iconAnchor: [30, 40],
+    popupAnchor: [0, -75]
+  });
+};
+
+// functions that fetch correct svg data for Icon
+// all svg data is in SVG-data.js
+const CreateFlagboxSvg = (ownerColour, status) => {
+  return status === 2
+    ? CapturingFlagboxSVG(ownerColour)
+    : RegularFlagboxSVG(ownerColour);
+};
+const CreatePlayerSVG = (icon, colour) => {
+  return {
+    "infantry.svg": PlayerInfantrySVG,
+    "recon.svg": PlayerReconSVG,
+    "mechanized.svg": PlayerMechanizedSVG
+  }[icon](colour);
+};
 // class for text field
 L.Draw.MarkerTextBox = L.Draw.Marker.extend({
   options: {
