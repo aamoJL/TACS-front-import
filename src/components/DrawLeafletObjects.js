@@ -105,8 +105,13 @@ class DrawLeafletObjects extends React.Component {
         key={Math.random()}
         position={drawing.data.coordinates}
         id={drawing.objectivePointId}
-        icon={flagboxIcon}
+        icon={flagboxIcon(
+          drawing.owner.colour,
+          drawing.action.status,
+          drawing.capture.colour
+        )}
         type="flagbox"
+        title={drawing.capture.colour}
       >
         <Popup>
           NodeId: {drawing.objectivePointDescription} <br />
