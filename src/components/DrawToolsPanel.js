@@ -2,13 +2,25 @@ import React, { Component } from "react";
 import { EditControl } from "react-leaflet-draw";
 import L from "leaflet";
 import "leaflet-draw";
+import { CreateFlagboxSvg } from "./CreateSVG";
 
 // an empty icon for textboxes
-let noIcon = L.divIcon({
+export const noIcon = L.divIcon({
   className: "",
   iconSize: [20, 20],
   iconAnchor: [10, 20]
 });
+
+// flagbox icon
+export const flagboxIcon = (ownerColour, capturing) => {
+  return L.divIcon({
+    html: L.Util.template(CreateFlagboxSvg(ownerColour, capturing)),
+    className: capturing === 2 ? "capturing-flagbox" : "captured-flagbox",
+    iconSize: [75, 75],
+    iconAnchor: [42, 75],
+    popupAnchor: [-3, -76]
+  });
+};
 
 // class for text field
 L.Draw.MarkerTextBox = L.Draw.Marker.extend({
