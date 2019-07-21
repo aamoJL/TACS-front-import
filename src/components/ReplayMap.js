@@ -15,14 +15,16 @@ export default class ReplayMap extends React.Component {
     this.state = {
       // stores game's initial location
       location: [62.3, 25.7],
-      // stores player locations from backend
+      // stores player locations from the game
       players: [],
       // stores all factions from the game
       factions: [],
       // stores all scores from the game
       scores: [],
-      // stores all drawings from backend
-      drawings: []
+      // stores all drawings from the game
+      drawings: [],
+      // stores all flagbox data from the game
+      objectivepoints: []
     };
   }
 
@@ -38,10 +40,41 @@ export default class ReplayMap extends React.Component {
       players: replaydata.players,
       factions: replaydata.factions,
       scores: replaydata.scores,
-      drawings: replaydata.drawings
+      drawings: replaydata.drawings,
+      objectivepoints: replaydata.objectivepoints
     });
     replaydata ? this.replay() : alert("No replay data was found");
+    setInterval(this.animation, 2000);
   }
+
+  sleep = ms => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  };
+
+  // animate some css when flagbox is being captured
+  animation = async _ => {
+    var boxes = await document.getElementsByClassName("capturing-flagbox");
+    if (boxes) {
+      for (let i in boxes) {
+        if (boxes[i].style) {
+          boxes[i].style.width = "100px";
+          boxes[i].style.height = "100px";
+          boxes[i].style.marginLeft = "-47px";
+          boxes[i].style.marginTop = "-77px";
+          boxes[i].style.borderRadius = "0%";
+          boxes[i].style.backgroundColor = boxes[i].title;
+          await this.sleep(400);
+          boxes[i].style.backgroundColor = "#ebd7d5";
+          boxes[i].style.width = "75px";
+          boxes[i].style.height = "75px";
+          boxes[i].style.marginLeft = "-47px";
+          boxes[i].style.marginTop = "-77px";
+          boxes[i].style.borderRadius = "50%";
+          await this.sleep(400);
+        }
+      }
+    }
+  };
 
   fetchReplayData = async () => {
     let res = await fetch(
