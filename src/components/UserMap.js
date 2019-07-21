@@ -167,7 +167,7 @@ class UserMap extends Component {
         center={this.props.position}
         zoom={this.props.zoom}
         minZoom="7"
-        maxZoom="17"
+        maxZoom="18"
         zoomControl={false}
       >
         <TileLayer
