@@ -1,14 +1,16 @@
+// https://github.com/YUzhva/react-leaflet-markercluster
+// https://github.com/Leaflet/Leaflet.markercluster#all-options
+
 import React, { Component } from "react";
 import { Marker, Popup } from "react-leaflet";
-import { playerIcon } from "./DrawToolsPanel";
+import MarkerClusterGroup from "react-leaflet-markercluster";
+
+import { playerIcon, clusterIcon } from "./DrawToolsPanel";
 
 class Player extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      players: []
-    };
-  }
+  state = {
+    factions: []
+  };
 
   getPlayers = () => {
     fetch(
@@ -27,7 +29,7 @@ class Player extends Component {
         // don't do anything if data is not an array, as it breaks the map function at render
         if (Array.isArray(data)) {
           this.setState({
-            players: data
+            factions: data
           });
         }
       })
@@ -43,29 +45,39 @@ class Player extends Component {
 
   render() {
     return (
-      <div>
-        {this.state.players !== null &&
-          this.state.players.map(player => {
+      <React.Fragment>
+        {this.state.factions &&
+          this.state.factions.map(faction => {
             return (
-              <Marker
-                key={Math.random()}
-                position={[player.coordinates.lat, player.coordinates.lng]}
-                icon={playerIcon(player.icon, player.factionColour)}
-                factionId={player.factionId}
-                gamepersonId={player.gamepersonId}
-                gamepersonRole={player.gamepersonRole}
-              >
-                <Popup>
-                  <b>factionId:</b> {player.factionId}
-                  <br />
-                  <b>gamepersonId:</b> {player.gamepersonId}
-                  <br />
-                  <b>gamepersonRole:</b> {player.gamepersonRole}
-                </Popup>
-              </Marker>
+              <MarkerClusterGroup iconCreateFunction={clusterIcon}>
+                {faction.map(player => {
+                  return (
+                    <Marker
+                      key={Math.random()}
+                      position={[
+                        player.coordinates.lat,
+                        player.coordinates.lng
+                      ]}
+                      icon={playerIcon(player.icon, player.factionColour)}
+                      factionId={player.factionId}
+                      gamepersonId={player.gamepersonId}
+                      gamepersonRole={player.gamepersonRole}
+                      colour={player.factionColour}
+                    >
+                      <Popup>
+                        <b>factionId:</b> {player.factionId}
+                        <br />
+                        <b>gamepersonId:</b> {player.gamepersonId}
+                        <br />
+                        <b>gamepersonRole:</b> {player.gamepersonRole}
+                      </Popup>
+                    </Marker>
+                  );
+                })}
+              </MarkerClusterGroup>
             );
           })}
-      </div>
+      </React.Fragment>
     );
   }
 }
