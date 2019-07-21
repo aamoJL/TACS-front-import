@@ -10,7 +10,8 @@ class DrawTools extends Component {
     super(props);
     this.state = {
       editModeActive: false,
-      flagboxes: []
+      flagboxes: [],
+      timer: null
     };
   }
 
@@ -18,6 +19,44 @@ class DrawTools extends Component {
     // disable re-rendering when edit mode is active
     return !this.state.editModeActive;
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    // start updating interval
+    if (prevState.timer === null) {
+      this.setState({
+        timer: setInterval(this.animation, 2000)
+      });
+    }
+  }
+
+  sleep = ms => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  };
+
+  // animate some css when flagbox is being captured
+  animation = async _ => {
+    var boxes = await document.getElementsByClassName("capturing-flagbox");
+    if (boxes) {
+      for (let i in boxes) {
+        if (boxes[i].style) {
+          boxes[i].style.width = "100px";
+          boxes[i].style.height = "100px";
+          boxes[i].style.marginLeft = "-47px";
+          boxes[i].style.marginTop = "-77px";
+          boxes[i].style.borderRadius = "0%";
+          boxes[i].style.backgroundColor = boxes[i].title;
+          await this.sleep(400);
+          boxes[i].style.backgroundColor = "#ebd7d5";
+          boxes[i].style.width = "75px";
+          boxes[i].style.height = "75px";
+          boxes[i].style.marginLeft = "-47px";
+          boxes[i].style.marginTop = "-77px";
+          boxes[i].style.borderRadius = "50%";
+          await this.sleep(400);
+        }
+      }
+    }
+  };
 
   // send drawing to database when it's created
   _onCreated = e => {
