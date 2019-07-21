@@ -12,9 +12,11 @@ export const TrackController = L.Class.extend({
     L.setOptions(this, options);
     this._activeScores = [];
     this._activeDrawings = [];
+    this._activeFlagboxes = [];
     this._tracks = data.tracks;
     this._scores = data.scores;
     this._drawings = data.drawings;
+    this._objectivepoints = data.objectivepoints;
     this.addTrack(data.tracks || []);
 
     this._draw = draw;
@@ -73,6 +75,24 @@ export const TrackController = L.Class.extend({
         }
       }
       this._activeDrawings[i] = drawing;
+    }
+    // update flagbox status
+    for (let i = 0; i < this._objectivepoints.length; i++) {
+      let activebox = this._objectivepoints[i].history[0];
+      for (let j = 0; j < this._objectivepoints[i].history.length; j++) {
+        if (this._objectivepoints[i].history[j].timestamp < time) {
+          activebox = this._objectivepoints[i].history[j];
+        }
+      }
+      this._activeFlagboxes[i] = {
+        objectivePointId: this._objectivepoints[i].objectivePointId,
+        objectivePointDescription: this._objectivepoints[i]
+          .objectivePointDescription,
+        objectivePointMultiplier: this._objectivepoints[i]
+          .objectivePointMultiplier,
+        data: this._objectivepoints[i].data,
+        history: activebox
+      };
     }
   },
 

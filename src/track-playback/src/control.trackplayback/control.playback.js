@@ -1,4 +1,5 @@
 import L from "leaflet";
+import { flagboxIcon } from "../../../components/DrawToolsPanel";
 
 export const TrackPlayBackControl = L.Control.extend({
   options: {
@@ -16,6 +17,7 @@ export const TrackPlayBackControl = L.Control.extend({
     this.trackPlayBack = trackplayback;
     this.trackPlayBack.on("tick", this._tickCallback, this);
     this.leafletDrawings = [];
+    this.mapflagboxes = [];
   },
 
   // init object to pass drawing data to right function
@@ -339,6 +341,17 @@ export const TrackPlayBackControl = L.Control.extend({
     }
   },
 
+  _resetMap() {
+    this.leafletDrawings.forEach(drawing => {
+      if (drawing) this.map.removeLayer(drawing);
+    });
+    this.leafletDrawings = [];
+    this.mapflagboxes.forEach(box => {
+      if (box) this.map.removeLayer(box);
+    });
+    this.mapflagboxes = [];
+  },
+
   _play: function() {
     let hasClass = L.DomUtil.hasClass(this._playBtn, "btn-stop");
     if (hasClass) {
@@ -356,10 +369,7 @@ export const TrackPlayBackControl = L.Control.extend({
 
   _restart: function() {
     // 播放开始改变播放按钮样式
-    this.leafletDrawings.forEach(drawing => {
-      if (drawing) this.map.removeLayer(drawing);
-    });
-    this.leafletDrawings = [];
+    this._resetMap();
     L.DomUtil.removeClass(this._playBtn, "btn-stop");
     L.DomUtil.addClass(this._playBtn, "btn-start");
     this._playBtn.setAttribute("title", "stop");
@@ -387,10 +397,7 @@ export const TrackPlayBackControl = L.Control.extend({
   },
 
   _scrollchange: function(e) {
-    this.leafletDrawings.forEach(drawing => {
-      if (drawing) this.map.removeLayer(drawing);
-    });
-    this.leafletDrawings = [];
+    this._resetMap();
     let val = Number(e.target.value);
     this.trackPlayBack.setCursor(val);
   },
@@ -411,9 +418,40 @@ export const TrackPlayBackControl = L.Control.extend({
     for (let i = 0; i < this._factionScoreboxes.length; i++) {
       this._factionScoreboxes[i].innerHTML = this.trackPlayBack.passScores(i);
     }
+    // tick drawings
     this._tickDrawings(e.time);
+    // tick flagboxes
+    let flagboxes = this.trackPlayBack.passFlagboxes();
+    for (let i = 0; i < flagboxes.length; i++) {
+      if (!this.mapflagboxes[i]) {
+        this.mapflagboxes[i] = this._createFlagbox(flagboxes[i]);
+        this.mapflagboxes[i].bindPopup(this._createPopup(flagboxes[i]));
+      } else if (
+        flagboxes[i].history.timestamp > this.mapflagboxes[i].options.time
+      ) {
+        this.map.removeLayer(this.mapflagboxes[i]);
+        this.mapflagboxes[i] = this._createFlagbox(flagboxes[i]);
+        this.mapflagboxes[i].bindPopup(this._createPopup(flagboxes[i]));
+      }
+    }
     //
     // 更新时间轴
+  },
+
+  _createPopup: function(box) {
+    return `
+    NodeId: ${box.objectivePointDescription} <br />
+    Value: ${box.objectivePointMultiplier} <br />
+    Owner: ${box.history.owner.factionName} <br />
+    Status: ${box.history.action.message}
+  `;
+  },
+
+  _createFlagbox: function(box) {
+    return L.marker(box.data.coordinates, {
+      icon: flagboxIcon(box.history.owner.colour, box.history.action.status),
+      time: box.history.timestamp
+    }).addTo(this.map);
   },
 
   _tickDrawings: function(time) {
@@ -456,44 +494,6 @@ export const TrackPlayBackControl = L.Control.extend({
           drawings[i].timestamp
         );
       }
-      // remove updated layers when resetting timer
-      /*       if (
-        this.leafletDrawings[i] &&
-        this.leafletDrawings[i].options.time > time
-      ) {
-        this.map.removeLayer(this.leafletDrawings[i]);
-      }
-      // skip if undefined
-      if (!drawings[i] && this.leafletDrawings[i]) {
-        this.map.removeLayer(this.leafletDrawings[i]);
-        this.leafletDrawings[i] = null;
-        return;
-      }
-      if (!drawings[i]) return;
-      // remove if it's not active
-      if (!drawings[i].drawingIsActive && this.leafletDrawings[i]) {
-        this.map.removeLayer(this.leafletDrawings[i]);
-        this.leafletDrawings[i] = null;
-        return;
-      }
-      // else draw the marker if it's not drawn
-      if (drawings[i].drawingIsActive && !this.leafletDrawings[i]) {
-        this.leafletDrawings[i] = this._drawFunction(
-          drawings[i].data,
-          drawings[i].timestamp
-        );
-      }
-      // draw the element again if it has been updated
-      if (
-        this.leafletDrawings[i] &&
-        drawings[i].timestamp > this.leafletDrawings[i].options.time
-      ) {
-        this.map.removeLayer(this.leafletDrawings[i]);
-        this.leafletDrawings[i] = this._drawFunction(
-          drawings[i].data,
-          drawings[i].timestamp
-        );
-      } */
     }
   }
 });
