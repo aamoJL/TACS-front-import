@@ -89,6 +89,7 @@ class DrawTools extends Component {
       data: data
     };
     this.props.sendGeoJSON(obj);
+    e.layer.remove();
   };
 
   // save edit changes to db
