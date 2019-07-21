@@ -99,25 +99,44 @@ class DrawLeafletObjects extends React.Component {
     );
   };
 
+  // create a flagbox event
+  // used in edit mode and when showing it on map
+  // in edit mode the drawing does not have all information so return one with less info
   createFlagbox = drawing => {
+    if (drawing.owner) {
+      return (
+        <Marker
+          key={Math.random()}
+          position={drawing.data.coordinates}
+          id={drawing.objectivePointId}
+          icon={flagboxIcon(
+            drawing.owner.colour,
+            drawing.action.status,
+            drawing.capture.colour
+          )}
+          type="flagbox"
+          title={drawing.capture.colour}
+        >
+          <Popup>
+            NodeId: {drawing.objectivePointDescription} <br />
+            Value: {drawing.objectivePointMultiplier} <br />
+            Owner: {drawing.owner.factionName} <br />
+            Status: {drawing.action.message}
+          </Popup>
+        </Marker>
+      );
+    }
     return (
       <Marker
         key={Math.random()}
         position={drawing.data.coordinates}
         id={drawing.objectivePointId}
-        icon={flagboxIcon(
-          drawing.owner.colour,
-          drawing.action.status,
-          drawing.capture.colour
-        )}
+        icon={flagboxIcon("#000000", 0, "#000000")}
         type="flagbox"
-        title={drawing.capture.colour}
       >
         <Popup>
           NodeId: {drawing.objectivePointDescription} <br />
           Value: {drawing.objectivePointMultiplier} <br />
-          Owner: {drawing.owner.factionName || "Neutral"} <br />
-          Status: {drawing.action.message}
         </Popup>
       </Marker>
     );
