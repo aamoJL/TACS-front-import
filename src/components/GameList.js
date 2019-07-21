@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import GameCard from "./GameCard";
 
 class GameList extends React.Component {
