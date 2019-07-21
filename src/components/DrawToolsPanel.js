@@ -32,9 +32,19 @@ export const playerIcon = (type, colour) => {
   return L.divIcon({
     html: L.Util.template(CreatePlayerSVG(type, colour)),
     className: "player-marker",
-    iconSize: [10, 10],
+    iconSize: [100, 100],
     iconAnchor: [30, 40],
     popupAnchor: [0, -75]
+  });
+};
+
+export const clusterIcon = cluster => {
+  let markers = cluster.getAllChildMarkers();
+  let colour = markers[0] ? markers[0].options.colour : "#1d1d1b";
+  return L.divIcon({
+    html: L.Util.template(CreateClusterSVG(cluster.getChildCount(), colour)),
+    className: "cluster-marker",
+    iconSize: L.point(100, 100, true)
   });
 };
 
@@ -50,7 +60,11 @@ const CreatePlayerSVG = (icon, colour) => {
     "infantry.svg": PlayerInfantrySVG,
     "recon.svg": PlayerReconSVG,
     "mechanized.svg": PlayerMechanizedSVG
-  }[icon](colour);
+  }[icon](1, colour);
+};
+
+const CreateClusterSVG = (amount, colour) => {
+  return PlayerInfantrySVG(amount, colour);
 };
 // class for text field
 L.Draw.MarkerTextBox = L.Draw.Marker.extend({
