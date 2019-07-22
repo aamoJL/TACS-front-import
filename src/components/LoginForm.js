@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import logo from "../icons/tacs-logo-neg.png";
+
 export class LoginForm extends React.Component {
   constructor(props) {
     super(props);
@@ -58,37 +60,67 @@ export class LoginForm extends React.Component {
 
   render() {
     return (
-      <div className="fade-main">
-        <div className="login">
-          <form onSubmit={this.handleLogin}>
-            <h1>Login</h1>
-            <br />
-            <input
-              placeholder="Enter Username"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleChange}
-              id="loginUsernameInput"
-              autoFocus
-            />
-            <br />
-            <input
-              placeholder="Enter password"
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-              id="loginPasswordInput"
-            />
-            <br />
-            <button id="submitLoginButton" type="submit">
-              Submit
-            </button>
-            <h2>{this.state.errorMsg}</h2>
-          </form>
-          <Link to="/register">
-            <button id="loginRegisterButton">Create account</button>
-          </Link>
+      <div className="container">
+        <div className="row">
+          <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+            <img className="tacs-logo-neg" src={logo} alt="tacs logo" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+            <div className="tacs-login">
+              <form onSubmit={this.handleLogin}>
+                <p className="login-text">Login</p>
+                <br />
+                <input
+                  className="form-control1"
+                  placeholder="Enter username"
+                  name="username"
+                  value={this.state.username}
+                  onChange={this.handleChange}
+                  id="loginUsernameInput"
+                  autoFocus
+                  required
+                />
+                <br />
+                <input
+                  className="form-control2"
+                  placeholder="Enter password"
+                  type="password"
+                  name="password"
+                  value={this.state.password}
+                  onChange={this.handleChange}
+                  id="loginPasswordInput"
+                  required
+                />
+                <br />
+                <br />
+
+                <button
+                  className="btn btn-secondary"
+                  id="submitLoginButton"
+                  type="submit"
+                >
+                  Login
+                </button>
+                {this.state.errorMsg && (
+                  <div className="d-flex flex-fill justify-content-center text-center">
+                    {this.state.errorMsg}
+                  </div>
+                )}
+              </form>
+              <br />
+              Need an account?
+              <Link to="/register">
+                <a id="registerButton"> Register</a>
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className=" justify-content-center text-center footer text-muted">
+            &copy; 2019 TACS
+          </div>
         </div>
       </div>
     );
