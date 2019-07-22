@@ -646,10 +646,14 @@ div.login h1 {
   position: absolute;
   top: 20%;
   right: 50%;
-  margin: auto;
   z-index: 2020;
   background-color: #1d1d1b;
   color: #ffffff;
+}
+
+.tasklist > * {
+  padding: 5px;
+  margin: 5px;
 }
 
 .tasklist-item {
@@ -660,7 +664,6 @@ div.login h1 {
 }
 
 .task-form {
-  padding: 5px;
   display: flex;
   flex-direction: column;
 }
@@ -688,6 +691,29 @@ div.login h1 {
   cursor: pointer;
 }
 
+.notification {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  padding: 5px;
+  position: absolute;
+  top: 20%;
+  right: 50%;
+  margin: auto;
+  z-index: 2020;
+  background-color: #1d1d1b;
+  color: #ffffff;
+}
+
+.notification > * {
+  padding: 5px;
+  margin: 5px;
+}
+
+.notification-input > * {
+  padding: 5px;
+  margin: 5px;
+}
 /* Draggable */
 
 /* .draggableContainer {

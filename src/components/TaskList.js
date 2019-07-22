@@ -218,49 +218,45 @@ class TaskList extends React.Component {
           >
             x
           </button>
-          <h1 style={{ justifyContent: "center" }}>Tasklist</h1>
+          <h1>Tasklist</h1>
           {this.props.role === "admin" && (
-            <div className="no-cursor">
-              <form className="task-form" onSubmit={this.handleTaskCreation}>
-                <label>New task</label>
-                <input
-                  className="input-cancel-drag"
-                  id="taskNameInput"
-                  type="text"
-                  placeholder="Task name"
-                  minLength="3"
-                  maxLength="31"
-                  value={this.state.taskNameInput}
-                  onChange={e =>
-                    this.setState({ taskNameInput: e.target.value })
-                  }
-                />
-                <textarea
-                  className="input-cancel-drag"
-                  id="taskDescriptionInput"
-                  placeholder="Task description"
-                  value={this.state.taskDescriptionInput}
-                  maxLength="255"
-                  onChange={e =>
-                    this.setState({ taskDescriptionInput: e.target.value })
-                  }
-                />
-                <select
-                  className="input-cancel-drag"
-                  id="taskFactionSelect"
-                  onChange={this.handleFactionChange}
-                >
-                  {factionlistItems}
-                </select>
-                <button
-                  id="newTaskSubmitButton"
-                  type="submit"
-                  className="input-cancel-drag"
-                >
-                  Add new task
-                </button>
-              </form>
-            </div>
+            <form className="task-form" onSubmit={this.handleTaskCreation}>
+              <label>New task</label>
+              <input
+                className="input-cancel-drag"
+                id="taskNameInput"
+                type="text"
+                placeholder="Task name"
+                minLength="3"
+                maxLength="31"
+                value={this.state.taskNameInput}
+                onChange={e => this.setState({ taskNameInput: e.target.value })}
+              />
+              <textarea
+                className="input-cancel-drag"
+                id="taskDescriptionInput"
+                placeholder="Task description"
+                value={this.state.taskDescriptionInput}
+                maxLength="255"
+                onChange={e =>
+                  this.setState({ taskDescriptionInput: e.target.value })
+                }
+              />
+              <select
+                className="input-cancel-drag"
+                id="taskFactionSelect"
+                onChange={this.handleFactionChange}
+              >
+                {factionlistItems}
+              </select>
+              <button
+                id="newTaskSubmitButton"
+                type="submit"
+                className="input-cancel-drag"
+              >
+                Add new task
+              </button>
+            </form>
           )}
           <div className="task-items-container">
             <label>On-going tasks</label>
