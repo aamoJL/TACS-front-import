@@ -4,6 +4,8 @@ import { Map, TileLayer } from "react-leaflet";
 import { SketchPicker } from "react-color";
 import reactCSS from "reactcss";
 
+import EditGameFormToolbar from "./EditGameFormToolbar";
+
 export default class EditGameForm extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +40,43 @@ export default class EditGameForm extends React.Component {
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value, saved: false });
+  };
+
+  // get flagbox data from EditGameFormToolbar and push it to state array
+  // when saving changes, the whole array is sent to database
+  pushFlagbox = box => {
+    let newdata = [...this.state.objectivePoints];
+    for (let i in newdata) {
+      if (!newdata[i].data) {
+        newdata[i].data = box.data;
+        this.setState({ objectivePoints: newdata });
+        break;
+      }
+    }
+  };
+  // get edited flagbox data from EditGameFormToolbar and update it in state array
+  // changes are sent to db on save
+  updateFlagbox = boxes => {
+    let newData = [...this.state.objectivePoints];
+    boxes.forEach(flagbox => {
+      let i = newData.findIndex(
+        x => x.objectivePointId === flagbox.objectivePointId
+      );
+      if (i !== -1) newData[i].data = flagbox.data;
+    });
+    this.setState({ objectivePoints: newData });
+  };
+  // get deleted flagbox data from EditGameFormToolbar and update it in state array
+  // changes are sent to db on save
+  deleteFlagbox = boxes => {
+    let newData = [...this.state.objectivePoints];
+    boxes.forEach(flagbox => {
+      let i = newData.findIndex(
+        x => x.objectivePointId === flagbox.objectivePointId
+      );
+      if (i !== -1) newData.splice(i, 1);
+    });
+    this.setState({ objectivePoints: newData });
   };
 
   handleFactionAdd = e => {
@@ -123,7 +162,11 @@ export default class EditGameForm extends React.Component {
         objectivePointDescription: this.state.objectivePointDescriptionInput,
         objectivePointMultiplier: parseFloat(
           this.state.objectivePointMultiplierInput
-        )
+        ),
+        data: {
+          type: "flagbox",
+          coordinates: [this.state.mapCenter.lat, this.state.mapCenter.lng]
+        }
       });
 
       return {
@@ -210,9 +253,6 @@ export default class EditGameForm extends React.Component {
     if (this.state.factions.length === 0) {
       objectivePoints = [];
     }
-
-    console.log(objectivePoints);
-
     // Object the form sends to server
     let gameObject = {
       name: this.state.gamename,
@@ -317,7 +357,8 @@ export default class EditGameForm extends React.Component {
           return {
             objectivePointId: point.objectivePointId,
             objectivePointDescription: point.objectivePointDescription,
-            objectivePointMultiplier: point.objectivePointMultiplier
+            objectivePointMultiplier: point.objectivePointMultiplier,
+            data: point.data
           };
         });
 
@@ -341,6 +382,7 @@ export default class EditGameForm extends React.Component {
           },
           factions: factions,
           objectivePoints: objectivePoints,
+          objectivePointLocation: json.objective_point_location,
           capture_time:
             nodesettings !== undefined
               ? json.nodesettings.node_settings.capture_time
@@ -639,6 +681,13 @@ export default class EditGameForm extends React.Component {
             <TileLayer
               attribution="Maanmittauslaitoksen kartta"
               url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+            />
+            <EditGameFormToolbar
+              pushFlagbox={this.pushFlagbox}
+              updateFlagbox={this.updateFlagbox}
+              deleteFlagbox={this.deleteFlagbox}
+              flagboxlocations={this.state.objectivePoints}
+              gameId={this.props.gameId}
             />
           </Map>
           <br />

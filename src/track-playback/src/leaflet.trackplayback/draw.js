@@ -55,6 +55,13 @@ export const Draw = L.Class.extend({
     L.extend(this.filterOptions, options.filterOptions);
     L.extend(this.scoreOptions, options.scoreOptions);
 
+    // add admin faction to ease replay management
+    this.filterOptions.factions.push({
+      active: true,
+      colour: "#0000FF",
+      name: "admin"
+    });
+
     this._showTrackPoint = this.trackPointOptions.isDraw;
     this._showTrackLine = this.trackLineOptions.isDraw;
 
@@ -192,9 +199,9 @@ export const Draw = L.Class.extend({
 
   _drawTrack: function(trackpoints) {
     // 画轨迹线
-    if (this._showTrackLine) {
+    /*     if (this._showTrackLine) {
       this._drawTrackLine(trackpoints);
-    }
+    } */
     // 画船
     let targetPoint = trackpoints[trackpoints.length - 1];
     // get info from first trackpoint
@@ -209,7 +216,6 @@ export const Draw = L.Class.extend({
         skip = true;
       }
     });
-
     // compare icon to filter, draw if true else skip
     if (!skip && this.filterOptions[info[0]["value"].slice(0, -4)]) {
       this._drawShipImage(targetPoint, info);
@@ -218,7 +224,7 @@ export const Draw = L.Class.extend({
       this._drawShipCanvas(targetPoint);
     } */
     // 画标注信息
-    if (this.targetOptions.showText) {
+    /*     if (this.targetOptions.showText) {
       this._drawtxt(`航向：${parseInt(targetPoint.dir)}度`, targetPoint);
     }
     // 画经过的轨迹点
@@ -228,9 +234,9 @@ export const Draw = L.Class.extend({
       } else {
         this._drawTrackPointsSvg(trackpoints);
       }
-    }
+    } */
   },
-
+  /* 
   _drawTrackLine: function(trackpoints) {
     let options = this.trackLineOptions;
     let tp0 = this._getLayerPoint(trackpoints[0]);
@@ -253,8 +259,8 @@ export const Draw = L.Class.extend({
       this._ctx.fill();
     }
     this._ctx.restore();
-  },
-
+  }, */
+  /* 
   _drawTrackPointsCanvas: function(trackpoints) {
     let options = this.trackPointOptions;
     let i = trackpoints.length - 1;
@@ -274,9 +280,9 @@ export const Draw = L.Class.extend({
       this._ctx.fill();
     }
     this._ctx.restore();
-  },
+  }, */
 
-  _drawTrackPointsSvg: function(trackpoints) {
+  /*   _drawTrackPointsSvg: function(trackpoints) {
     let i = trackpoints.length - 1;
     let latLng = L.latLng(trackpoints[i].lat, trackpoints[i].lng);
     let cricleMarker = L.circleMarker(latLng, this.trackPointOptions);
@@ -285,9 +291,9 @@ export const Draw = L.Class.extend({
       this.toolTipOptions
     );
     this._trackPointFeatureGroup.addLayer(cricleMarker);
-  },
+  }, */
 
-  _drawtxt: function(text, trackpoint) {
+  /*   _drawtxt: function(text, trackpoint) {
     let point = this._getLayerPoint(trackpoint);
     this._ctx.save();
     this._ctx.font = "12px Verdana";
@@ -296,9 +302,9 @@ export const Draw = L.Class.extend({
     this._ctx.textBaseline = "bottom";
     this._ctx.fillText(text, point.x, point.y - 12, 200);
     this._ctx.restore();
-  },
+  }, */
 
-  _drawShipCanvas: function(trackpoint) {
+  /*   _drawShipCanvas: function(trackpoint) {
     let point = this._getLayerPoint(trackpoint);
     let rotate = trackpoint.dir || 0;
     let w = this.targetOptions.width;
@@ -320,7 +326,7 @@ export const Draw = L.Class.extend({
     this._ctx.fill();
     this._ctx.stroke();
     this._ctx.restore();
-  },
+  }, */
 
   // used to draw image for tracking data
   _drawShipImage: function(trackpoint, info) {
@@ -335,8 +341,8 @@ export const Draw = L.Class.extend({
     this._ctx.translate(point.x, point.y);
     let image;
     // use an existing image if it has the same icon as the new data
-    this._targetImg.map(img => {
-      if (img.icon == info[0]["value"]) {
+    this._targetImg.forEach(img => {
+      if (img.icon === info[0]["value"]) {
         image = img;
       }
     });
