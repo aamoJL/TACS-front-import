@@ -4,6 +4,8 @@ import { Map, TileLayer } from "react-leaflet";
 import { SketchPicker } from "react-color";
 import reactCSS from "reactcss";
 
+import EditGameFormToolbar from "./EditGameFormToolbar";
+
 export default class EditGameForm extends React.Component {
   constructor(props) {
     super(props);
@@ -30,19 +32,51 @@ export default class EditGameForm extends React.Component {
       objectivePoints: [],
       capture_time: 300,
       confirmation_time: 60,
-      displayColorPicker: false
+      displayColorPicker: false,
+      saved: true
     };
-
-    this.handleMapDrag = this.handleMapDrag.bind(this);
   }
-
-  handleError = error => {
-    this.setState({ errorMsg: error });
-  };
 
   handleChange = e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, saved: false });
+  };
+
+  // get flagbox data from EditGameFormToolbar and push it to state array
+  // when saving changes, the whole array is sent to database
+  pushFlagbox = box => {
+    let newdata = [...this.state.objectivePoints];
+    for (let i in newdata) {
+      if (!newdata[i].data) {
+        newdata[i].data = box.data;
+        this.setState({ objectivePoints: newdata });
+        break;
+      }
+    }
+  };
+  // get edited flagbox data from EditGameFormToolbar and update it in state array
+  // changes are sent to db on save
+  updateFlagbox = boxes => {
+    let newData = [...this.state.objectivePoints];
+    boxes.forEach(flagbox => {
+      let i = newData.findIndex(
+        x => x.objectivePointId === flagbox.objectivePointId
+      );
+      if (i !== -1) newData[i].data = flagbox.data;
+    });
+    this.setState({ objectivePoints: newData });
+  };
+  // get deleted flagbox data from EditGameFormToolbar and update it in state array
+  // changes are sent to db on save
+  deleteFlagbox = boxes => {
+    let newData = [...this.state.objectivePoints];
+    boxes.forEach(flagbox => {
+      let i = newData.findIndex(
+        x => x.objectivePointId === flagbox.objectivePointId
+      );
+      if (i !== -1) newData.splice(i, 1);
+    });
+    this.setState({ objectivePoints: newData });
   };
 
   handleFactionAdd = e => {
@@ -128,7 +162,11 @@ export default class EditGameForm extends React.Component {
         objectivePointDescription: this.state.objectivePointDescriptionInput,
         objectivePointMultiplier: parseFloat(
           this.state.objectivePointMultiplierInput
-        )
+        ),
+        data: {
+          type: "flagbox",
+          coordinates: [this.state.mapCenter.lat, this.state.mapCenter.lng]
+        }
       });
 
       return {
@@ -185,7 +223,12 @@ export default class EditGameForm extends React.Component {
 
   // show/hide this form
   handleView = e => {
-    this.props.toggleView(this.props.view);
+    if (
+      this.state.saved ||
+      window.confirm("Are you sure you want to leave without saving?")
+    ) {
+      this.props.toggleView(this.props.view);
+    }
   };
 
   // remove view with ESC
@@ -195,17 +238,7 @@ export default class EditGameForm extends React.Component {
     }
   };
 
-  handleMapDrag = e => {
-    this.setState({
-      mapCenter: e.target.getCenter()
-    });
-  };
-
-  handleMapScroll = e => {
-    this.setState({
-      zoom: e.target.getZoom()
-    });
-  };
+  handleMapScroll = e => {};
 
   handleGameSave = e => {
     e.preventDefault();
@@ -220,7 +253,6 @@ export default class EditGameForm extends React.Component {
     if (this.state.factions.length === 0) {
       objectivePoints = [];
     }
-
     // Object the form sends to server
     let gameObject = {
       name: this.state.gamename,
@@ -230,24 +262,21 @@ export default class EditGameForm extends React.Component {
       enddate: endDate,
       center: this.state.mapCenter,
       factions: this.state.factions,
-      objective_points: objectivePoints
-    };
-
-    // Add node settings to the game if the game has objective points
-    if (objectivePoints.length > 0) {
-      gameObject.nodesettings = {
+      objective_points: objectivePoints,
+      nodesettings: {
         node_settings: {
-          capture_time: this.state.capture_time,
-          confirmation_time: this.state.confirmation_time,
+          capture_time: parseInt(this.state.capture_time),
+          confirmation_time: parseInt(this.state.confirmation_time),
           owner: 0,
           capture: 0,
           buttons_available: 16,
           heartbeat_interval: 60
         }
-      };
-    }
+      }
+    };
 
     let token = sessionStorage.getItem("token");
+    let error = false;
 
     // Send Game info to the server
     fetch(`${process.env.REACT_APP_API_URL}/game/edit/${this.props.gameId}`, {
@@ -261,15 +290,23 @@ export default class EditGameForm extends React.Component {
     })
       .then(res => {
         if (!res.ok) {
-          throw Error(res.statusMessage);
-        } else {
-          return res.json();
+          error = true;
         }
+        return res.json();
       })
       .then(result => {
         alert(result.message);
-        this.props.onEditSave();
-        this.handleView();
+        if (!error) {
+          this.setState(
+            {
+              saved: true
+            },
+            () => {
+              this.handleView();
+              this.props.onEditSave();
+            }
+          );
+        }
       })
       .catch(error => console.log("Error: ", error));
   };
@@ -320,7 +357,8 @@ export default class EditGameForm extends React.Component {
           return {
             objectivePointId: point.objectivePointId,
             objectivePointDescription: point.objectivePointDescription,
-            objectivePointMultiplier: point.objectivePointMultiplier
+            objectivePointMultiplier: point.objectivePointMultiplier,
+            data: point.data
           };
         });
 
@@ -344,6 +382,7 @@ export default class EditGameForm extends React.Component {
           },
           factions: factions,
           objectivePoints: objectivePoints,
+          objectivePointLocation: json.objective_point_location,
           capture_time:
             nodesettings !== undefined
               ? json.nodesettings.node_settings.capture_time
@@ -446,7 +485,7 @@ export default class EditGameForm extends React.Component {
             onSubmit={this.handleObjectivePointAdd}
           />
 
-          <h1>Demo Game Editor</h1>
+          <h1>Game Editor</h1>
           <br />
           <input
             placeholder="Game name"
@@ -515,10 +554,10 @@ export default class EditGameForm extends React.Component {
           />
           <br />
           <br />
-
           <label>Factions</label>
           <br />
           <input
+            id="editGameFactionNameInput"
             name="factionNameInput"
             value={this.state.factionNameInput}
             minLength="2"
@@ -527,14 +566,17 @@ export default class EditGameForm extends React.Component {
             form="factionAddFrom"
           />
           <input
+            id="editGameFactionPasswordInput"
             name="factionPasswordInput"
             value={this.state.factionPasswordInput}
             minLength="3"
             onChange={this.handleChange}
             placeholder="Faction password"
+            type="password"
             form="factionAddFrom"
           />
           <div
+            id="editGameColorPickerButton"
             style={styles.swatch}
             onClick={() =>
               this.setState({
@@ -546,6 +588,7 @@ export default class EditGameForm extends React.Component {
           </div>
           {this.state.displayColorPicker && (
             <div
+              id="editGameColorPicker"
               style={styles.cover}
               onClick={() => this.setState({ displayColorPicker: false })}
             >
@@ -557,7 +600,11 @@ export default class EditGameForm extends React.Component {
               />
             </div>
           )}
-          <button type="submit" form="factionAddFrom">
+          <button
+            id="editGameFactionSubmitButton"
+            type="submit"
+            form="factionAddFrom"
+          >
             Add
           </button>
           <ul>{factions}</ul>
@@ -566,6 +613,7 @@ export default class EditGameForm extends React.Component {
           <label>Objective points</label>
           <br />
           <input
+            id="editGameObjectivePointDescriptionInput"
             name="objectivePointDescriptionInput"
             type="number"
             value={this.state.objectivePointDescriptionInput}
@@ -575,6 +623,7 @@ export default class EditGameForm extends React.Component {
             form="objectivePointAddFrom"
           />
           <input
+            id="editGameObjectivePointMultiplierInput"
             name="objectivePointMultiplierInput"
             type="number"
             value={this.state.objectivePointMultiplierInput}
@@ -582,7 +631,11 @@ export default class EditGameForm extends React.Component {
             placeholder="Objective point multiplier"
             form="objectivePointAddFrom"
           />
-          <button type="submit" form="objectivePointAddFrom">
+          <button
+            id="editGameObjectivePointSubmitButton"
+            type="submit"
+            form="objectivePointAddFrom"
+          >
             Add
           </button>
           <ul>{objectivePoints}</ul>
@@ -595,6 +648,7 @@ export default class EditGameForm extends React.Component {
             Capture time:
           </label>
           <input
+            id="editGameCaptureTimeInput"
             name="capture_time"
             type="number"
             value={this.state.capture_time}
@@ -603,6 +657,7 @@ export default class EditGameForm extends React.Component {
           />
           <label className="">Confimation time:</label>
           <input
+            id="editGameConfirmationTimeInput"
             name="confirmation_time"
             type="number"
             value={this.state.confirmation_time}
@@ -620,16 +675,24 @@ export default class EditGameForm extends React.Component {
             zoom={this.state.zoom}
             maxZoom="13"
             style={{ height: "400px", width: "400px" }}
-            onmoveend={this.handleMapDrag}
-            onzoomend={this.handleMapScroll}
+            onmoveend={e => this.setState({ mapCenter: e.target.getCenter() })}
+            onzoomend={e => this.setState({ zoom: e.target.getZoom() })}
           >
             <TileLayer
               attribution="Maanmittauslaitoksen kartta"
               url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
             />
+            <EditGameFormToolbar
+              pushFlagbox={this.pushFlagbox}
+              updateFlagbox={this.updateFlagbox}
+              deleteFlagbox={this.deleteFlagbox}
+              flagboxlocations={this.state.objectivePoints}
+              gameId={this.props.gameId}
+            />
           </Map>
           <br />
           <button
+            id="editGameDeleteGameButton"
             style={{ backgroundColor: "red" }}
             type="submit"
             form="gameDeletionForm"
