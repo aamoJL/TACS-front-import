@@ -226,6 +226,7 @@ export default class GameView extends React.Component {
               {this.state.form === "players" && (
                 <PlayerlistView
                   gameId={this.state.gameInfo.id}
+                  gameState={this.state.gameInfo.state}
                   role={this.state.role}
                   toggleView={() => this.setState({ form: "" })}
                 />
