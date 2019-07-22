@@ -200,8 +200,6 @@ export default class EditGameForm extends React.Component {
     let token = sessionStorage.getItem("token");
 
     if (window.confirm("Are you sure you want to delete this game")) {
-      alert("Game deleted");
-
       fetch(
         `${process.env.REACT_APP_API_URL}/game/delete/${this.props.gameId}`,
         {
@@ -213,9 +211,10 @@ export default class EditGameForm extends React.Component {
       )
         .then(result => result.json())
         .then(result => {
-          console.log(result);
-          this.handleView();
-          this.props.onEditSave();
+          this.setState({ saved: true }, () => {
+            alert("Game deleted");
+            window.document.location.href = "/";
+          });
         })
         .catch(error => console.log(error));
     }
