@@ -721,8 +721,16 @@ export default class EditGameForm extends React.Component {
           <button id="editGameSubmitButton" type="submit" form="gameEditForm">
             Save changes
           </button>
-          <button onClick={this.handleBackToGameClick}>Back to game</button>
-          <button onClick={this.handleGameSelectionClick}>
+          <button
+            id="editGameBackToGameButton"
+            onClick={this.handleBackToGameClick}
+          >
+            Back to game
+          </button>
+          <button
+            id="editGameGameSelectionButton"
+            onClick={this.handleGameSelectionClick}
+          >
             Game selection
           </button>
           <h2>{this.state.errorMsg}</h2>
