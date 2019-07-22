@@ -31,12 +31,14 @@ export default class GrouplistFaction extends React.Component {
 
     // map faction groups
     let groups = this.state.factionGroups.map(group => {
+      console.log(group);
       return (
-        <GrouplistGroupCard
-          key={group.groupId}
-          group={group}
-          onChange={() => this.getFactionGroups()}
-        />
+        <div>{group.name}</div>
+        // <GrouplistGroupCard
+        //   key={group.Id}
+        //   group={group.name}
+        //   //onChange={() => this.getFactionGroups()}
+        // />
       );
     });
 

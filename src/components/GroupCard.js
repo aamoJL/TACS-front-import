@@ -25,6 +25,7 @@ export default class GrouplistGroupCard extends React.Component {
     // };
   };
   render() {
+    return <div>{this.props.group.name}</div>;
     // Normal user view
     // if (this.props.role !== "admin") {
     //   return (
