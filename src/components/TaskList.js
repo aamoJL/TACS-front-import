@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import React from "react";
 import TaskItem from "./TaskItem";
+import Draggable from "react-draggable";
 
 class TaskList extends React.Component {
   constructor(props) {
@@ -201,43 +202,67 @@ class TaskList extends React.Component {
     );
 
     return ReactDOM.createPortal(
-      <div className="tasklist">
-        <h1>Tasklist</h1>
-        {this.props.role === "admin" && (
-          <form className="task-form" onSubmit={this.handleTaskCreation}>
-            <label>New task</label>
-            <input
-              id="taskNameInput"
-              type="text"
-              placeholder="Task name"
-              minLength="3"
-              maxLength="31"
-              value={this.state.taskNameInput}
-              onChange={e => this.setState({ taskNameInput: e.target.value })}
-            />
-            <textarea
-              id="taskDescriptionInput"
-              placeholder="Task description"
-              value={this.state.taskDescriptionInput}
-              maxLength="255"
-              onChange={e =>
-                this.setState({ taskDescriptionInput: e.target.value })
-              }
-            />
-            <select id="taskFactionSelect" onChange={this.handleFactionChange}>
-              {factionlistItems}
-            </select>
-            <button id="newTaskSubmitButton" type="submit">
-              Add new task
-            </button>
-          </form>
-        )}
-        {incompleteTasks}
-        <br />
-        <label>Completed tasks</label>
-        {completedTasks}
-        <br />
-      </div>,
+      <Draggable
+        bounds="body"
+        className="draggableContainer"
+        enableUserSelectHack={false}
+        cancel=".input-cancel-drag"
+      >
+        <div className="tasklist">
+          <h1 style={{ justifyContent: "center" }}>Tasklist</h1>
+          {this.props.role === "admin" && (
+            <div className="no-cursor">
+              <form className="task-form" onSubmit={this.handleTaskCreation}>
+                <label>New task</label>
+                <input
+                  className="input-cancel-drag"
+                  id="taskNameInput"
+                  type="text"
+                  placeholder="Task name"
+                  minLength="3"
+                  maxLength="31"
+                  value={this.state.taskNameInput}
+                  onChange={e =>
+                    this.setState({ taskNameInput: e.target.value })
+                  }
+                />
+                <textarea
+                  className="input-cancel-drag"
+                  id="taskDescriptionInput"
+                  placeholder="Task description"
+                  value={this.state.taskDescriptionInput}
+                  maxLength="255"
+                  onChange={e =>
+                    this.setState({ taskDescriptionInput: e.target.value })
+                  }
+                />
+                <select
+                  className="input-cancel-drag"
+                  id="taskFactionSelect"
+                  onChange={this.handleFactionChange}
+                >
+                  {factionlistItems}
+                </select>
+                <button
+                  id="newTaskSubmitButton"
+                  type="submit"
+                  className="input-cancel-drag"
+                >
+                  Add new task
+                </button>
+              </form>
+            </div>
+          )}
+          <div className="task-items-container">
+            {incompleteTasks}
+
+            <br />
+            <label>Completed tasks</label>
+            {completedTasks}
+            <br />
+          </div>
+        </div>
+      </Draggable>,
       document.getElementById("tasklist")
     );
   }
