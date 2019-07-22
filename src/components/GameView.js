@@ -181,6 +181,14 @@ export default class GameView extends React.Component {
                 </button>
               )}
               {this.state.role !== "" && (
+                <button
+                  id="showPlayersButton"
+                  onClick={() => this.setState({ form: "players" })}
+                >
+                  Players
+                </button>
+              )}
+              {this.state.role !== "" && (
                 <TaskListButton
                   gameId={this.state.gameInfo.id}
                   role={this.state.role}
