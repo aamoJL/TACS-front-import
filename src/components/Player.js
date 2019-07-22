@@ -48,34 +48,40 @@ class Player extends Component {
       <React.Fragment>
         {this.state.factions &&
           this.state.factions.map(faction => {
-            return (
-              <MarkerClusterGroup iconCreateFunction={clusterIcon}>
-                {faction.map(player => {
-                  return (
-                    <Marker
-                      key={Math.random()}
-                      position={[
-                        player.coordinates.lat,
-                        player.coordinates.lng
-                      ]}
-                      icon={playerIcon(player.icon, player.factionColour)}
-                      factionId={player.factionId}
-                      gamepersonId={player.gamepersonId}
-                      gamepersonRole={player.gamepersonRole}
-                      colour={player.factionColour}
-                    >
-                      <Popup>
-                        <b>factionId:</b> {player.factionId}
-                        <br />
-                        <b>gamepersonId:</b> {player.gamepersonId}
-                        <br />
-                        <b>gamepersonRole:</b> {player.gamepersonRole}
-                      </Popup>
-                    </Marker>
-                  );
-                })}
-              </MarkerClusterGroup>
-            );
+            return faction.map(group => {
+              return (
+                <MarkerClusterGroup
+                  key={`${group[0].factionId}-${group[0].icon}`}
+                  iconCreateFunction={clusterIcon}
+                >
+                  {group.map(player => {
+                    return (
+                      <Marker
+                        key={Math.random()}
+                        position={[
+                          player.coordinates.lat,
+                          player.coordinates.lng
+                        ]}
+                        icon={playerIcon(player.icon, player.factionColour)}
+                        factionId={player.factionId}
+                        gamepersonId={player.gamepersonId}
+                        gamepersonRole={player.gamepersonRole}
+                        colour={player.factionColour}
+                        clusterIcon={player.icon}
+                      >
+                        <Popup>
+                          <b>factionId:</b> {player.factionId}
+                          <br />
+                          <b>gamepersonId:</b> {player.gamepersonId}
+                          <br />
+                          <b>gamepersonRole:</b> {player.gamepersonRole}
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
+                </MarkerClusterGroup>
+              );
+            });
           })}
       </React.Fragment>
     );

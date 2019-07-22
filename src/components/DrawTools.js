@@ -10,7 +10,6 @@ class DrawTools extends Component {
     super(props);
     this.state = {
       editModeActive: false,
-      flagboxes: [],
       timer: null
     };
   }
@@ -43,15 +42,11 @@ class DrawTools extends Component {
           boxes[i].style.height = "100px";
           boxes[i].style.marginLeft = "-47px";
           boxes[i].style.marginTop = "-77px";
-          boxes[i].style.borderRadius = "0%";
-          boxes[i].style.backgroundColor = boxes[i].title;
           await this.sleep(400);
-          boxes[i].style.backgroundColor = "#ebd7d5";
           boxes[i].style.width = "75px";
           boxes[i].style.height = "75px";
           boxes[i].style.marginLeft = "-47px";
           boxes[i].style.marginTop = "-77px";
-          boxes[i].style.borderRadius = "50%";
           await this.sleep(400);
         }
       }

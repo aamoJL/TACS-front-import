@@ -610,6 +610,11 @@ div.login h1 {
   border: 0;
 }
 
+/* Used to animate the flagboxes when they are being captured */
+.capturing-flagbox {
+  transition: all 1s;
+}
+
 /* Editing editable tooltips */
 /* .editable {
   display: block;
