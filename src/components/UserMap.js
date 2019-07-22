@@ -181,7 +181,6 @@ class UserMap extends Component {
         minZoom="7"
         maxZoom="18"
         zoomControl={false}
-        dragging={this.state.isDraggable}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.maanmittauslaitos.fi/">Maanmittauslaitos</a>'

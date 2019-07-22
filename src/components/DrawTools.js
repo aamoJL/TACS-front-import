@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { FeatureGroup } from "react-leaflet";
+import { FeatureGroup, Pane } from "react-leaflet";
 import "leaflet-draw";
+import L from "leaflet";
 import DrawingFormatter, { initialTextSetup } from "./DrawingFormatter";
 import DrawLeafletObjects from "./DrawLeafletObjects.js";
 import DrawToolsPanel from "./DrawToolsPanel";
@@ -74,6 +75,7 @@ class DrawTools extends Component {
 
   // send drawing to database when it's created
   _onCreated = e => {
+    console.log(e);
     // handle one point polylines
     if (e.layerType === "polyline" && e.layer.getLatLngs().length === 1) {
       e.layer.remove();
@@ -84,7 +86,6 @@ class DrawTools extends Component {
     // more information in DrawingFormatter
     if (e.layerType === "textbox" && !e.layer._tooltip) {
       initialTextSetup(e);
-      console.log(e);
       // blur event listener can't be given straight to a layer
       // getting element by ID and adding an event listener to the element
       document
@@ -103,7 +104,7 @@ class DrawTools extends Component {
       data: data
     };
     this.props.sendGeoJSON(obj);
-    e.layer.remove();
+    e.layer._path.attributes.class.value = "hidden";
   };
 
   // save edit changes to db
@@ -181,6 +182,7 @@ class DrawTools extends Component {
           )}
           <DrawLeafletObjects drawings={this.props.drawings} />
         </FeatureGroup>
+        <Pane name="hiddenPane" />
         <DrawLeafletObjects drawings={this.props.flagboxes} />
       </React.Fragment>
     );
