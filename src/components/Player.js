@@ -49,6 +49,7 @@ class Player extends Component {
         {this.state.factions &&
           this.state.factions.map(faction => {
             return faction.map(group => {
+              if (group.length === 0) return false;
               return (
                 <MarkerClusterGroup
                   key={`${group[0].factionId}-${group[0].icon}`}
@@ -70,11 +71,9 @@ class Player extends Component {
                         clusterIcon={player.icon}
                       >
                         <Popup>
-                          <b>factionId:</b> {player.factionId}
+                          <b>Username:</b> {player.username}
                           <br />
-                          <b>gamepersonId:</b> {player.gamepersonId}
-                          <br />
-                          <b>gamepersonRole:</b> {player.gamepersonRole}
+                          <b>Role:</b> {player.gamepersonRole}
                         </Popup>
                       </Marker>
                     );
