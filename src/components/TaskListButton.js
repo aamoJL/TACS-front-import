@@ -37,6 +37,11 @@ export default class TaskListButton extends React.Component {
     );
   };
 
+  handleClearForm = () => {
+    this.props.toggleView();
+    console.log("JEP!");
+  };
+
   render() {
     return (
       <Fragment>
@@ -46,6 +51,7 @@ export default class TaskListButton extends React.Component {
         </button>
         {this.state.open && (
           <TaskList
+            toggleView={() => this.setState({ open: false })}
             gameId={this.props.gameId}
             role={this.props.role}
             factions={this.props.factions}

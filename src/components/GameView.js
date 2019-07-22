@@ -128,9 +128,6 @@ export default class GameView extends React.Component {
           <div>
             <ScoreCounter />
             <div className="header">
-              <Link to="/">
-                <button id="gameViewGameSelectionButton">Game selection</button>
-              </Link>
               {this.state.gameInfo !== null && (
                 <div>
                   {this.state.gameInfo.id && (
@@ -149,6 +146,9 @@ export default class GameView extends React.Component {
               {this.state.role !== "" && (
                 <div>Your role in this game: {this.state.role}</div>
               )}
+              <Link to="/">
+                <button id="gameViewGameSelectionButton">Game selection</button>
+              </Link>
               {this.state.role === "admin" &&
                 this.state.gameInfo.state === "CREATED" && (
                   <button

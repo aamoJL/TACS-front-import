@@ -155,7 +155,9 @@ class TaskList extends React.Component {
       })
       .catch(error => console.log(error));
   };
-
+  handleOnClick() {
+    this.props.toggleView();
+  }
   render() {
     let incompleteTasks = [];
     let completedTasks = [];
@@ -200,7 +202,7 @@ class TaskList extends React.Component {
         Every faction
       </option>
     );
-
+    console.log(this.props.toggleView);
     return ReactDOM.createPortal(
       <Draggable
         bounds="body"
@@ -209,6 +211,13 @@ class TaskList extends React.Component {
         cancel=".input-cancel-drag"
       >
         <div className="tasklist">
+          <button
+            className="close"
+            id="tasklistCloseButton"
+            onClick={this.props.toggleView}
+          >
+            x
+          </button>
           <h1 style={{ justifyContent: "center" }}>Tasklist</h1>
           {this.props.role === "admin" && (
             <div className="no-cursor">
@@ -254,6 +263,7 @@ class TaskList extends React.Component {
             </div>
           )}
           <div className="task-items-container">
+            <label>On-going tasks</label>
             {incompleteTasks}
 
             <br />
