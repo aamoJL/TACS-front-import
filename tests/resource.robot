@@ -65,6 +65,14 @@ ${I_CAPTURE}        id=editGameCaptureTimeInput
 ${I_CONF}           id=editGameConfirmationTimeInput
 
 ${B_ESUBMIT}        id=editGameSubmitButton
+${B_EDELETE}        id=gameDeleteButton
+${E_ECLOSE}         id=closeEditGameFormX
+${FACTION1}         Faction1
+${FACTION2}         Faction2
+
+## Game List
+${B_GAMESELECT}     id=selectGameButton
+${testit}           css=button[id^="selecttest_"]
 
 ## Join Game
 ${B_JOINGAME}       id=joinGameButton
@@ -328,7 +336,17 @@ Generate Task Name/Description
     ${TASK_D} =     Generate Random String      ${TASK_DESCRIPTION}     [LETTERS][NUMBERS]
     Input Text      id=taskNameInput            ${TASK_N}
     Input Text      id=taskDescriptionInput     ${TASK_D}
-    
+
+Submit Task
+    Click Element       id=newTaskSubmitButton
+
+#Wait For Game Select Button To Appear
+#    Wait Until Page Contains Element        id=     1
+
+Select Faction
+    [Arguments]     ${faction}
+    Select From List By Label     id=taskFactionSelect      ${faction}
+
 
 
 
@@ -387,13 +405,14 @@ Create Game
     Generate Game End Date And Time     # Generate globals: ENDDATE, ENDTIME
     Input Text      ${I_NGAMESTOP}   ${ENDDATE}
     Input Text      ${I_NSTOPTIME}   ${ENDTIME}
-    Log             end tadedime ok
+    Log             end datetime ok
 
     Click Button    ${B_NSUBMIT}
     Handle Alert
 
 Select Game
     ${x} =              Format String           select{}     ${VALID_GAME}
+    Wait Until Page Contains Element        id=${x}     1
     Click Button        id=${x}
     Log                 Game Selected
 
@@ -418,11 +437,11 @@ Edit Game Time
     Log             end edited
 
 Edit Factions
-    Input Text      ${I_FACTIONNAME}    Faction1
+    Input Text      ${I_FACTIONNAME}    ${FACTION1}
     Input Text      ${I_FACTIONPASS}    Pass1
     Click Button    ${B_FACTIONADD}
 
-    Input Text      ${I_FACTIONNAME}    Faction2
+    Input Text      ${I_FACTIONNAME}    ${FACTION2}
     Input Text      ${I_FACTIONPASS}    Pass2
     Click Button    ${B_FACTIONADD}
 
@@ -431,15 +450,17 @@ Edit Objective Points
     Input Text      ${I_FLAGMULTI}      3
     Click Button    ${B_FLAGADD}
 
-    Input Text      ${I_CAPTURE}        240
-    Input Text      ${I_CONF}           30
+#    Input Text      ${I_CAPTURE}        240
+#    Input Text      ${I_CONF}           30
 
 Save Game
     # Joku vika
-    Press Keys          None    PAGE_DOWN
-    Submit Form
+    #Press Keys          None    PAGE_DOWN
+    #Submit Form
 
-    Click Button        id=closeEditGameFormX
+    Click Button        ${B_ESUBMIT}
+    Alert Should Be Present     text=Game updated     action=ACCEPT       timeout=None
+    Click Element        ${E_ECLOSE}
 #    Handle Alert
 
 Generate Valid Gamename     #Generates new name for every test rotation in gitlab. Used in test suite xx.
@@ -509,3 +530,28 @@ Join Game
 Log
     [Arguments]     ${x}
     Log To Console  ${x}
+
+#
+#   Delete Game
+#
+
+Delete Game
+    Click Button       ${testit}
+    Click Button       ${B_EDITGAME}
+    Click Button       ${B_EDELETE}
+    Alert Should Be Present     text=Are you sure you want to delete this game     action=ACCEPT       timeout=None
+    Alert Should Be Present     text=Game deleted     action=ACCEPT       timeout=None
+    Click Button       ${B_GAMESELECT}
+
+Check If Any Test Games
+    ${status}       ${value} =      Run Keyword And Ignore Error        Page Should Contain Button     ${testit}
+    [Return]        ${status}
+
+
+
+
+#Select Game
+#    ${x} =              Format String           select{}     ${VALID_GAME}
+#    Wait Until Page Contains Element        id=${x}     2
+#    Click Button        id=${x}
+#    Log                 Game Selected
