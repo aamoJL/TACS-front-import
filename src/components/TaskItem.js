@@ -108,7 +108,12 @@ class TaskItem extends React.Component {
             >
               {factionlistItems}
             </select>
-            <button type="submit">Save</button>
+            <button
+              id={`taskSaveButton${this.props.task.taskName}`}
+              type="submit"
+            >
+              Save
+            </button>
           </form>
         )}
         {this.props.role === "admin" && (
