@@ -33,7 +33,7 @@ export default class GameSelection extends React.Component {
       <div>
         <div className="navbar navbar-dark shadow-sm">
           <div className="container d-flex justify-content-between">
-            <a href="#" class="navbar-brand d-flex align-items-center">
+            <a href="#" className="navbar-brand d-flex align-items-center">
               <img
                 className="tacs-icon-neg mr-2"
                 src={logo}
