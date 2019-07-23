@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import img from "../icons/ehasa-monitor.jpeg";
 export default class GameCard extends React.Component {
   state = {
     editForm: false,
@@ -27,7 +26,8 @@ export default class GameCard extends React.Component {
             desc: res.desc,
             state: res.state,
             startdate: res.startdate,
-            enddate: res.enddate
+            enddate: res.enddate,
+            image: `${process.env.REACT_APP_API_URL}/game/${res.image}`
           }
         });
       })
@@ -56,7 +56,11 @@ export default class GameCard extends React.Component {
         <div className="row">
           <div className="col-md-4">
             <div className="gamecard card mb-4 shadow-sm">
-              <img className="card-img-top" src={img} alt="Game Logo" />
+              <img
+                className="card-img-top"
+                src={this.state.gameInfo.image}
+                alt="Game Logo"
+              />
               <div className="card-body">
                 <label>Name: {this.state.gameInfo.name}</label>
                 <br />
@@ -90,6 +94,7 @@ export default class GameCard extends React.Component {
                   <button
                     id={`replay${this.state.gameInfo.name}`}
                     type="button"
+                    className="select-game-button"
                   >
                     Replay
                   </button>

@@ -112,7 +112,7 @@ export class LoginForm extends React.Component {
               <br />
               Need an account?
               <Link to="/register">
-                <a id="registerButton"> Register</a>
+                <p id="registerButton"> Register</p>
               </Link>
             </div>
           </div>

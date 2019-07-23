@@ -9,7 +9,8 @@ import { playerIcon, clusterIcon } from "./DrawToolsPanel";
 
 class Player extends Component {
   state = {
-    factions: []
+    factions: [],
+    playerFetch: null
   };
 
   getPlayers = () => {
@@ -40,7 +41,13 @@ class Player extends Component {
 
   componentDidMount() {
     this.getPlayers();
-    setInterval(this.getPlayers, 60000);
+    this.setState({
+      playerFetch: setInterval(this.getPlayers, 60000)
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.playerFetch);
   }
 
   render() {
@@ -48,34 +55,39 @@ class Player extends Component {
       <React.Fragment>
         {this.state.factions &&
           this.state.factions.map(faction => {
-            return (
-              <MarkerClusterGroup iconCreateFunction={clusterIcon}>
-                {faction.map(player => {
-                  return (
-                    <Marker
-                      key={Math.random()}
-                      position={[
-                        player.coordinates.lat,
-                        player.coordinates.lng
-                      ]}
-                      icon={playerIcon(player.icon, player.factionColour)}
-                      factionId={player.factionId}
-                      gamepersonId={player.gamepersonId}
-                      gamepersonRole={player.gamepersonRole}
-                      colour={player.factionColour}
-                    >
-                      <Popup>
-                        <b>factionId:</b> {player.factionId}
-                        <br />
-                        <b>gamepersonId:</b> {player.gamepersonId}
-                        <br />
-                        <b>gamepersonRole:</b> {player.gamepersonRole}
-                      </Popup>
-                    </Marker>
-                  );
-                })}
-              </MarkerClusterGroup>
-            );
+            return faction.map(group => {
+              if (group.length === 0) return false;
+              return (
+                <MarkerClusterGroup
+                  key={`${group[0].factionId}-${group[0].icon}`}
+                  iconCreateFunction={clusterIcon}
+                >
+                  {group.map(player => {
+                    return (
+                      <Marker
+                        key={Math.random()}
+                        position={[
+                          player.coordinates.lat,
+                          player.coordinates.lng
+                        ]}
+                        icon={playerIcon(player.icon, player.factionColour)}
+                        factionId={player.factionId}
+                        gamepersonId={player.gamepersonId}
+                        gamepersonRole={player.gamepersonRole}
+                        colour={player.factionColour}
+                        clusterIcon={player.icon}
+                      >
+                        <Popup>
+                          <b>Username:</b> {player.username}
+                          <br />
+                          <b>Role:</b> {player.gamepersonRole}
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
+                </MarkerClusterGroup>
+              );
+            });
           })}
       </React.Fragment>
     );

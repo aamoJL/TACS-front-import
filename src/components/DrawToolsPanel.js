@@ -23,14 +23,14 @@ export const flagboxIcon = (ownerColour, capturing) => {
     html: L.Util.template(CreateFlagboxSvg(ownerColour, capturing)),
     className: capturing === 2 ? "capturing-flagbox" : "captured-flagbox",
     iconSize: [75, 75],
-    iconAnchor: [42, 75],
-    popupAnchor: [-3, -76]
+    iconAnchor: [-20, 55],
+    popupAnchor: [40, -55]
   });
 };
 
 export const playerIcon = (type, colour) => {
   return L.divIcon({
-    html: L.Util.template(CreatePlayerSVG(type, colour)),
+    html: L.Util.template(CreateIconSVG(1, type, colour)),
     className: "player-marker",
     iconSize: [100, 100],
     iconAnchor: [30, 40],
@@ -41,8 +41,9 @@ export const playerIcon = (type, colour) => {
 export const clusterIcon = cluster => {
   let markers = cluster.getAllChildMarkers();
   let colour = markers[0] ? markers[0].options.colour : "#1d1d1b";
+  let type = markers[0] ? markers[0].options.clusterIcon : "infantry.svg";
   return L.divIcon({
-    html: L.Util.template(CreateClusterSVG(cluster.getChildCount(), colour)),
+    html: L.Util.template(CreateIconSVG(cluster.getChildCount(), type, colour)),
     className: "cluster-marker",
     iconSize: L.point(100, 100, true)
   });
@@ -55,16 +56,12 @@ const CreateFlagboxSvg = (ownerColour, status) => {
     ? CapturingFlagboxSVG(ownerColour)
     : RegularFlagboxSVG(ownerColour);
 };
-const CreatePlayerSVG = (icon, colour) => {
+const CreateIconSVG = (amount, icon, colour) => {
   return {
     "infantry.svg": PlayerInfantrySVG,
     "recon.svg": PlayerReconSVG,
     "mechanized.svg": PlayerMechanizedSVG
-  }[icon](1, colour);
-};
-
-const CreateClusterSVG = (amount, colour) => {
-  return PlayerInfantrySVG(amount, colour);
+  }[icon](amount, colour);
 };
 // class for text field
 L.Draw.MarkerTextBox = L.Draw.Marker.extend({
