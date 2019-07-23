@@ -28,6 +28,10 @@ class DrawTools extends Component {
     }
   }
 
+  componentWillUnmount() {
+    clearInterval(this.state.timer);
+  }
+
   sleep = ms => {
     return new Promise(resolve => setTimeout(resolve, ms));
   };

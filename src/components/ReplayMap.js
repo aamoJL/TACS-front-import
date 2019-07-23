@@ -24,7 +24,9 @@ export default class ReplayMap extends React.Component {
       // stores all drawings from the game
       drawings: [],
       // stores all flagbox data from the game
-      objectivepoints: []
+      objectivepoints: [],
+      // css animation interval
+      animation: null
     };
   }
 
@@ -44,7 +46,13 @@ export default class ReplayMap extends React.Component {
       objectivepoints: replaydata.objectivepoints
     });
     replaydata ? this.replay() : alert("No replay data was found");
-    setInterval(this.animation, 2000);
+    this.setState({
+      animation: setInterval(this.animation, 2000)
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.animation);
   }
 
   sleep = ms => {
@@ -61,15 +69,11 @@ export default class ReplayMap extends React.Component {
           boxes[i].style.height = "100px";
           boxes[i].style.marginLeft = "-47px";
           boxes[i].style.marginTop = "-77px";
-          boxes[i].style.borderRadius = "0%";
-          boxes[i].style.backgroundColor = boxes[i].title;
           await this.sleep(400);
-          boxes[i].style.backgroundColor = "#ebd7d5";
           boxes[i].style.width = "75px";
           boxes[i].style.height = "75px";
           boxes[i].style.marginLeft = "-47px";
           boxes[i].style.marginTop = "-77px";
-          boxes[i].style.borderRadius = "50%";
           await this.sleep(400);
         }
       }
