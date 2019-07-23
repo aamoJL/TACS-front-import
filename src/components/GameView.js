@@ -151,12 +151,14 @@ export default class GameView extends React.Component {
               )}
               {this.state.role === "admin" &&
                 this.state.gameInfo.state === "CREATED" && (
-                  <button
-                    id="editGameButton"
-                    onClick={() => this.setState({ form: "edit" })}
+                  <Link
+                    to={{
+                      pathname: "/edit/game",
+                      search: "?id=" + this.state.gameInfo.id
+                    }}
                   >
-                    Edit
-                  </button>
+                    <button id="editGameButton">Edit</button>
+                  </Link>
                 )}
               <button
                 id="gameInfoButton"
@@ -207,13 +209,6 @@ export default class GameView extends React.Component {
                 <GameStateButtons
                   gameState={this.state.gameInfo.state}
                   gameId={this.state.gameInfo.id}
-                />
-              )}
-              {this.state.form === "edit" && (
-                <EditGameForm
-                  gameId={this.state.gameInfo.id}
-                  toggleView={() => this.setState({ form: "" })}
-                  onEditSave={() => this.getGameInfo(this.state.gameInfo.id)}
                 />
               )}
               {this.state.form === "join" && (
