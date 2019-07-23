@@ -104,18 +104,6 @@ class UserMap extends Component {
       });
   };
 
-  changeDragState = status => {
-    // for some reason React's onMouseOver event fires gazillion times in a second
-    // evading by checking if the isDraggable state is the same as what's coming. still fires two or three times, though
-    if (status === this.state.isDraggable) {
-      return;
-    } else {
-      this.setState({
-        isDraggable: status
-      });
-    }
-  };
-
   componentWillUnmount() {
     if (this.watchPositionId != null) {
       navigator.geolocation.clearWatch(this.watchPositionId);
@@ -193,7 +181,6 @@ class UserMap extends Component {
           flagboxes={this.state.flagboxes}
           sendGeoJSON={this.sendGeoJSON}
           currentGameId={this.props.currentGameId}
-          changeDragState={this.changeDragState}
           role={this.props.role}
         />
         {this.state.ownLat !== null && (

@@ -5,10 +5,10 @@ import {
   Popup,
   Polygon,
   Polyline,
-  Rectangle,
-  Tooltip
+  Rectangle
 } from "react-leaflet";
 import { noIcon, flagboxIcon } from "./DrawToolsPanel";
+import DrawingFormatter, { initialTextSetup } from "./DrawingFormatter";
 
 class DrawLeafletObjects extends React.Component {
   createPolyline = drawing => {
@@ -82,20 +82,8 @@ class DrawLeafletObjects extends React.Component {
         //color={color}
         icon={noIcon}
         type="textbox"
-      >
-        <Tooltip
-          direction="bottom"
-          permanent
-          className="editable"
-          interactive={true}
-        >
-          <div className="editable">
-            <div contentEditable="true" placeholder="Click out to save">
-              {drawing.data.text}
-            </div>
-          </div>
-        </Tooltip>
-      </Marker>
+        onAdd={e => this.props.textboxSetup(e.target, drawing.data.text)}
+      />
     );
   };
 
