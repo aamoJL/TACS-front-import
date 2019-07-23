@@ -36,6 +36,7 @@ export default class PlayerlistFaction extends React.Component {
           player={member}
           role={this.props.role}
           gameId={this.props.gameId}
+          gameState={this.props.gameState}
           onChange={() => this.getFactionMembers()}
         />
       );

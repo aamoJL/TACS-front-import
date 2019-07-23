@@ -98,14 +98,16 @@ export default class PlayerlistPlayerCard extends React.Component {
       <div>
         {this.props.player.person.name} : {this.state.edit && roleOptions()}
         {!this.state.edit && this.props.player.role}
-        {this.props.role === "admin" && !this.state.edit && (
-          <button
-            id={"playerCardEditButton" + this.props.player.person.name}
-            onClick={() => this.setState({ edit: !this.state.edit })}
-          >
-            Edit
-          </button>
-        )}
+        {this.props.role === "admin" &&
+          !this.state.edit &&
+          this.props.gameState === "CREATED" && (
+            <button
+              id={"playerCardEditButton" + this.props.player.person.name}
+              onClick={() => this.setState({ edit: !this.state.edit })}
+            >
+              Edit
+            </button>
+          )}
       </div>
     );
   }
