@@ -27,7 +27,7 @@ export default class GameCard extends React.Component {
             state: res.state,
             startdate: res.startdate,
             enddate: res.enddate,
-            image: `${process.env.REACT_APP_API_URL}/${res.image}`
+            image: `${process.env.REACT_APP_API_URL}/game/${res.image}`
           }
         });
       })
@@ -80,6 +80,7 @@ export default class GameCard extends React.Component {
                   <button
                     id={`replay${this.state.gameInfo.name}`}
                     type="button"
+                    className="select-game-button"
                   >
                     Replay
                   </button>
