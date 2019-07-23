@@ -2,6 +2,7 @@ import React from "react";
 import GameList from "./GameList";
 import NewGameForm from "./NewGameForm";
 
+import logo from "../icons/tacs-icon-neg.png";
 export default class GameSelection extends React.Component {
   state = {
     newGameForm: false,
@@ -30,31 +31,64 @@ export default class GameSelection extends React.Component {
   render() {
     return (
       <div>
-        <label>Games</label>
-        <br />
-        <button
-          id="newGameButton"
-          onClick={() => this.setState({ newGameForm: true })}
-        >
-          New Game
-        </button>
-        {this.state.newGameForm && (
-          <NewGameForm
-            view=""
-            handleState={this.handleState}
-            toggleView={() =>
-              this.setState({ newGameForm: false }, () => {
-                this.getGames();
-              })
-            }
+        <div className="navbar navbar-dark shadow-sm">
+          <div className="container d-flex justify-content-between">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+              <img
+                className="tacs-icon-neg mr-2"
+                src={logo}
+                height="35"
+                alt="tacs icon"
+              />
+            </a>
+            <button
+              className="btn btn-secondary"
+              id="logoutButton"
+              type="submit"
+            >
+              Log out
+            </button>
+          </div>
+        </div>
+
+        <div className="d-flex flexbox-container flex-fill justify-content-center">
+          <h1 className="gamesheader">Games</h1>
+        </div>
+
+        <div className="d-flex flexbox-container flex-fill justify-content-center">
+          <button
+            id="newGameButton"
+            onClick={() => this.setState({ newGameForm: true })}
+          >
+            + Add New Game
+          </button>
+        </div>
+
+        <div className="d-flex flexbox-container flex-fill justify-content-center games">
+          {this.state.newGameForm && (
+            <NewGameForm
+              view=""
+              handleState={this.handleState}
+              toggleView={() =>
+                this.setState({ newGameForm: false }, () => {
+                  this.getGames();
+                })
+              }
+            />
+          )}
+          <GameList
+            games={this.state.games}
+            onEditSave={() => {
+              this.getGames();
+            }}
           />
-        )}
-        <GameList
-          games={this.state.games}
-          onEditSave={() => {
-            this.getGames();
-          }}
-        />
+        </div>
+
+        <div className="row">
+          <div className=" justify-content-center text-center footer text-muted">
+            &copy; 2019 TACS
+          </div>
+        </div>
       </div>
     );
   }

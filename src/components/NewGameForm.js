@@ -106,7 +106,7 @@ export class NewGameForm extends React.Component {
 
   render() {
     return ReactDOM.createPortal(
-      <div className="fade-main">
+      <div className="fade-main container">
         <div className="sticky">
           <span
             id="closeNewGameFormX"
@@ -120,6 +120,7 @@ export class NewGameForm extends React.Component {
           <form id="gameCreationForm" onSubmit={this.handleGameCreation} />
           <h1>Demo Game Creation</h1>
           <br />
+          <label className="">Name: &nbsp;</label>
           <input
             placeholder="Game name"
             name="gamename"
@@ -130,6 +131,7 @@ export class NewGameForm extends React.Component {
             required
           />
           <br />
+          <label className="">Description: &nbsp;</label>
           <input
             placeholder="Description"
             type="text"
@@ -141,7 +143,7 @@ export class NewGameForm extends React.Component {
             required
           />
           <br />
-          <label className="">Start:</label>
+          <label className="">Start: &nbsp;</label>
           <input
             className="formDate"
             type="date"
@@ -162,7 +164,7 @@ export class NewGameForm extends React.Component {
             required
           />
           <br />
-          <label className="">End:</label>
+          <label className="">End: &nbsp; </label>
           <input
             className="formDate"
             type="date"
@@ -183,6 +185,7 @@ export class NewGameForm extends React.Component {
             form="gameCreationForm"
             required
           />
+          <br />
           <br />
           <label>Map things</label>
           <br />
