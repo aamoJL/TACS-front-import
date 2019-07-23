@@ -28,6 +28,10 @@ export default class GameSelection extends React.Component {
       });
   }
 
+  handleLogout = e => {
+    this.props.onLogout();
+  };
+
   render() {
     return (
       <div>
@@ -44,7 +48,7 @@ export default class GameSelection extends React.Component {
             <button
               className="btn btn-secondary"
               id="logoutButton"
-              type="submit"
+              onClick={this.handleLogout}
             >
               Log out
             </button>
