@@ -9,7 +9,8 @@ import { playerIcon, clusterIcon } from "./DrawToolsPanel";
 
 class Player extends Component {
   state = {
-    factions: []
+    factions: [],
+    playerFetch: null
   };
 
   getPlayers = () => {
@@ -40,7 +41,13 @@ class Player extends Component {
 
   componentDidMount() {
     this.getPlayers();
-    setInterval(this.getPlayers, 60000);
+    this.setState({
+      playerFetch: setInterval(this.getPlayers, 60000)
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.playerFetch);
   }
 
   render() {
