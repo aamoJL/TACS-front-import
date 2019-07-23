@@ -517,7 +517,6 @@ export default class EditGameForm extends React.Component {
           <input
             id="editGameFactionNameInput"
             name="factionNameInput"
-            id="factionNameInput"
             value={this.state.factionNameInput}
             minLength="2"
             onChange={this.handleChange}
@@ -527,7 +526,6 @@ export default class EditGameForm extends React.Component {
           <input
             id="editGameFactionPasswordInput"
             name="factionPasswordInput"
-            id="factionPasswordInput"
             value={this.state.factionPasswordInput}
             minLength="3"
             onChange={this.handleChange}
@@ -575,7 +573,6 @@ export default class EditGameForm extends React.Component {
           <input
             id="editGameObjectivePointDescriptionInput"
             name="objectivePointDescriptionInput"
-            id="objectivePointDescriptionInput"
             type="number"
             value={this.state.objectivePointDescriptionInput}
             onChange={this.handleChange}
@@ -586,7 +583,6 @@ export default class EditGameForm extends React.Component {
           <input
             id="editGameObjectivePointMultiplierInput"
             name="objectivePointMultiplierInput"
-            id="objectivePointMultiplierInput"
             type="number"
             value={this.state.objectivePointMultiplierInput}
             onChange={this.handleChange}
@@ -612,7 +608,6 @@ export default class EditGameForm extends React.Component {
           <input
             id="editGameCaptureTimeInput"
             name="capture_time"
-            id="captureTimeInput"
             type="number"
             value={this.state.capture_time}
             form="gameEditForm"
@@ -622,7 +617,6 @@ export default class EditGameForm extends React.Component {
           <input
             id="editGameConfirmationTimeInput"
             name="confirmation_time"
-            id="confirmationTimeInput"
             type="number"
             value={this.state.confirmation_time}
             form="gameEditForm"
