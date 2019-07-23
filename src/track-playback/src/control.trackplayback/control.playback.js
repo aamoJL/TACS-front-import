@@ -155,7 +155,7 @@ export const TrackPlayBackControl = L.Control.extend({
     });
     // create a div container for score replay
     this._scoreContainer = this._createContainer(
-      "scoreContainer",
+      "score-container-replay",
       this._container
     );
     // create score blocks for each faction
