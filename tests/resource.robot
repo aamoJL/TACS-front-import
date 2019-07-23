@@ -3,6 +3,7 @@ Documentation       A resource file with reusable keywords and variables.
 Library     SeleniumLibrary    run_on_failure=nothing
 Library     String
 Library     DateTime
+Library    Collections
 
 *** Variables ***
 ${SERVER}           %{SITE_URL}
@@ -325,7 +326,7 @@ Write Text
 
 # ------------------------------------------------------------------------------
 
-# Adding New Task
+# Adding New Task / 09_tasks
 
 Click Tasks
     Click Element       id=tasklistButton
@@ -335,6 +336,24 @@ Generate Task Name/Description
     ${TASK_N} =     Generate Random String      ${TASK_NAME}            [LETTERS][NUMBERS]
     ${TASK_D} =     Generate Random String      ${TASK_DESCRIPTION}     [LETTERS][NUMBERS]
     Input Text      id=taskNameInput            ${TASK_N}
+    Input Text      id=taskDescriptionInput     ${TASK_D}
+
+Create A List
+    @{ASD} =        Create List
+    Set Global Variable     @{ABC}      @{ASD}
+
+Generate Task Name
+    [Arguments]     ${TASK_NAME}
+    ${TASK_N} =     Generate Random String      ${TASK_NAME}            [LETTERS][NUMBERS]
+    Input Text      id=taskNameInput            ${TASK_N}
+    #Set Global Variable     ${ABC}      ${TASK_N}
+    Append To List      ${ABC}      ${TASK_N}
+    Log     ${ABC}
+    [Return]        ${ABC}
+
+Generate Task Description
+    [Arguments]     ${TASK_DESCRIPTION}
+    ${TASK_D} =     Generate Random String      ${TASK_DESCRIPTION}     [LETTERS][NUMBERS]
     Input Text      id=taskDescriptionInput     ${TASK_D}
 
 Submit Task
@@ -347,7 +366,35 @@ Select Faction
     [Arguments]     ${faction}
     Select From List By Label     id=taskFactionSelect      ${faction}
 
+#
+# 10_tasks_edit
+#
 
+Task Winner Select
+    ${game_name} =      Catenate        SEPARATOR=      id=taskEditButton       @{ABC}[0]
+    ${winner} =         Catenate        SEPARATOR=      id=taskWinnerSelect     @{ABC}[0]
+    ${save_winner} =    Catenate        SEPARATOR=      id=taskSaveButton       @{ABC}[0]
+    Click Tasks
+    Click Button       ${game_name}
+    Click Button       ${game_name}
+    Click Button       ${game_name}
+    Select From List By Label       ${winner}       ${FACTION2}
+    Click Button        ${save_winner}
+    Alert Should Be Present     text=Task updated and closed     action=ACCEPT       timeout=None
+
+Delete Task
+    ${delete_game} =    Catenate      SEPARATOR=      id=taskDeleteButton       @{ABC}[1]
+    Click Button       ${delete_game}
+    Handle Alert        action=DISMISS      #Chooses "Cancel" on the popup.
+    Click Button       ${delete_game}
+    Alert Should Be Present     text=Are you sure you want to delete task "@{ABC}[1]"    action=ACCEPT       timeout=None
+    Alert Should Be Present     text=Task deleted       action=ACCEPT       timeout=None
+
+Delete Completed Task
+    ${delete_game} =    Catenate      SEPARATOR=      id=taskDeleteButton       @{ABC}[0]
+    Click Button        ${delete_game}
+    Alert Should Be Present     text=Are you sure you want to delete task "@{ABC}[0]"    action=ACCEPT       timeout=None
+    Alert Should Be Present     text=Task deleted       action=ACCEPT       timeout=None
 
 
 
