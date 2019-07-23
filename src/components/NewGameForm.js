@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Map, TileLayer } from "react-leaflet";
+import ImageUpload from "./ImageUpload";
 
 export class NewGameForm extends React.Component {
   constructor(props) {
@@ -13,6 +14,7 @@ export class NewGameForm extends React.Component {
       startTime: "",
       endDate: "",
       endTime: "",
+      filepath: "default.jpeg",
       zoom: 13,
       mapCenter: {
         lat: 62.2416479,
@@ -56,6 +58,12 @@ export class NewGameForm extends React.Component {
     });
   };
 
+  handleImagePath = path => {
+    this.setState({
+      filepath: path
+    });
+  };
+
   handleGameCreation = e => {
     let startDate =
       this.state.startDate + "T" + this.state.startTime + ":00.000Z";
@@ -67,6 +75,7 @@ export class NewGameForm extends React.Component {
       map: "",
       startdate: startDate,
       enddate: endDate,
+      image: this.state.filepath,
       center: this.state.mapCenter
     };
 
@@ -186,6 +195,7 @@ export class NewGameForm extends React.Component {
             required
           />
           <br />
+          <ImageUpload handleImagePath={this.handleImagePath} />
           <br />
           <label>Map things</label>
           <br />
