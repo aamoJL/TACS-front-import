@@ -34,6 +34,18 @@ export default class GameCard extends React.Component {
       .catch(error => console.log(error));
   }
 
+  getFormattedDate(date) {
+    let day = date.substring(8, 10);
+    let month = date.substring(5, 7);
+    let year = date.substring(0, 4);
+    return day + "." + month + "." + year;
+  }
+
+  getFormattedTime(date) {
+    let time = date.substring(11, 16);
+    return time;
+  }
+
   render() {
     if (this.state.gameInfo.id === undefined) {
       return false;
@@ -51,8 +63,10 @@ export default class GameCard extends React.Component {
                 <label>Description: {this.state.gameInfo.desc}</label>
                 <br />
                 <label>
-                  Date: {this.state.gameInfo.startdate} -{" "}
-                  {this.state.gameInfo.enddate}
+                  Date: {this.getFormattedDate(this.state.gameInfo.startdate)}{" "}
+                  {this.getFormattedTime(this.state.gameInfo.startdate)} -{" "}
+                  {this.getFormattedDate(this.state.gameInfo.enddate)}{" "}
+                  {this.getFormattedTime(this.state.gameInfo.enddate)}
                 </label>
                 <br />
                 <label>State: {this.state.gameInfo.state}</label>
