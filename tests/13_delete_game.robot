@@ -6,10 +6,12 @@ Suite Teardown  Close Browser
 *** Test Cases ***
 Delete Game
     Valid Login
-    :FOR        ${i}        IN RANGE        3
-    \       Delete Game
-    \       ${check} =   Check If Any Test Games
-    \       Exit For Loop If                "${check}"=="FAIL"
+    Select Game
+    Delete Game
+#    :FOR        ${i}        IN RANGE        3
+#    \       Delete Game
+#    \       ${check} =   Check If Any Test Games
+#    \       Exit For Loop If                "${check}"=="FAIL"
 
 
 *** Keywords ***
