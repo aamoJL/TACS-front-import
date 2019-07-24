@@ -3,16 +3,14 @@ import UserMap from "./UserMap";
 import TaskListButton from "./TaskListButton";
 import { Link } from "react-router-dom";
 import JoinGameForm from "./JoinGameForm";
-import PlayerlistView from "./PlayerlistView";
-import NotificationView from "./NotificationView";
 import GameStateButtons from "./GameStateButtons";
 import ClientSocket from "./Socket";
 import NotificationPopup from "./NotificationPopup";
 import GameInfoView from "./GameInfoView";
 import ScoreCounter from "./ScoreCounter";
-import ScoreForm from "./ScoreForm";
 import NotificationButton from "./NotificationButton";
 import AddScoreButton from "./AddScoreButton";
+import PlayerListButton from "./PlayerListButton";
 
 export default class GameView extends React.Component {
   state = {
@@ -196,12 +194,15 @@ export default class GameView extends React.Component {
                 />
               )}
               {this.state.role !== "" && (
-                <button
-                  id="showPlayersButton"
-                  onClick={() => this.setState({ form: "players" })}
-                >
-                  Players
-                </button>
+                <PlayerListButton
+                  gameId={this.state.gameInfo.id}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
+                />
               )}
               {this.state.role !== "" && (
                 <TaskListButton
@@ -241,14 +242,6 @@ export default class GameView extends React.Component {
                   gameId={this.state.gameInfo.id}
                   toggleView={() => this.setState({ form: "" })}
                   onJoin={() => this.getPlayerRole(this.state.gameInfo.id)}
-                />
-              )}
-              {this.state.form === "players" && (
-                <PlayerlistView
-                  gameId={this.state.gameInfo.id}
-                  gameState={this.state.gameInfo.state}
-                  role={this.state.role}
-                  toggleView={() => this.setState({ form: "" })}
                 />
               )}
 
