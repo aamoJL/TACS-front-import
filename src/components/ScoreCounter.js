@@ -22,6 +22,7 @@ export default class ScoreCounter extends Component {
     )
       .then(res => res.json())
       .then(scores => {
+        console.log(scores);
         if (scores.length > 0) {
           this.setState({
             scores

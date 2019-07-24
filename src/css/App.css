@@ -723,12 +723,13 @@ div.login h1 {
   z-index: 2020;
   background-color: #1d1d1b;
   color: #ffffff;
+  max-width: 500px;
+  min-width: 300px;
 }
 
 .tasklist > * {
   padding: 5px;
   margin: 5px;
-  max-width: 500px;
 }
 
 .tasklist-item {

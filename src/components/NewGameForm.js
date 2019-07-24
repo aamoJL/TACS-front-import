@@ -14,7 +14,7 @@ export class NewGameForm extends React.Component {
       startTime: "",
       endDate: "",
       endTime: "",
-      filepath: "default.jpeg",
+      filepath: "images/default.jpeg",
       zoom: 13,
       mapCenter: {
         lat: 62.2416479,
