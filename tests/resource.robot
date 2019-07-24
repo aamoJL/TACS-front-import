@@ -55,15 +55,16 @@ ${I_ESTARTTIME}     id=editGameTimeStartInput
 
 ${I_EGAMESTOP}      id=editGameDateEndInput
 ${I_ESTOPTIME}      id=editGameTimeEndInput
-${I_FACTIONNAME}    id=factionNameInput
-${I_FACTIONPASS}    id=factionPasswordInput
+${I_FACTIONNAME}    id=editGameFactionNameInput
+${I_FACTIONPASS}    id=editGameFactionPasswordInput
 ${B_FACTIONADD}     id=editGameFactionSubmitButton
 
-${I_FLAGNAME}       id=objectivePointDescriptionInput
-${I_FLAGMULTI}      id=objectivePointMultiplierInput
+${I_FLAGNAME}       id=editGameObjectivePointDescriptionInput
+${I_FLAGMULTI}      id=editGameObjectivePointMultiplierInput
 ${B_FLAGADD}        id=editGameObjectivePointSubmitButton
-${I_CAPTURE}        id=captureTimeInput
-${I_CONF}           id=confirmationTimeInput
+${I_CAPTURE}        id=editGameCaptureTimeInput
+${I_CONF}           id=editGameConfirmationTimeInput
+
 
 ${B_ESUBMIT}        id=editGameSubmitButton
 ${B_EDELETE}        id=editGameDeleteGameButton
@@ -76,7 +77,7 @@ ${ALLFACTIONS}      Every faction
 ${B_GAMESELECT}     id=selectGameButton
 ${testit}           css=button[id^="selecttest_"]
 
-<<<<<<< HEAD
+
 ## Join Game
 ${B_JOINGAME}       id=joinGameButton
 ${L_SELECTFACTION}  id=selectFactionList
@@ -85,8 +86,6 @@ ${B_JOINSUBMIT}     id=joinGameSubmitButton
 
 ## Promote
 ${B_SHOWPLAYERS}    id=showPlayersButton
-
-
 *** Keywords ***
 
 #Valid Login
