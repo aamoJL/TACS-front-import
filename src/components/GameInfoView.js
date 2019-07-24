@@ -103,7 +103,7 @@ export default class GameInfoView extends React.Component {
                 search: "?id=" + this.state.gameInfo.id
               }}
             >
-              <button>Go to the game</button>
+              <button id="infoToGameButton">Go to the game</button>
             </Link>
             <Link
               to={{
@@ -111,7 +111,7 @@ export default class GameInfoView extends React.Component {
                 search: "?id=" + this.state.gameInfo.id
               }}
             >
-              <button>Game selection</button>
+              <button id="infoToGameSelectionButton">Game selection</button>
             </Link>
           </div>
         </div>
