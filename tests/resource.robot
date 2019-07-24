@@ -408,36 +408,6 @@ Delete Completed Task
 #
 #   New Game
 #   Valid name 3-30 / Desc 1 - 255
-#${B_NEWGAME}        id=newGameButton
-#${I_NGAMENAME}      id=newGameNameInput
-#${I_NGAMEDESC}      id=newGameDescriptionInput
-#${I_NGAMESTART}     id=newGameDateStartInput
-#${I_NSTARTTIME}     id=newGameTimeStartInput
-#${I_NGAMESTOP}      id=newGameDateEndInput
-#${I_NSTOPTIME}      id=newGameTimeEndInput
-#${B_NSUBMIT}        id=newGameSubmitButton
-#${L_GAMELIST}       id=changeActiveGameList
-#${START}
-
-### Edit Game
-#${B_EDITGAME}       id=editGameButton
-#${I_EGAMENAME}      id=editGameNameInput
-#${I_EGAMEDESC}      id=editGameDescriptionInput
-#${I_EGAMESTART}     id=editGameDateStartInput
-#${I_ESTARTTIME}     id=editGameTimeStartInput
-#${I_EGAMESTOP}      id=editGameDateEndInput
-#${I_ESTOPTIME}      id=editGameTimeEndInput
-#${B_ESUBMIT}        id=editGameSubmitButton
-
-#${I_FACTIONNAME}    id=factionNameInput
-#${I_FACTIONPASS}    id=factionPasswordInput
-#${B_FACTIONADD}     id=factionAddButton
-#
-#${I_FLAGNAME}       id=objectivePointDescriptionInput
-#${I_FLAGMULTI}      id=objectivePointMultiplierInput
-#${B_FLAGADD}        id=objectivePointAddButton
-#${I_CAPTURE}        id=captureTimeInput
-#${I_CONF}           id=confirmationTimeInput
 
 Create Game
     Wait Until Page Contains Element        id=newGameButton      1
