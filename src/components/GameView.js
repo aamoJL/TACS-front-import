@@ -12,6 +12,7 @@ import GameInfoView from "./GameInfoView";
 import ScoreCounter from "./ScoreCounter";
 import ScoreForm from "./ScoreForm";
 import NotificationButton from "./NotificationButton";
+import AddScoreButton from "./AddScoreButton";
 
 export default class GameView extends React.Component {
   state = {
@@ -210,12 +211,16 @@ export default class GameView extends React.Component {
                 />
               )}
               {this.state.role === "admin" && (
-                <button
-                  id="scoreFormButton"
-                  onClick={() => this.setState({ form: "score" })}
-                >
-                  Add score
-                </button>
+                <AddScoreButton
+                  gameId={this.state.gameInfo.id}
+                  factions={this.state.gameInfo.factions}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
+                />
               )}
               {this.state.role !== "admin" && this.state.role !== "" && (
                 <button
@@ -251,19 +256,6 @@ export default class GameView extends React.Component {
                 <GameInfoView
                   gameInfo={this.state.gameInfo}
                   toggleView={() => this.setState({ form: "" })}
-                />
-              )}
-              {this.state.form === "score" && (
-                <ScoreForm
-                  gameId={this.state.gameInfo.id}
-                  factions={this.state.gameInfo.factions}
-                  toggleView={() => this.setState({ form: "" })}
-                  role={this.state.role}
-                  gameState={
-                    this.state.gameInfo !== undefined
-                      ? this.state.gameInfo.state
-                      : ""
-                  }
                 />
               )}
             </div>
