@@ -567,6 +567,9 @@ Generate Game End Date And Time
 #Generates new username for every test rotation in gitlab. Used in test suite join_game
 Generate Player Username
     ${playername} =     Generate Random String      12       [LETTERS][NUMBERS]
+    Create A List       PLAYERS
+    Append To List      @{PLAYERS}  ${playername}
+    Log                 @{PLAYERS}
     [Return]            ${playername}
 
 #Inputs the generated valid username for login. (Test suite join_game)
@@ -588,6 +591,11 @@ Go To Players
 Promote
     ${x} =              Format String           select{}     ${VALID_GAME}
     Click Button
+
+Create A List
+    [Arguments]             ${listname}
+    @{${listname}} =        Create List
+    Set Global Variable     @{${listname}}      @{${listname}}
 
 
 Log
