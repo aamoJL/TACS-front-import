@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation       A test suite for valid login.
 ...                 Keywords imported from a resource file.
-Resource            resource.robot
+Resource        resource.robot
 
 *** Test Cases ***
 Valid Login
@@ -10,4 +10,4 @@ Valid Login
     Input Password      ${VALID PASSWORD}
     Submit Credentials Login
     Log Out
-    [Teardown]          Close Browser
+    [Teardown]      Close Browser

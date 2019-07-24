@@ -255,6 +255,7 @@ Draw A Marker
     Log To Console          Markers done
 
 Edit Layers
+    Reload Page        #IF EDIT DOESN'T WORK AFTER DRAWING MARKERS.
     Click Element   css=a[class=leaflet-draw-edit-edit]
     Mouse Down      class:leaflet-editing-icon:first-of-type            #Polyline
     Mouse Up        class:leaflet-tile-loaded:nth-child(2)              #Polyline
