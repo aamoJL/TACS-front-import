@@ -2,7 +2,6 @@ import React from "react";
 import UserMap from "./UserMap";
 import TaskListButton from "./TaskListButton";
 import { Link } from "react-router-dom";
-import EditGameForm from "./EditGameForm";
 import JoinGameForm from "./JoinGameForm";
 import PlayerlistView from "./PlayerlistView";
 import NotificationView from "./NotificationView";
@@ -11,6 +10,7 @@ import ClientSocket from "./Socket";
 import NotificationPopup from "./NotificationPopup";
 import GameInfoView from "./GameInfoView";
 import ScoreCounter from "./ScoreCounter";
+import ScoreForm from "./ScoreForm";
 
 export default class GameView extends React.Component {
   state = {
@@ -197,6 +197,14 @@ export default class GameView extends React.Component {
                   factions={this.state.gameInfo.factions}
                 />
               )}
+              {this.state.role === "admin" && (
+                <button
+                  id="scoreFormButton"
+                  onClick={() => this.setState({ form: "score" })}
+                >
+                  Add score
+                </button>
+              )}
               {this.state.role !== "admin" && this.state.role !== "" && (
                 <button
                   id="leaveFactionButton"
@@ -243,6 +251,19 @@ export default class GameView extends React.Component {
                 <GameInfoView
                   gameInfo={this.state.gameInfo}
                   toggleView={() => this.setState({ form: "" })}
+                />
+              )}
+              {this.state.form === "score" && (
+                <ScoreForm
+                  gameId={this.state.gameInfo.id}
+                  factions={this.state.gameInfo.factions}
+                  toggleView={() => this.setState({ form: "" })}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
                 />
               )}
             </div>
