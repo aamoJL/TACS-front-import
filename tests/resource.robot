@@ -412,7 +412,7 @@ Delete Completed Task
 #   Valid name 3-30 / Desc 1 - 255
 
 Create Game
-    Wait Until Page Contains Element        id=newGameButton      1
+    Wait Until Page Contains Element        id=newGameButton      5
     Generate Valid Gamename
     Click Button    ${B_NEWGAME}
     Input Text      ${I_NGAMENAME}   ${VALID_GAME}
@@ -437,12 +437,12 @@ Create Game
 
 Select Game
     ${x} =              Format String           select{}    ${VALID_GAME}
-    Wait Until Page Contains Element            id=${x}     1
+    Wait Until Page Contains Element            id=${x}     5
     Click Button        id=${x}
     Log                 Game Selected
 
 Edit Game Time
-    Wait Until Page Contains Element        id=editGameButton      1
+    Wait Until Page Contains Element        id=editGameButton      5
     Click Button    ${B_EDITGAME}
     Input Text      ${I_EGAMENAME}   ${VALID_GAME}  #test_bINk5V
     Log             GameName edited
