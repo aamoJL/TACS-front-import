@@ -92,43 +92,21 @@ export default class App extends Component {
   }
 
   loginForm = () => {
-    return (
-      <Route
-        render={props =>
-          !this.state.logged ? (
-            <LoginForm view="" handleState={this.handleState} />
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/"
-              }}
-            />
-          )
-        }
-      />
-    );
+    return <LoginForm view="" handleState={this.handleState} />;
   };
 
   registerForm = () => {
-    return (
-      <Route
-        render={props =>
-          !this.state.logged ? (
-            <RegisterForm view="" handleState={this.handleState} />
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/"
-              }}
-            />
-          )
-        }
-      />
-    );
+    return <RegisterForm view="" handleState={this.handleState} />;
   };
 
   replay = () => {
     return <ReplayMap />;
+  };
+
+  handleLogout = () => {
+    sessionStorage.setItem("token", "");
+    sessionStorage.setItem("name", "");
+    this.setState({ logged: false, authenticateComplete: true });
   };
 
   render() {
@@ -159,7 +137,7 @@ export default class App extends Component {
                   exact
                   path="/"
                   component={() => {
-                    return <GameSelection />;
+                    return <GameSelection onLogout={this.handleLogout} />;
                   }}
                 />
                 {/* Redirect from any other path to root */}
