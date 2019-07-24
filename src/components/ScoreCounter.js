@@ -4,24 +4,25 @@ export default class ScoreCounter extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      scores: null,
-      testGameid: "a1231e2b-aa29-494d-b687-ea2d48cc23df"
+      scores: null
     };
   }
 
   // Gets the current scores with factions (and their colors for display)
   getScoresAndFactions = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/${this.state.testGameid}`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+    fetch(
+      `${process.env.REACT_APP_API_URL}/score/get-score/${this.props.gameId}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
       }
-    })
+    )
       .then(res => res.json())
       .then(scores => {
         if (scores.length > 0) {
-          console.log(scores);
           this.setState({
             scores
           });
@@ -34,6 +35,10 @@ export default class ScoreCounter extends Component {
 
   componentWillMount() {
     this.getScoresAndFactions();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.socketSignal === "score-update") this.getScoresAndFactions();
   }
 
   render() {

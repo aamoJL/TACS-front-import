@@ -126,7 +126,14 @@ export default class GameView extends React.Component {
       <div>
         {this.state.gameInfo !== null && (
           <div>
-            <ScoreCounter />
+            <ScoreCounter
+              gameId={this.state.gameInfo.id}
+              socketSignal={
+                this.state.socketSignal === null
+                  ? null
+                  : this.state.socketSignal.type
+              }
+            />
             <div className="header">
               <Link to="/">
                 <button id="gameViewGameSelectionButton">Game selection</button>
