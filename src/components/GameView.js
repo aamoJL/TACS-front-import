@@ -11,6 +11,7 @@ import NotificationPopup from "./NotificationPopup";
 import GameInfoView from "./GameInfoView";
 import ScoreCounter from "./ScoreCounter";
 import ScoreForm from "./ScoreForm";
+import NotificationButton from "./NotificationButton";
 
 export default class GameView extends React.Component {
   state = {
@@ -182,12 +183,16 @@ export default class GameView extends React.Component {
                 </button>
               )}
               {this.state.role !== "" && (
-                <button
-                  id="notificationsButton"
-                  onClick={() => this.setState({ form: "notifications" })}
-                >
-                  Notifications
-                </button>
+                <NotificationButton
+                  gameId={this.state.gameInfo.id}
+                  socket={this.state.socket}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
+                />
               )}
               {this.state.role !== "" && (
                 <button
@@ -241,19 +246,7 @@ export default class GameView extends React.Component {
                   toggleView={() => this.setState({ form: "" })}
                 />
               )}
-              {this.state.form === "notifications" && (
-                <NotificationView
-                  gameId={this.state.gameInfo.id}
-                  toggleView={() => this.setState({ form: "" })}
-                  socket={this.state.socket}
-                  role={this.state.role}
-                  gameState={
-                    this.state.gameInfo !== undefined
-                      ? this.state.gameInfo.state
-                      : ""
-                  }
-                />
-              )}
+
               {this.state.form === "info" && (
                 <GameInfoView
                   gameInfo={this.state.gameInfo}

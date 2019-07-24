@@ -37,11 +37,6 @@ export default class TaskListButton extends React.Component {
     );
   };
 
-  handleClearForm = () => {
-    this.props.toggleView();
-    console.log("JEP!");
-  };
-
   render() {
     return (
       <Fragment>
