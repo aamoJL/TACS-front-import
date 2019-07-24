@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
+import Draggable from "react-draggable";
 
 export default class JoinGameForm extends React.Component {
   constructor(props) {
@@ -90,20 +91,24 @@ export default class JoinGameForm extends React.Component {
     ));
 
     return ReactDOM.createPortal(
-      <div className="fade-main">
-        <div className="sticky">
-          <span
+      <Draggable
+        bounds="body"
+        className="draggableContainer"
+        enableUserSelectHack={false}
+        cancel=".input-cancel-drag"
+      >
+        <div className="tasklist">
+          <button
             id="closeNewGameFormX"
             className="close"
             onClick={this.handleView}
           >
             ×
-          </span>
-        </div>
-        <div className="">
-          <form onSubmit={this.handleGameJoin}>
+          </button>
+
+          <form className="task-form" onSubmit={this.handleGameJoin}>
             <h1>Join game: {this.state.gameJSON.name}</h1>
-            <h2>Description: {this.state.gameJSON.desc}</h2>
+            <p>Description: {this.state.gameJSON.desc}</p>
             <select
               id="selectFactionList"
               onChange={e =>
@@ -129,7 +134,7 @@ export default class JoinGameForm extends React.Component {
             <h2>{this.state.errorMsg}</h2>
           </form>
         </div>
-      </div>,
+      </Draggable>,
       document.getElementById("form")
     );
   }

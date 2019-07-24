@@ -728,6 +728,7 @@ div.login h1 {
 .tasklist > * {
   padding: 5px;
   margin: 5px;
+  max-width: 500px;
 }
 
 .tasklist-item {
