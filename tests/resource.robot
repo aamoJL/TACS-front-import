@@ -55,30 +55,26 @@ ${I_ESTARTTIME}     id=editGameTimeStartInput
 
 ${I_EGAMESTOP}      id=editGameDateEndInput
 ${I_ESTOPTIME}      id=editGameTimeEndInput
-${I_FACTIONNAME}    id=editGameFactionNameInput
-${I_FACTIONPASS}    id=editGameFactionPasswordInput
+${I_FACTIONNAME}    id=factionNameInput
+${I_FACTIONPASS}    id=factionPasswordInput
 ${B_FACTIONADD}     id=editGameFactionSubmitButton
 
-${I_FLAGNAME}       id=editGameObjectivePointDescriptionInput
-${I_FLAGMULTI}      id=editGameObjectivePointMultiplierInput
+${I_FLAGNAME}       id=objectivePointDescriptionInput
+${I_FLAGMULTI}      id=objectivePointMultiplierInput
 ${B_FLAGADD}        id=editGameObjectivePointSubmitButton
-${I_CAPTURE}        id=editGameCaptureTimeInput
-${I_CONF}           id=editGameConfirmationTimeInput
+${I_CAPTURE}        id=captureTimeInput
+${I_CONF}           id=confirmationTimeInput
 
 ${B_ESUBMIT}        id=editGameSubmitButton
-${B_EDELETE}        id=gameDeleteButton
+${B_EDELETE}        id=editGameDeleteGameButton
 ${E_ECLOSE}         id=closeEditGameFormX
 ${FACTION1}         Faction1
 ${FACTION2}         Faction2
+${ALLFACTIONS}      Every faction
 
 ## Game List
 ${B_GAMESELECT}     id=selectGameButton
 ${testit}           css=button[id^="selecttest_"]
-
-## Join Game
-${B_JOINGAME}       id=joinGameButton
-${L_SELECTFACTION}  id=selectFactionList
-${B_JOINSUBMIT}     id=joinGameSubmitButton
 
 *** Keywords ***
 
@@ -338,18 +334,17 @@ Generate Task Name/Description
     Input Text      id=taskNameInput            ${TASK_N}
     Input Text      id=taskDescriptionInput     ${TASK_D}
 
-Create A List
-    @{ASD} =        Create List
-    Set Global Variable     @{ABC}      @{ASD}
+Create Task List
+    @{task_list} =        Create List
+    Set Global Variable     @{TASK_NAMES}      @{task_list}
 
 Generate Task Name
     [Arguments]     ${TASK_NAME}
     ${TASK_N} =     Generate Random String      ${TASK_NAME}            [LETTERS][NUMBERS]
     Input Text      id=taskNameInput            ${TASK_N}
-    #Set Global Variable     ${ABC}      ${TASK_N}
-    Append To List      ${ABC}      ${TASK_N}
-    Log     ${ABC}
-    [Return]        ${ABC}
+    Append To List      ${TASK_NAMES}      ${TASK_N}
+    Log     ${TASK_NAMES}
+    [Return]        ${TASK_NAMES}
 
 Generate Task Description
     [Arguments]     ${TASK_DESCRIPTION}
@@ -371,9 +366,9 @@ Select Faction
 #
 
 Task Winner Select
-    ${game_name} =      Catenate        SEPARATOR=      id=taskEditButton       @{ABC}[0]
-    ${winner} =         Catenate        SEPARATOR=      id=taskWinnerSelect     @{ABC}[0]
-    ${save_winner} =    Catenate        SEPARATOR=      id=taskSaveButton       @{ABC}[0]
+    ${game_name} =      Catenate        SEPARATOR=      id=taskEditButton       @{TASK_NAMES}[0]
+    ${winner} =         Catenate        SEPARATOR=      id=taskWinnerSelect     @{TASK_NAMES}[0]
+    ${save_winner} =    Catenate        SEPARATOR=      id=taskSaveButton       @{TASK_NAMES}[0]
     Click Tasks
     Click Button       ${game_name}
     Click Button       ${game_name}
@@ -383,18 +378,19 @@ Task Winner Select
     Alert Should Be Present     text=Task updated and closed     action=ACCEPT       timeout=None
 
 Delete Task
-    ${delete_game} =    Catenate      SEPARATOR=      id=taskDeleteButton       @{ABC}[1]
+    ${delete_game} =    Catenate      SEPARATOR=      id=taskDeleteButton       @{TASK_NAMES}[1]
     Click Button       ${delete_game}
     Handle Alert        action=DISMISS      #Chooses "Cancel" on the popup.
     Click Button       ${delete_game}
-    Alert Should Be Present     text=Are you sure you want to delete task "@{ABC}[1]"    action=ACCEPT       timeout=None
+    Alert Should Be Present     text=Are you sure you want to delete task "@{TASK_NAMES}[1]"    action=ACCEPT       timeout=None
     Alert Should Be Present     text=Task deleted       action=ACCEPT       timeout=None
 
 Delete Completed Task
-    ${delete_game} =    Catenate      SEPARATOR=      id=taskDeleteButton       @{ABC}[0]
+    ${delete_game} =    Catenate      SEPARATOR=      id=taskDeleteButton       @{TASK_NAMES}[0]
     Click Button        ${delete_game}
-    Alert Should Be Present     text=Are you sure you want to delete task "@{ABC}[0]"    action=ACCEPT       timeout=None
+    Alert Should Be Present     text=Are you sure you want to delete task "@{TASK_NAMES}[0]"    action=ACCEPT       timeout=None
     Alert Should Be Present     text=Task deleted       action=ACCEPT       timeout=None
+
 
 
 
@@ -507,7 +503,6 @@ Save Game
 
     Click Button        ${B_ESUBMIT}
     Alert Should Be Present     text=Game updated     action=ACCEPT       timeout=None
-    Click Element        ${E_ECLOSE}
 #    Handle Alert
 
 Generate Valid Gamename     #Generates new name for every test rotation in gitlab. Used in test suite xx.
@@ -552,28 +547,6 @@ Generate Game End Date And Time
     Set Global Variable     ${ENDDATE}    ${date}
     Set Global Variable     ${ENDTIME}    ${time}
 
-
-#
-# JOIN GAME AND FACTION
-#
-
-
-Generate Player Username     #Generates new username for every test rotation in gitlab. Used in test suite 10.
-    ${playername} =     Generate Random String      12       [LETTERS][NUMBERS]
-    [Return]            ${playername}
-
-Input Player Username        #Inputs the generated valid username for login. (Test suite 00)
-    [Arguments]     ${playername}
-    Input Text      ${LOC_USER}        ${playername}
-
-Join Game
-    [Arguments]     ${faction}  ${password}
-    Click Button    ${B_JOINGAME}
-    Select From List By Label           ${L_SELECTFACTION}  ${faction}
-    Input Text      ${I_FACTIONPASS}    ${password}
-    Click Button    ${B_JOINSUBMIT}
-    Handle Alert
-
 Log
     [Arguments]     ${x}
     Log To Console  ${x}
@@ -588,7 +561,7 @@ Delete Game
     Click Button       ${B_EDELETE}
     Alert Should Be Present     text=Are you sure you want to delete this game     action=ACCEPT       timeout=None
     Alert Should Be Present     text=Game deleted     action=ACCEPT       timeout=None
-    Click Button       ${B_GAMESELECT}
+    Alert Should Be Present     text=Game not found     action=ACCEPT       timeout=None
 
 Check If Any Test Games
     ${status}       ${value} =      Run Keyword And Ignore Error        Page Should Contain Button     ${testit}
