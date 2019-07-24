@@ -16,6 +16,18 @@ export default class GameInfoView extends React.Component {
     }
   };
 
+  getFormattedDate(date) {
+    let day = date.substring(8, 10);
+    let month = date.substring(5, 7);
+    let year = date.substring(0, 4);
+    return day + "." + month + "." + year;
+  }
+
+  getFormattedTime(date) {
+    let time = date.substring(11, 16);
+    return time;
+  }
+
   render() {
     if (this.props.gameInfo === undefined) {
       return false;
@@ -35,8 +47,12 @@ export default class GameInfoView extends React.Component {
           <h1>Game Info</h1>
           <p>Game name: {this.props.gameInfo.name}</p>
           <p>Description: {this.props.gameInfo.desc}</p>
-          <p>Start date: {this.props.gameInfo.startdate}</p>
-          <p>End date: {this.props.gameInfo.enddate}</p>
+          <p>
+            Date: {this.getFormattedDate(this.props.gameInfo.startdate)}{" "}
+            {this.getFormattedTime(this.props.gameInfo.startdate)} -{" "}
+            {this.getFormattedDate(this.props.gameInfo.enddate)}{" "}
+            {this.getFormattedTime(this.props.gameInfo.enddate)}
+          </p>
           <h2>Factions</h2>
           <div>
             {this.props.gameInfo.factions.map(faction => (

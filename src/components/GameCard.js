@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import img from "../icons/ehasa-monitor.jpeg";
 export default class GameCard extends React.Component {
   state = {
     editForm: false,
@@ -27,11 +26,24 @@ export default class GameCard extends React.Component {
             desc: res.desc,
             state: res.state,
             startdate: res.startdate,
-            enddate: res.enddate
+            enddate: res.enddate,
+            image: `${process.env.REACT_APP_API_URL}/game/${res.image}`
           }
         });
       })
       .catch(error => console.log(error));
+  }
+
+  getFormattedDate(date) {
+    let day = date.substring(8, 10);
+    let month = date.substring(5, 7);
+    let year = date.substring(0, 4);
+    return day + "." + month + "." + year;
+  }
+
+  getFormattedTime(date) {
+    let time = date.substring(11, 16);
+    return time;
   }
 
   render() {
@@ -44,15 +56,21 @@ export default class GameCard extends React.Component {
         <div className="row">
           <div className="col-md-4">
             <div className="gamecard card mb-4 shadow-sm">
-              <img className="card-img-top" src={img} alt="Game Logo" />
+              <img
+                className="card-img-top"
+                src={this.state.gameInfo.image}
+                alt="Game Logo"
+              />
               <div className="card-body">
                 <label>Name: {this.state.gameInfo.name}</label>
                 <br />
                 <label>Description: {this.state.gameInfo.desc}</label>
                 <br />
                 <label>
-                  Date: {this.state.gameInfo.startdate} -{" "}
-                  {this.state.gameInfo.enddate}
+                  Date: {this.getFormattedDate(this.state.gameInfo.startdate)}{" "}
+                  {this.getFormattedTime(this.state.gameInfo.startdate)} -{" "}
+                  {this.getFormattedDate(this.state.gameInfo.enddate)}{" "}
+                  {this.getFormattedTime(this.state.gameInfo.enddate)}
                 </label>
                 <br />
                 <label>State: {this.state.gameInfo.state}</label>
@@ -76,6 +94,7 @@ export default class GameCard extends React.Component {
                   <button
                     id={`replay${this.state.gameInfo.name}`}
                     type="button"
+                    className="select-game-button"
                   >
                     Replay
                   </button>

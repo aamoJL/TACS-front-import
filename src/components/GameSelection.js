@@ -28,23 +28,25 @@ export default class GameSelection extends React.Component {
       });
   }
 
+  handleLogout = e => {
+    this.props.onLogout();
+  };
+
   render() {
     return (
       <div>
         <div className="navbar navbar-dark shadow-sm">
           <div className="container d-flex justify-content-between">
-            <a href="#" class="navbar-brand d-flex align-items-center">
-              <img
-                className="tacs-icon-neg mr-2"
-                src={logo}
-                height="35"
-                alt="tacs icon"
-              />
-            </a>
+            <img
+              className="tacs-icon-neg mr-2"
+              src={logo}
+              height="35"
+              alt="tacs icon"
+            />
             <button
               className="btn btn-secondary"
               id="logoutButton"
-              type="submit"
+              onClick={this.handleLogout}
             >
               Log out
             </button>

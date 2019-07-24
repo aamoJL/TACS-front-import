@@ -126,7 +126,7 @@ export class RegisterForm extends React.Component {
               <br />
               Back to
               <Link to="/">
-                <a id="loginButton"> Login </a>
+                <p id="loginButton"> Login </p>
               </Link>
             </div>
           </div>

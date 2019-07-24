@@ -12,6 +12,7 @@ import RegisterForm from "./components/RegisterForm";
 import GameSelection from "./components/GameSelection";
 import GameView from "./components/GameView";
 import ReplayMap from "./components/ReplayMap";
+import EditGameForm from "./components/EditGameForm";
 
 export default class App extends Component {
   constructor() {
@@ -91,43 +92,21 @@ export default class App extends Component {
   }
 
   loginForm = () => {
-    return (
-      <Route
-        render={props =>
-          !this.state.logged ? (
-            <LoginForm view="" handleState={this.handleState} />
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/"
-              }}
-            />
-          )
-        }
-      />
-    );
+    return <LoginForm view="" handleState={this.handleState} />;
   };
 
   registerForm = () => {
-    return (
-      <Route
-        render={props =>
-          !this.state.logged ? (
-            <RegisterForm view="" handleState={this.handleState} />
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/"
-              }}
-            />
-          )
-        }
-      />
-    );
+    return <RegisterForm view="" handleState={this.handleState} />;
   };
 
   replay = () => {
     return <ReplayMap />;
+  };
+
+  handleLogout = () => {
+    sessionStorage.setItem("token", "");
+    sessionStorage.setItem("name", "");
+    this.setState({ logged: false, authenticateComplete: true });
   };
 
   render() {
@@ -140,10 +119,6 @@ export default class App extends Component {
       <div>
         <Router>
           <div>
-            {/* Debug Sign out button ------------------------ */}
-
-            {/* Debug End ----------------------- */}
-
             {!this.state.logged && (
               <Switch>
                 <Route exact path="/replay" component={this.replay} />
@@ -155,18 +130,14 @@ export default class App extends Component {
             )}
             {this.state.logged && (
               <Switch>
+                <Route path="/edit/game" component={() => <EditGameForm />} />
                 <Route exact path="/replay" component={this.replay} />
-                <Route
-                  path="/game"
-                  component={() => {
-                    return <GameView logged={this.state.logged} />;
-                  }}
-                />
+                <Route path="/game" component={() => <GameView />} />
                 <Route
                   exact
                   path="/"
                   component={() => {
-                    return <GameSelection />;
+                    return <GameSelection onLogout={this.handleLogout} />;
                   }}
                 />
                 {/* Redirect from any other path to root */}

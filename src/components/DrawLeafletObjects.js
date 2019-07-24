@@ -5,8 +5,7 @@ import {
   Popup,
   Polygon,
   Polyline,
-  Rectangle,
-  Tooltip
+  Rectangle
 } from "react-leaflet";
 import { noIcon, flagboxIcon } from "./DrawToolsPanel";
 
@@ -14,7 +13,7 @@ class DrawLeafletObjects extends React.Component {
   createPolyline = drawing => {
     return (
       <Polyline
-        key={Math.random()}
+        key={drawing.mapDrawingId}
         positions={drawing.data.coordinates}
         id={drawing.mapDrawingId}
         type="polyline"
@@ -26,7 +25,7 @@ class DrawLeafletObjects extends React.Component {
   createPolygon = drawing => {
     return (
       <Polygon
-        key={Math.random()}
+        key={drawing.mapDrawingId}
         positions={drawing.data.coordinates}
         id={drawing.mapDrawingId}
         type="polygon"
@@ -38,7 +37,7 @@ class DrawLeafletObjects extends React.Component {
   createRectangle = drawing => {
     return (
       <Rectangle
-        key={Math.random()}
+        key={drawing.mapDrawingId}
         bounds={drawing.data.coordinates}
         id={drawing.mapDrawingId}
         type="rectangle"
@@ -51,7 +50,7 @@ class DrawLeafletObjects extends React.Component {
   createCircle = drawing => {
     return (
       <Circle
-        key={Math.random()}
+        key={drawing.mapDrawingId}
         center={drawing.data.coordinates}
         id={drawing.mapDrawingId}
         radius={drawing.data.radius}
@@ -64,7 +63,7 @@ class DrawLeafletObjects extends React.Component {
   createMarker = drawing => {
     return (
       <Marker
-        key={Math.random()}
+        key={drawing.mapDrawingId}
         position={drawing.data.coordinates}
         id={drawing.mapDrawingId}
         type="marker"
@@ -76,26 +75,14 @@ class DrawLeafletObjects extends React.Component {
   createTextbox = drawing => {
     return (
       <Marker
-        key={Math.random()}
+        key={drawing.mapDrawingId}
         position={drawing.data.coordinates}
         id={drawing.mapDrawingId}
         //color={color}
         icon={noIcon}
         type="textbox"
-      >
-        <Tooltip
-          direction="bottom"
-          permanent
-          className="editable"
-          interactive={true}
-        >
-          <div className="editable">
-            <div contentEditable="true" placeholder="Click out to save">
-              {drawing.data.text}
-            </div>
-          </div>
-        </Tooltip>
-      </Marker>
+        onAdd={e => this.props.textboxSetup(e.target, drawing.data.text)}
+      />
     );
   };
 
@@ -106,7 +93,7 @@ class DrawLeafletObjects extends React.Component {
     if (drawing.owner) {
       return (
         <Marker
-          key={Math.random()}
+          key={drawing.objectivePointId}
           position={drawing.data.coordinates}
           id={drawing.objectivePointId}
           icon={flagboxIcon(
@@ -128,7 +115,7 @@ class DrawLeafletObjects extends React.Component {
     }
     return (
       <Marker
-        key={Math.random()}
+        key={drawing.objectivePointId}
         position={drawing.data.coordinates}
         id={drawing.objectivePointId}
         icon={flagboxIcon("#000000", 0, "#000000")}

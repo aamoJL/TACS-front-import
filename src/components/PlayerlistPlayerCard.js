@@ -15,9 +15,7 @@ export default class PlayerlistPlayerCard extends React.Component {
 
     if (
       window.confirm(
-        `Change ${this.props.player.person.name}'s role to "${
-          this.state.roleInput
-        }"?`
+        `Change ${this.props.player.name}'s role to "${this.state.roleInput}"?`
       )
     ) {
       fetch(
@@ -41,7 +39,7 @@ export default class PlayerlistPlayerCard extends React.Component {
         .then(res => {
           this.props.onChange();
           alert(
-            `Player ${this.props.player.person.name}'s role was changed to "${
+            `Player ${this.props.player.name}'s role was changed to "${
               res.role
             }"`
           );
@@ -58,31 +56,31 @@ export default class PlayerlistPlayerCard extends React.Component {
     if (this.props.role !== "admin") {
       return (
         <div>
-          {this.props.player.person.name} : {this.props.player.role}
+          {this.props.player.name} : {this.props.player.role}
         </div>
       );
     }
 
     // Admin edit view
-    if (this.state.edit) {
+    else if (this.state.edit) {
       return (
         <div>
-          {this.props.player.person.name} :{" "}
+          {this.props.player.name} :{" "}
           <select
-            id={"playerCardRoleSelect" + this.props.player.person.name}
+            id={"playerCardRoleSelect" + this.props.player.name}
             value={this.state.roleInput}
             onChange={e => this.setState({ roleInput: e.target.value })}
           >
             {roleOptions()}
           </select>
           <button
-            id={"playerCardSaveButton" + this.props.player.person.name}
+            id={"playerCardSaveButton" + this.props.player.name}
             onClick={this.handleSave}
           >
             Save
           </button>
           <button
-            id={"playerCardCancelButton" + this.props.player.person.name}
+            id={"playerCardCancelButton" + this.props.player.name}
             onClick={() => {
               this.setState({ edit: false, roleInput: this.props.player.role });
             }}
@@ -91,23 +89,22 @@ export default class PlayerlistPlayerCard extends React.Component {
           </button>
         </div>
       );
+    } else {
+      // Admin view without editing
+      return (
+        <div>
+          {this.props.player.name} : {this.props.player.role}
+          {this.props.gameState === "CREATED" && (
+            <button
+              id={"playerCardEditButton" + this.props.player.name}
+              onClick={() => this.setState({ edit: !this.state.edit })}
+            >
+              Edit
+            </button>
+          )}
+        </div>
+      );
     }
-
-    // Admin view without editing
-    return (
-      <div>
-        {this.props.player.person.name} : {this.state.edit && roleOptions()}
-        {!this.state.edit && this.props.player.role}
-        {this.props.role === "admin" && !this.state.edit && (
-          <button
-            id={"playerCardEditButton" + this.props.player.person.name}
-            onClick={() => this.setState({ edit: !this.state.edit })}
-          >
-            Edit
-          </button>
-        )}
-      </div>
-    );
   }
 }
 

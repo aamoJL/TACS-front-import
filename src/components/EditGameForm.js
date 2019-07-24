@@ -1,9 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { Map, TileLayer } from "react-leaflet";
 import { SketchPicker } from "react-color";
 import reactCSS from "reactcss";
-
 import EditGameFormToolbar from "./EditGameFormToolbar";
 
 export default class EditGameForm extends React.Component {
@@ -11,8 +9,10 @@ export default class EditGameForm extends React.Component {
     super(props);
 
     this.state = {
+      gameId: null,
+      role: null,
       zoom: 13,
-      gamename: "",
+      gamename: null,
       description: "",
       startDate: "",
       startTime: "",
@@ -200,10 +200,8 @@ export default class EditGameForm extends React.Component {
     let token = sessionStorage.getItem("token");
 
     if (window.confirm("Are you sure you want to delete this game")) {
-      alert("Game deleted");
-
       fetch(
-        `${process.env.REACT_APP_API_URL}/game/delete/${this.props.gameId}`,
+        `${process.env.REACT_APP_API_URL}/game/delete/${this.state.gameId}`,
         {
           method: "DELETE",
           headers: {
@@ -213,28 +211,30 @@ export default class EditGameForm extends React.Component {
       )
         .then(result => result.json())
         .then(result => {
-          console.log(result);
-          this.handleView();
-          this.props.onEditSave();
+          this.setState({ saved: true }, () => {
+            alert("Game deleted");
+            window.document.location.href = "/";
+          });
         })
         .catch(error => console.log(error));
     }
   };
 
-  // show/hide this form
-  handleView = e => {
+  handleGameSelectionClick = e => {
     if (
       this.state.saved ||
       window.confirm("Are you sure you want to leave without saving?")
     ) {
-      this.props.toggleView(this.props.view);
+      window.document.location.href = "/";
     }
   };
 
-  // remove view with ESC
-  handleEsc = e => {
-    if (e.keyCode === 27) {
-      this.handleView();
+  handleBackToGameClick = e => {
+    if (
+      this.state.saved ||
+      window.confirm("Are you sure you want to leave without saving?")
+    ) {
+      window.document.location.href = "/game?id=" + this.state.gameId;
     }
   };
 
@@ -279,7 +279,7 @@ export default class EditGameForm extends React.Component {
     let error = false;
 
     // Send Game info to the server
-    fetch(`${process.env.REACT_APP_API_URL}/game/edit/${this.props.gameId}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/game/edit/${this.state.gameId}`, {
       method: "PUT",
       headers: {
         Authorization: "Bearer " + token,
@@ -302,8 +302,7 @@ export default class EditGameForm extends React.Component {
               saved: true
             },
             () => {
-              this.handleView();
-              this.props.onEditSave();
+              window.document.location.href = "/game?id=" + this.state.gameId;
             }
           );
         }
@@ -312,18 +311,44 @@ export default class EditGameForm extends React.Component {
   };
 
   componentDidMount() {
-    document.addEventListener("keyup", this.handleEsc);
-    this.getGameInfo(this.props.gameId);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keyup", this.handleEsc);
+    let gameId = new URL(window.location.href).searchParams.get("id");
+    this.setState(
+      {
+        gameId: gameId
+      },
+      () => {
+        this.getGameInfo(gameId);
+      }
+    );
   }
 
   getGameInfo(gameId) {
-    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
-      .then(response => response.json())
-      .then(json => this.setGameInfoToState(json))
+    let token = sessionStorage.getItem("token");
+    // Get player's role
+    fetch(`${process.env.REACT_APP_API_URL}/faction/check-faction/${gameId}`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.role === "admin") {
+          // Get game info
+          fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
+            .then(response => response.json())
+            .then(json => this.setGameInfoToState(json))
+            .catch(error => {
+              console.log(error);
+              window.document.location.href = "/";
+            });
+        } else {
+          alert(
+            "The game was not found or you don't have permission to edit it"
+          );
+          window.document.location.href = "/";
+        }
+      })
       .catch(error => console.log(error));
   }
 
@@ -332,7 +357,7 @@ export default class EditGameForm extends React.Component {
 
     // Get factions and passwordds
     fetch(
-      `${process.env.REACT_APP_API_URL}/game/get-factions/${this.props.gameId}`,
+      `${process.env.REACT_APP_API_URL}/game/get-factions/${this.state.gameId}`,
       {
         method: "GET",
         headers: {
@@ -397,6 +422,10 @@ export default class EditGameForm extends React.Component {
   }
 
   render() {
+    if (this.state.gamename === null) {
+      return false;
+    }
+
     let factions = [];
     for (let i = 0; i < this.state.factions.length; i++) {
       const faction = this.state.factions[i];
@@ -435,6 +464,7 @@ export default class EditGameForm extends React.Component {
       );
     }
 
+    // Color picker style settings
     const styles = reactCSS({
       default: {
         color: {
@@ -465,17 +495,8 @@ export default class EditGameForm extends React.Component {
       }
     });
 
-    return ReactDOM.createPortal(
+    return (
       <div className="fade-main">
-        <div className="sticky">
-          <span
-            id="closeEditGameFormX"
-            className="close"
-            onClick={this.handleView}
-          >
-            ×
-          </span>
-        </div>
         <div className="">
           <form id="gameEditForm" onSubmit={this.handleGameSave} />
           <form id="factionAddFrom" onSubmit={this.handleFactionAdd} />
@@ -687,7 +708,7 @@ export default class EditGameForm extends React.Component {
               updateFlagbox={this.updateFlagbox}
               deleteFlagbox={this.deleteFlagbox}
               flagboxlocations={this.state.objectivePoints}
-              gameId={this.props.gameId}
+              gameId={this.state.gameId}
             />
           </Map>
           <br />
@@ -702,10 +723,21 @@ export default class EditGameForm extends React.Component {
           <button id="editGameSubmitButton" type="submit" form="gameEditForm">
             Save changes
           </button>
+          <button
+            id="editGameBackToGameButton"
+            onClick={this.handleBackToGameClick}
+          >
+            Back to game
+          </button>
+          <button
+            id="editGameGameSelectionButton"
+            onClick={this.handleGameSelectionClick}
+          >
+            Game selection
+          </button>
           <h2>{this.state.errorMsg}</h2>
         </div>
-      </div>,
-      document.getElementById("form")
+      </div>
     );
   }
 }

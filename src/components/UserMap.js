@@ -180,7 +180,6 @@ class UserMap extends Component {
           drawings={this.state.drawings}
           flagboxes={this.state.flagboxes}
           sendGeoJSON={this.sendGeoJSON}
-          geoJSONLayer={this.state.geoJSONLayer}
           currentGameId={this.props.currentGameId}
           role={this.props.role}
         />
