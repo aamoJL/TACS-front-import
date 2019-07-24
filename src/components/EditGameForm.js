@@ -497,17 +497,17 @@ export default class EditGameForm extends React.Component {
 
     return (
       <div className="fade-main">
-        <div className="">
-          <form id="gameEditForm" onSubmit={this.handleGameSave} />
-          <form id="factionAddFrom" onSubmit={this.handleFactionAdd} />
-          <form id="gameDeletionForm" onSubmit={this.handleGameDeletion} />
-          <form
-            id="objectivePointAddFrom"
-            onSubmit={this.handleObjectivePointAdd}
-          />
+        <form id="gameEditForm" onSubmit={this.handleGameSave} />
+        <form id="factionAddFrom" onSubmit={this.handleFactionAdd} />
+        <form id="gameDeletionForm" onSubmit={this.handleGameDeletion} />
+        <form
+          id="objectivePointAddFrom"
+          onSubmit={this.handleObjectivePointAdd}
+        />
 
-          <h1>Game Editor</h1>
-          <br />
+        <h1 className="edit-game-title">Game Editor</h1>
+        <div className="edit-game-container">
+          <label>Name:</label>
           <input
             placeholder="Game name"
             name="gamename"
@@ -517,7 +517,7 @@ export default class EditGameForm extends React.Component {
             form="gameEditForm"
             required
           />
-          <br />
+          <label>Description:</label>
           <input
             placeholder="Description"
             type="text"
@@ -528,7 +528,6 @@ export default class EditGameForm extends React.Component {
             form="gameEditForm"
             required
           />
-          <br />
           <label className="">Start:</label>
           <input
             className="formDate"
@@ -550,7 +549,6 @@ export default class EditGameForm extends React.Component {
             form="gameEditForm"
             required
           />
-          <br />
           <label className="">End:</label>
           <input
             className="formDate"
@@ -573,10 +571,7 @@ export default class EditGameForm extends React.Component {
             form="gameEditForm"
             required
           />
-          <br />
-          <br />
           <label>Factions</label>
-          <br />
           <input
             id="editGameFactionNameInput"
             name="factionNameInput"
@@ -629,10 +624,7 @@ export default class EditGameForm extends React.Component {
             Add
           </button>
           <ul>{factions}</ul>
-          <br />
-          <br />
           <label>Objective points</label>
-          <br />
           <input
             id="editGameObjectivePointDescriptionInput"
             name="objectivePointDescriptionInput"
@@ -660,11 +652,7 @@ export default class EditGameForm extends React.Component {
             Add
           </button>
           <ul>{objectivePoints}</ul>
-          <br />
-          <br />
           <label>Node things (set if objective points are in the game)</label>
-          <br />
-          <br />
           <label className="" form="gameEditForm">
             Capture time:
           </label>
@@ -685,58 +673,54 @@ export default class EditGameForm extends React.Component {
             form="gameEditForm"
             onChange={this.handleChange}
           />
-          <br />
-          <br />
-          <label>Map things</label>
-          <br />
-          <Map
-            id="editGameCenterMap"
-            className=""
-            center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
-            zoom={this.state.zoom}
-            maxZoom="13"
-            style={{ height: "400px", width: "400px" }}
-            onmoveend={e => this.setState({ mapCenter: e.target.getCenter() })}
-            onzoomend={e => this.setState({ zoom: e.target.getZoom() })}
-          >
-            <TileLayer
-              attribution="Maanmittauslaitoksen kartta"
-              url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
-            />
-            <EditGameFormToolbar
-              pushFlagbox={this.pushFlagbox}
-              updateFlagbox={this.updateFlagbox}
-              deleteFlagbox={this.deleteFlagbox}
-              flagboxlocations={this.state.objectivePoints}
-              gameId={this.state.gameId}
-            />
-          </Map>
-          <br />
-          <button
-            id="editGameDeleteGameButton"
-            style={{ backgroundColor: "red" }}
-            type="submit"
-            form="gameDeletionForm"
-          >
-            Delete
-          </button>
-          <button id="editGameSubmitButton" type="submit" form="gameEditForm">
-            Save changes
-          </button>
-          <button
-            id="editGameBackToGameButton"
-            onClick={this.handleBackToGameClick}
-          >
-            Back to game
-          </button>
-          <button
-            id="editGameGameSelectionButton"
-            onClick={this.handleGameSelectionClick}
-          >
-            Game selection
-          </button>
-          <h2>{this.state.errorMsg}</h2>
         </div>
+        <label>Map things</label>
+        <Map
+          id="editGameCenterMap"
+          className=""
+          center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
+          zoom={this.state.zoom}
+          maxZoom="13"
+          style={{ height: "400px", width: "400px" }}
+          onmoveend={e => this.setState({ mapCenter: e.target.getCenter() })}
+          onzoomend={e => this.setState({ zoom: e.target.getZoom() })}
+        >
+          <TileLayer
+            attribution="Maanmittauslaitoksen kartta"
+            url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+          />
+          <EditGameFormToolbar
+            pushFlagbox={this.pushFlagbox}
+            updateFlagbox={this.updateFlagbox}
+            deleteFlagbox={this.deleteFlagbox}
+            flagboxlocations={this.state.objectivePoints}
+            gameId={this.state.gameId}
+          />
+        </Map>
+        <button
+          id="editGameDeleteGameButton"
+          style={{ backgroundColor: "red" }}
+          type="submit"
+          form="gameDeletionForm"
+        >
+          Delete
+        </button>
+        <button id="editGameSubmitButton" type="submit" form="gameEditForm">
+          Save changes
+        </button>
+        <button
+          id="editGameBackToGameButton"
+          onClick={this.handleBackToGameClick}
+        >
+          Back to game
+        </button>
+        <button
+          id="editGameGameSelectionButton"
+          onClick={this.handleGameSelectionClick}
+        >
+          Game selection
+        </button>
+        <h2>{this.state.errorMsg}</h2>
       </div>
     );
   }

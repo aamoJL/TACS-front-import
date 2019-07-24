@@ -793,6 +793,7 @@ div.login h1 {
 }
 /* Draggable */
 
+<<<<<<< Updated upstream
 /* .draggableContainer {
   border-radius: 999;
 
@@ -800,3 +801,24 @@ div.login h1 {
   bottom: 50%;
   right: 50%;
 } */
+=======
+.edit-game-container {
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  width: 50%;
+}
+
+.edit-game-container > * {
+  margin: 5px 10%;
+  max-width: 400px;
+}
+
+.edit-game-title {
+  display: flex;
+  justify-content: center;
+  margin: 2%;
+}
+
+/* VANHAA */
+>>>>>>> Stashed changes
