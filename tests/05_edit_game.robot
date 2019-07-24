@@ -24,4 +24,5 @@ Valid Login
     Input Username      ${VALID USER}
     Input Password      ${VALID PASSWORD}
     Submit Credentials Login
+    Log  logged in
 

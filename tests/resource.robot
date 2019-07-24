@@ -443,7 +443,7 @@ Select Game
     Log                 Game Selected
 
 Edit Game Time
-    Wait Until Page Contains Element        id=editGameButton      5
+    Wait Until Page Contains Element        id=editGameButton
     Click Button    ${B_EDITGAME}
     Input Text      ${I_EGAMENAME}   ${VALID_GAME}  #test_bINk5V
     Log             GameName edited
