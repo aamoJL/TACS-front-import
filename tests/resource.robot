@@ -55,15 +55,16 @@ ${I_ESTARTTIME}     id=editGameTimeStartInput
 
 ${I_EGAMESTOP}      id=editGameDateEndInput
 ${I_ESTOPTIME}      id=editGameTimeEndInput
-${I_FACTIONNAME}    id=factionNameInput
-${I_FACTIONPASS}    id=factionPasswordInput
+${I_FACTIONNAME}    id=editGameFactionNameInput
+${I_FACTIONPASS}    id=editGameFactionPasswordInput
 ${B_FACTIONADD}     id=editGameFactionSubmitButton
 
-${I_FLAGNAME}       id=objectivePointDescriptionInput
-${I_FLAGMULTI}      id=objectivePointMultiplierInput
+${I_FLAGNAME}       id=editGameObjectivePointDescriptionInput
+${I_FLAGMULTI}      id=editGameObjectivePointMultiplierInput
 ${B_FLAGADD}        id=editGameObjectivePointSubmitButton
-${I_CAPTURE}        id=captureTimeInput
-${I_CONF}           id=confirmationTimeInput
+${I_CAPTURE}        id=editGameCaptureTimeInput
+${I_CONF}           id=editGameConfirmationTimeInput
+
 
 ${B_ESUBMIT}        id=editGameSubmitButton
 ${B_EDELETE}        id=editGameDeleteGameButton
@@ -75,6 +76,11 @@ ${ALLFACTIONS}      Every faction
 ## Game List
 ${B_GAMESELECT}     id=selectGameButton
 ${testit}           css=button[id^="selecttest_"]
+
+## Join Game
+${B_JOINGAME}       id=joinGameButton
+${L_SELECTFACTION}  id=selectFactionList
+${B_JOINSUBMIT}     id=joinGameSubmitButton
 
 *** Keywords ***
 
@@ -546,6 +552,28 @@ Generate Game End Date And Time
     Set Global Variable     ${END}        ${enddate}
     Set Global Variable     ${ENDDATE}    ${date}
     Set Global Variable     ${ENDTIME}    ${time}
+
+#
+# JOIN GAME AND FACTION
+#
+
+
+Generate Player Username     #Generates new username for every test rotation in gitlab. Used in test suite 10.
+    ${playername} =     Generate Random String      12       [LETTERS][NUMBERS]
+    [Return]            ${playername}
+
+Input Player Username        #Inputs the generated valid username for login. (Test suite 00)
+    [Arguments]     ${playername}
+    Input Text      ${LOC_USER}        ${playername}
+
+Join Game
+    [Arguments]     ${faction}  ${password}
+    Click Button    ${B_JOINGAME}
+    Select From List By Label           ${L_SELECTFACTION}  ${faction}
+    Input Text      ${I_FACTIONPASS}    ${password}
+    Click Button    ${B_JOINSUBMIT}
+    Handle Alert
+
 
 Log
     [Arguments]     ${x}
