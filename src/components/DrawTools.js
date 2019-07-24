@@ -99,10 +99,17 @@ class DrawTools extends Component {
     initialTextSetup(drawing, text);
     // blur event listener can't be given straight to a layer
     // getting element by ID and adding an event listener to the element
+    drawing.on("click", this.checkDeleteModeStatus.bind(this, drawing));
     document
       .getElementById(drawing._leaflet_id)
       // can't put functions straight, as it calls the function
       .addEventListener("blur", this.checkTextOnBlur.bind(this, drawing));
+  };
+
+  checkDeleteModeStatus = drawing => {
+    if (this.state.deleteModeActive === true) {
+      drawing._map.dragging.enable();
+    }
   };
 
   // send drawing to database when it's created
@@ -191,6 +198,7 @@ class DrawTools extends Component {
   // used to deny component update when deleting is active
   _onDeleteStart = () => {
     this.setState({ deleteModeActive: true });
+    console.log(this.state.deleteModeActive);
   };
 
   _onDeleteStop = () => {

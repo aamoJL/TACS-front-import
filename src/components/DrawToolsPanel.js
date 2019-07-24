@@ -126,10 +126,10 @@ class DrawToolsPanel extends Component {
         onCreated={this.props.onCreated}
         onEdited={this.props.onEdited}
         onDeleted={this.props.onDeleted}
-        onEditStart={this.props.onEditDeleteStart}
-        onDeleteStart={this.props.onEditDeleteStart}
-        onEditStop={this.props.onEditDeleteStop}
-        onDeleteStop={this.props.onEditDeleteStop}
+        onEditStart={this.props.onEditStart}
+        onDeleteStart={this.props.onDeleteStart}
+        onEditStop={this.props.onEditStop}
+        onDeleteStop={this.props.onDeleteStop}
       />
     );
   }
