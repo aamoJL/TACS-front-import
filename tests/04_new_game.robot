@@ -18,9 +18,8 @@ Create A New Game
 #   USE THE COMMENTED VARIABLES WHEN RUNNING ALL TESTS
 #
 Valid Login
-#    Input Username      ville   # ${VALID USER}
-    Input Username      ${VALID USER}
-    Input Password      ${VALID PASSWORD}
+    Input Username      ville   # ${VALID USER}
+    Input Password      koira   # ${VALID PASSWORD}
     Submit Credentials Login
 
 Refresh Browser
