@@ -793,7 +793,6 @@ div.login h1 {
 }
 /* Draggable */
 
-<<<<<<< Updated upstream
 /* .draggableContainer {
   border-radius: 999;
 
@@ -801,16 +800,21 @@ div.login h1 {
   bottom: 50%;
   right: 50%;
 } */
-=======
 .edit-game-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   left: 0;
-  width: 50%;
 }
 
-.edit-game-container > * {
+.edit-game-inner-container {
+  display: flex;
+  flex-direction: column;
+  width: 33%;
+}
+
+.edit-game-inner-container > * {
   margin: 5px 10%;
+  padding: 5px;
   max-width: 400px;
 }
 
@@ -820,5 +824,35 @@ div.login h1 {
   margin: 2%;
 }
 
+.edit-game-color-picker {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  padding: "5px";
+  border-radius: "1px";
+  box-shadow: "0 0 0 1px rgba(0,0,0,.1)";
+  cursor: "pointer";
+}
+
+.edit-game-color-picker-button {
+  margin: 5px;
+  padding: 0 10px;
+}
+
+.edit-game-faction-color {
+  display: flex;
+  flex-direction: row;
+}
+
+.edit-game-form-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 50px;
+}
+
+.edit-game-form-buttons > * {
+  margin: 10px;
+  padding: 5px;
+}
+
 /* VANHAA */
->>>>>>> Stashed changes
