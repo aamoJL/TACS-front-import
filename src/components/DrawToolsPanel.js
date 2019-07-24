@@ -23,8 +23,8 @@ export const flagboxIcon = (ownerColour, capturing) => {
     html: L.Util.template(CreateFlagboxSvg(ownerColour, capturing)),
     className: capturing === 2 ? "capturing-flagbox" : "captured-flagbox",
     iconSize: [75, 75],
-    iconAnchor: [-20, 55],
-    popupAnchor: [40, -55]
+    iconAnchor: [18, 100],
+    popupAnchor: [0, -100]
   });
 };
 
@@ -32,20 +32,21 @@ export const playerIcon = (type, colour) => {
   return L.divIcon({
     html: L.Util.template(CreateIconSVG(1, type, colour)),
     className: "player-marker",
-    iconSize: [100, 100],
-    iconAnchor: [30, 40],
-    popupAnchor: [0, -75]
+    iconSize: [100, 40],
+    iconAnchor: [50, 20],
+    popupAnchor: [0, -20]
   });
 };
 
 export const clusterIcon = cluster => {
+  cluster.options.riseOnHover = true;
   let markers = cluster.getAllChildMarkers();
   let colour = markers[0] ? markers[0].options.colour : "#1d1d1b";
   let type = markers[0] ? markers[0].options.clusterIcon : "infantry.svg";
   return L.divIcon({
     html: L.Util.template(CreateIconSVG(cluster.getChildCount(), type, colour)),
     className: "cluster-marker",
-    iconSize: L.point(100, 100, true)
+    iconSize: L.point(100, 40, true)
   });
 };
 
