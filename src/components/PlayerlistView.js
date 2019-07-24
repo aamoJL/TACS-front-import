@@ -78,6 +78,7 @@ export default class PlayerlistView extends React.Component {
         cancel=".input-cancel-drag"
       >
         <div className="tasklist">
+          <h1>Playerlist</h1>
           <button
             id="closePlayerlistX"
             className="close"
@@ -85,7 +86,10 @@ export default class PlayerlistView extends React.Component {
           >
             x
           </button>
-          <div className="task-items-container">{factionlistItems}</div>
+
+          <div className="task-items-container input-cancel-drag">
+            {factionlistItems}
+          </div>
         </div>
       </Draggable>,
       document.getElementById("tasklist")

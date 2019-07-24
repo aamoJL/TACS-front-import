@@ -791,15 +791,7 @@ div.login h1 {
   padding: 5px;
   margin: 5px;
 }
-/* Draggable */
 
-/* .draggableContainer {
-  border-radius: 999;
-
-  position: absolute;
-  bottom: 50%;
-  right: 50%;
-} */
 .edit-game-container {
   display: flex;
   flex-direction: row;
