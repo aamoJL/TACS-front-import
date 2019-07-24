@@ -775,6 +775,7 @@ div.login h1 {
   right: 50%;
   margin: auto;
   z-index: 2020;
+  min-width: 260px;
   background-color: #1d1d1b;
   color: #ffffff;
 }
