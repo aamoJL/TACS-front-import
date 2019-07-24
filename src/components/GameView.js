@@ -202,6 +202,7 @@ export default class GameView extends React.Component {
                   gameId={this.state.gameInfo.id}
                   role={this.state.role}
                   factions={this.state.gameInfo.factions}
+                  socketSignal={this.state.socketSignal}
                 />
               )}
               {this.state.role === "admin" && (
