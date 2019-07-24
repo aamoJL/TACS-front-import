@@ -77,7 +77,11 @@ ${testit}           css=button[id^="selecttest_"]
 ## Join Game
 ${B_JOINGAME}       id=joinGameButton
 ${L_SELECTFACTION}  id=selectFactionList
+${I_JOINPASS}       id=factionPasswordInput
 ${B_JOINSUBMIT}     id=joinGameSubmitButton
+
+## Promote
+${B_SHOWPLAYERS}    id=showPlayersButton
 
 *** Keywords ***
 
@@ -125,7 +129,7 @@ Wait For Log Out Button To Appear       #not in use
 
 #Registration
 Open Registration
-    Click Button        id=openRegisterFormButton
+    Click Button        id=loginRegisterButton
 
 Generate Valid Username     #Generates new username for every test rotation in gitlab. Used in test suite 00.
     ${GENE_username} =      Generate Random String      12       [LETTERS][NUMBERS]
@@ -460,7 +464,7 @@ Save Game
 
     Click Button        ${B_ESUBMIT}
     Alert Should Be Present     text=Game updated     action=ACCEPT       timeout=None
-    Click Element        ${E_ECLOSE}
+#    Click Element       ${E_ECLOSE}
 #    Handle Alert
 
 Generate Valid Gamename     #Generates new name for every test rotation in gitlab. Used in test suite xx.
@@ -508,14 +512,16 @@ Generate Game End Date And Time
 
 #
 # JOIN GAME AND FACTION
+# PROMOTE
 #
 
-
-Generate Player Username     #Generates new username for every test rotation in gitlab. Used in test suite 10.
+#Generates new username for every test rotation in gitlab. Used in test suite join_game
+Generate Player Username
     ${playername} =     Generate Random String      12       [LETTERS][NUMBERS]
     [Return]            ${playername}
 
-Input Player Username        #Inputs the generated valid username for login. (Test suite 00)
+#Inputs the generated valid username for login. (Test suite join_game)
+Input Player Username
     [Arguments]     ${playername}
     Input Text      ${LOC_USER}        ${playername}
 
@@ -523,9 +529,16 @@ Join Game
     [Arguments]     ${faction}  ${password}
     Click Button    ${B_JOINGAME}
     Select From List By Label           ${L_SELECTFACTION}  ${faction}
-    Input Text      ${I_FACTIONPASS}    ${password}
+    Input Text      ${I_JOINPASS}       ${password}
     Click Button    ${B_JOINSUBMIT}
     Handle Alert
+
+Go To Players
+    Click Button    ${B_SHOWPLAYERS}
+
+Promote
+    ${x} =              Format String           select{}     ${VALID_GAME}
+    Click Button
 
 Log
     [Arguments]     ${x}
