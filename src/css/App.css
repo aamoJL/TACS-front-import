@@ -7,6 +7,23 @@ body {
   height: 100%;
 }
 
+/* Editing editable tooltips */
+.editable {
+  display: block;
+  cursor: text; /* the cursor icon doesn't change by default when hovering on top of the text; overriding */
+  min-width: 154px;
+  min-height: 18px;
+  color: #fff;
+  font-weight: bold;
+  /* text borders */
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.hidden {
+  display: none;
+}
+
 .login-text {
   position: absolute;
   font-size: 14px;

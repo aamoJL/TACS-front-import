@@ -10,13 +10,28 @@ class DrawTools extends Component {
     super(props);
     this.state = {
       editModeActive: false,
+      deleteModeActive: false,
+      flagboxes: [],
       timer: null
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     // disable re-rendering when edit mode is active
-    return !this.state.editModeActive;
+    if (
+      this.state.editModeActive === true ||
+      this.state.deleteModeActive === true
+    ) {
+      return false;
+    }
+
+    // don't render if the coming elements are same as the current elements
+    // stops focus loss in elements, i.e. textbox
+    if (nextProps.drawings === this.props.drawings) {
+      return false;
+    }
+
+    return true;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -26,10 +41,6 @@ class DrawTools extends Component {
         timer: setInterval(this.animation, 2000)
       });
     }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.state.timer);
   }
 
   sleep = ms => {
@@ -46,14 +57,58 @@ class DrawTools extends Component {
           boxes[i].style.height = "100px";
           boxes[i].style.marginLeft = "-47px";
           boxes[i].style.marginTop = "-77px";
+          boxes[i].style.borderRadius = "0%";
+          boxes[i].style.backgroundColor = boxes[i].title;
           await this.sleep(400);
+          boxes[i].style.backgroundColor = "#ebd7d5";
           boxes[i].style.width = "75px";
           boxes[i].style.height = "75px";
           boxes[i].style.marginLeft = "-47px";
           boxes[i].style.marginTop = "-77px";
+          boxes[i].style.borderRadius = "50%";
           await this.sleep(400);
         }
       }
+    }
+  };
+
+  checkTextOnBlur = drawing => {
+    let text = drawing._tooltip._container.innerText;
+
+    // compare old text with new text; if text has changed, send new textbox to database
+    if (text !== drawing.options.oldText) {
+      let data = DrawingFormatter["textbox"](drawing);
+
+      let obj = {
+        gameId: this.props.currentGameId,
+        mapDrawingId: drawing.options.id,
+        drawingIsActive: true,
+        data: data
+      };
+      this.props.sendGeoJSON(obj);
+
+      // if textbox is newly created, remove the added element to make way for the one fetched
+      if (!drawing.options.id) {
+        drawing._icon.outerHTML = "";
+        drawing._tooltip._container.outerHTML = "";
+      }
+    }
+  };
+
+  textboxSetup = (drawing, text) => {
+    initialTextSetup(drawing, text);
+    // blur event listener can't be given straight to a layer
+    // getting element by ID and adding an event listener to the element
+    drawing.on("click", this.checkDeleteModeStatus.bind(this, drawing));
+    document
+      .getElementById(drawing._leaflet_id)
+      // can't put functions straight, as it calls the function
+      .addEventListener("blur", this.checkTextOnBlur.bind(this, drawing));
+  };
+
+  checkDeleteModeStatus = drawing => {
+    if (this.state.deleteModeActive === true) {
+      drawing._map.dragging.enable();
     }
   };
 
@@ -68,14 +123,7 @@ class DrawTools extends Component {
     // e has property _tooltip after first setup => skip this if
     // more information in DrawingFormatter
     if (e.layerType === "textbox" && !e.layer._tooltip) {
-      initialTextSetup(e);
-      console.log(e);
-      // blur event listener can't be given straight to a layer
-      // getting element by ID and adding an event listener to the element
-      document
-        .getElementById(e.layer._leaflet_id)
-        // can't put functions straight, as it calls the function
-        .addEventListener("blur", this._onCreated.bind(this, e));
+      this.textboxSetup(e.layer, "");
       document.getElementById(e.layer._leaflet_id).focus();
       return;
     }
@@ -88,7 +136,17 @@ class DrawTools extends Component {
       data: data
     };
     this.props.sendGeoJSON(obj);
-    e.layer.remove();
+
+    // removing drawn elements because new elements are fetched and drawn again on top
+    // removing markers and textboxes with e.layer.remove() doesn't remove them completely;
+    // they still linger in the source code and disables the edit functionality due to error.
+    // removing HTML elements of both to make them invisible
+    if (e.layerType === "marker") {
+      e.layer._icon.outerHTML = "";
+      e.layer._shadow.outerHTML = "";
+    } else {
+      e.layer.remove();
+    }
   };
 
   // save edit changes to db
@@ -130,11 +188,21 @@ class DrawTools extends Component {
   };
 
   // used to deny component update when editing is active
-  _onEditDeleteStart = () => {
+  _onEditStart = () => {
     this.setState({ editModeActive: true });
   };
-  _onEditDeleteStop = () => {
+  _onEditStop = () => {
     this.setState({ editModeActive: false });
+  };
+
+  // used to deny component update when deleting is active
+  _onDeleteStart = () => {
+    this.setState({ deleteModeActive: true });
+    console.log(this.state.deleteModeActive);
+  };
+
+  _onDeleteStop = () => {
+    this.setState({ deleteModeActive: false });
   };
 
   // Second DrawLeafletObjects is outside of FeatureGroup to deny editing
@@ -148,14 +216,16 @@ class DrawTools extends Component {
               onCreated={this._onCreated}
               onEdited={this._onEdited}
               onDeleted={this._onDeleted}
-              onEditStart={this._onEditDeleteStart}
-              onDeleteStart={this._onEditDeleteStart}
-              onEditStop={this._onEditDeleteStop}
-              onDeleteStop={this._onEditDeleteStop}
-              sendGeoJSON={this.props.sendGeoJSON}
+              onEditStart={this._onEditStart}
+              onDeleteStart={this._onDeleteStart}
+              onEditStop={this._onEditStop}
+              onDeleteStop={this._onDeleteStop}
             />
           )}
-          <DrawLeafletObjects drawings={this.props.drawings} />
+          <DrawLeafletObjects
+            drawings={this.props.drawings}
+            textboxSetup={this.textboxSetup}
+          />
         </FeatureGroup>
         <DrawLeafletObjects drawings={this.props.flagboxes} />
       </React.Fragment>

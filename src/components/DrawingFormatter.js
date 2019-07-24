@@ -43,7 +43,7 @@ const textFormat = data => {
   // workaround as tooltip._content does not exist when deleting textbox
   let text = data._tooltip._content
     ? data._tooltip._content.innerText
-    : data._tooltip._container.innderText;
+    : data._tooltip._container.innerText;
   return {
     type: "textbox",
     coordinates: [data._latlng.lat, data._latlng.lng],
@@ -68,48 +68,51 @@ var DrawingFormatter = {
   flagbox: flagboxFormat
 };
 
-export const initialTextSetup = e => {
+export const initialTextSetup = (layer, text) => {
   // have to create tooltip as a DOM element to allow text selecting. maybe
   let tooltip = L.DomUtil.create("div", "editable");
   // need ids for tooltips to be able to add a blur event to them
   tooltip.innerHTML =
     '<div contenteditable="true" placeholder="Click out to save" id="' +
-    e.layer._leaflet_id +
-    '"></div>';
-  e.layer.bindTooltip(tooltip, {
+    layer._leaflet_id +
+    '">' +
+    text +
+    "</div>";
+  layer.bindTooltip(tooltip, {
     permanent: true,
     direction: "bottom",
     interactive: true
   });
   // disable dragging when cursor is over marker (tooltip)
   // clicking on tooltip fires the marker's click handler, hence e.layer.on
-  e.layer.on("mouseover", function() {
-    e.layer._map.dragging.disable();
+  layer.on("mouseover", function() {
+    layer._map.dragging.disable();
   });
   // enable dragging again when cursor is out of marker (tooltip)
-  e.layer.on("mouseout", function() {
-    e.layer._map.dragging.enable();
+  layer.on("mouseout", function() {
+    layer._map.dragging.enable();
   });
   // show placeholder text again upon emptying textbox
-  e.layer.on("keyup", function() {
+  layer.on("keyup", function() {
     // when the text area is emptied, a <br> appears
     // manually removing it so that the placeholder text can show
     if (
       tooltip.innerHTML ===
         '<div placeholder="Click out to save" contenteditable="true" id ="' +
-          e.layer._leaflet_id +
+          layer._leaflet_id +
           "><br></div>" ||
       tooltip.innerHTML ===
         '<div placeholder="Click out to save" contenteditable="true" id ="' +
-          e.layer._leaflet_id +
+          layer._leaflet_id +
           "><div><br></div></div>"
     ) {
       tooltip.innerHTML =
         '<div placeholder="Click out to save" contenteditable="true" id ="' +
-        e.layer._leaflet_id +
+        layer._leaflet_id +
         "></div>";
     }
   });
+  layer.options.oldText = text;
   return;
 };
 
