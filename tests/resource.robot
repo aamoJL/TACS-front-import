@@ -86,6 +86,8 @@ ${B_JOINSUBMIT}     id=joinGameSubmitButton
 
 ## Promote
 ${B_SHOWPLAYERS}    id=showPlayersButton
+${B_CLOSEPLAYERS}   id=closePlayerlistX
+@{PLAYERS}
 *** Keywords ***
 
 #Valid Login
@@ -434,8 +436,8 @@ Create Game
     Handle Alert
 
 Select Game
-    ${x} =              Format String           select{}     ${VALID_GAME}
-    Wait Until Page Contains Element        id=${x}     1
+    ${x} =              Format String           select{}    ${VALID_GAME}
+    Wait Until Page Contains Element            id=${x}     1
     Click Button        id=${x}
     Log                 Game Selected
 
@@ -472,15 +474,10 @@ Edit Objective Points
     Input Text      ${I_FLAGNAME}       1234567
     Input Text      ${I_FLAGMULTI}      3
     Click Button    ${B_FLAGADD}
-
-#    Input Text      ${I_CAPTURE}        240
-#    Input Text      ${I_CONF}           30
+    Input Text      ${I_CAPTURE}        240
+    Input Text      ${I_CONF}           30
 
 Save Game
-    # Joku vika
-    #Press Keys          None    PAGE_DOWN
-    #Submit Form
-
     Click Button        ${B_ESUBMIT}
     Alert Should Be Present     text=Game updated     action=ACCEPT       timeout=None
 
@@ -536,9 +533,11 @@ Generate Game End Date And Time
 #Generates new username for every test rotation in gitlab. Used in test suite join_game
 Generate Player Username
     ${playername} =     Generate Random String      12       [LETTERS][NUMBERS]
-    Create A List       PLAYERS
-    Append To List      @{PLAYERS}  ${playername}
-    Log                 @{PLAYERS}
+
+    ${length} =         Get Length  ${PLAYERS}
+    Run Keyword If      ${length} == 0  Create Players List
+    Append To List      ${PLAYERS}  ${playername}
+    Log                 ${PLAYERS}
     [Return]            ${playername}
 
 #Inputs the generated valid username for login. (Test suite join_game)
@@ -558,13 +557,24 @@ Go To Players
     Click Button    ${B_SHOWPLAYERS}
 
 Promote
-    ${x} =              Format String           select{}     ${VALID_GAME}
-    Click Button
+    :FOR    ${i}    IN  @{PLAYERS}
+    \   ${b_edit} =         Format String   playerCardEditButton{}  ${i}
+    \   ${l_select} =       Format String   playerCardRoleSelect{}  ${i}
+    \   ${b_save} =         Format String   playerCardSaveButton{}  ${i}
+    \
+    \   Click Button                ${b_edit}
+    \   Select From List By Label   ${l_select}     Faction Leader
+    \   Click Button                ${b_save}
+    \
+    \   Handle Alert
+    \   Handle Alert
 
-Create A List
-    [Arguments]             ${listname}
-    @{${listname}} =        Create List
-    Set Global Variable     @{${listname}}      @{${listname}}
+Create Players List
+    @{x} =                  Create List
+    Set Global Variable     @{PLAYERS}      @{x}
+    ${type} =   Evaluate    type($PLAYERS)
+    Log     ${type}
+
 
 
 Log
