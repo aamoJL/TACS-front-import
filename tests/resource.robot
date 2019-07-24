@@ -304,7 +304,7 @@ Write Text
     Click Element At Coordinates    css=div[class=leaflet-control-container]        100        300
     Input Text      css=div[placeholder="Click out to save"]        Hello
     Click Element At Coordinates    css=div[class=leaflet-control-container]        100        400
-    Element Text Should Be      css=div[placeholder="Click out to save"]        Hello       #Tarkistaa onko teksti oikein.
+    Element Text Should Be      css=div[placeholder="Click out to save"]        Hello       #Checks that the text is right.
     Sleep       2
 
     Click Element       css=a[class=leaflet-draw-draw-textbox]
@@ -413,7 +413,7 @@ Delete Completed Task
 #   Valid name 3-30 / Desc 1 - 255
 
 Create Game
-    Wait Until Page Contains Element        id=newGameButton      5
+    Wait Until Page Contains Element        id=newGameButton      1
     Generate Valid Gamename
     Click Button    ${B_NEWGAME}
     Input Text      ${I_NGAMENAME}   ${VALID_GAME}
@@ -438,12 +438,12 @@ Create Game
 
 Select Game
     ${x} =              Format String           select{}    ${VALID_GAME}
-    Wait Until Page Contains Element            id=${x}     5
+    Wait Until Page Contains Element            id=${x}     1
     Click Button        id=${x}
     Log                 Game Selected
 
 Edit Game Time
-    Wait Until Page Contains Element        id=editGameButton
+    Wait Until Page Contains Element        id=editGameButton      1
     Click Button    ${B_EDITGAME}
     Input Text      ${I_EGAMENAME}   ${VALID_GAME}  #test_bINk5V
     Log             GameName edited
@@ -587,16 +587,24 @@ Log
 #
 
 Delete Game
-    Click Button       ${testit}
     Click Button       ${B_EDITGAME}
     Click Button       ${B_EDELETE}
     Alert Should Be Present     text=Are you sure you want to delete this game     action=ACCEPT       timeout=None
     Alert Should Be Present     text=Game deleted     action=ACCEPT       timeout=None
     Alert Should Be Present     text=Game not found     action=ACCEPT       timeout=None
 
-Check If Any Test Games
-    ${status}       ${value} =      Run Keyword And Ignore Error        Page Should Contain Button     ${testit}
-    [Return]        ${status}
+
+#Delete Game         #FOR LOOP VERSION
+#    Click Button       ${testit}
+#    Click Button       ${B_EDITGAME}
+#    Click Button       ${B_EDELETE}
+#    Alert Should Be Present     text=Are you sure you want to delete this game     action=ACCEPT       timeout=None
+#    Alert Should Be Present     text=Game deleted     action=ACCEPT       timeout=None
+#    Alert Should Be Present     text=Game not found     action=ACCEPT       timeout=None
+#
+#Check If Any Test Games
+#    ${status}       ${value} =      Run Keyword And Ignore Error        Page Should Contain Button     ${testit}
+#    [Return]        ${status}
 
 
 
