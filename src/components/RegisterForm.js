@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../icons/tacs-logo-neg.png";
 import { Link } from "react-router-dom";
 
 export class RegisterForm extends React.Component {
@@ -66,50 +67,74 @@ export class RegisterForm extends React.Component {
   // UNCOMMENT "REQUIRED" FOR PRODUCTION
   render() {
     return (
-      <div className="fade-main">
-        <div className="login">
-          <form onSubmit={this.handleRegister}>
-            <h1>Register</h1>
-            <br />
-            <input
-              id="registerUsernameInput"
-              placeholder="Enter Username"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleChange}
-              id="registerUsernameInput"
-              autoFocus
-              //required
-            />
-            <br />
-            <input
-              id="registerPasswordInput"
-              placeholder="Enter password"
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-              id="registerPasswordInput"
-            />
-            <br />
-            <input
-              id="registerPasswordVerifyInput"
-              placeholder="Verify password"
-              type="password"
-              name="password2"
-              value={this.state.password2}
-              onChange={this.handleChange}
-              id="registerPasswordVerifyInput"
-            />
-            <br />
-            <button id="submitRegisterButton" type="submit">
-              Submit
-            </button>
-            <h2>{this.state.errorMsg}</h2>
-          </form>
-          <Link to="/">
-            <button id="openLoginFormButton">Login</button>
-          </Link>
+      <div className="container">
+        <div className="row">
+          <div className="d-flex flexbox-container flex-fill justify-content-around">
+            <img className="tacs-logo-neg" src={logo} alt="TACS Logo" />
+          </div>
+        </div>
+        <div className="row">
+          <div className="d-flex flexbox-container flex-fill justify-content-center text-center">
+            <div className="tacs-register">
+              <form onSubmit={this.handleRegister}>
+                <p className="register-text">Register</p>
+                <br />
+                <input
+                  className="form-control1"
+                  placeholder="Enter username"
+                  name="username"
+                  value={this.state.username}
+                  onChange={this.handleChange}
+                  autoFocus
+                  required
+                />
+                <br />
+                <input
+                  className="form-control2"
+                  placeholder="Enter password"
+                  type="password"
+                  name="password"
+                  value={this.state.password}
+                  onChange={this.handleChange}
+                  required
+                />
+                <br />
+                <input
+                  className="form-control3"
+                  placeholder="Verify password"
+                  type="password"
+                  name="password2"
+                  value={this.state.password2}
+                  onChange={this.handleChange}
+                  required
+                />
+                <br />
+
+                <button
+                  className="btn btn-secondary"
+                  id="submitRegisterButton"
+                  type="submit"
+                >
+                  Register
+                </button>
+                {this.state.errorMsg && (
+                  <div className="d-flex flex-fill justify-content-center text-center">
+                    {this.state.errorMsg}
+                  </div>
+                )}
+              </form>
+              <br />
+              Back to
+              <Link to="/">
+                <p id="loginButton"> Login </p>
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="row copyright">
+          <div className="d-flex flex-fill justify-content-center text-center footer text-muted">
+            <div>&copy; 2019 TACS</div>
+          </div>
         </div>
       </div>
     );

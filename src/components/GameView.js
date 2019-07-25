@@ -2,14 +2,14 @@ import React from "react";
 import UserMap from "./UserMap";
 import TaskListButton from "./TaskListButton";
 import { Link } from "react-router-dom";
-import EditGameForm from "./EditGameForm";
 import JoinGameForm from "./JoinGameForm";
-import PlayerlistView from "./PlayerlistView";
-import NotificationView from "./NotificationView";
 import GameStateButtons from "./GameStateButtons";
 import ClientSocket from "./Socket";
 import NotificationPopup from "./NotificationPopup";
-import GameInfoView from "./GameInfoView";
+import ScoreCounter from "./ScoreCounter";
+import NotificationButton from "./NotificationButton";
+import AddScoreButton from "./AddScoreButton";
+import PlayerListButton from "./PlayerListButton";
 
 export default class GameView extends React.Component {
   state = {
@@ -68,7 +68,6 @@ export default class GameView extends React.Component {
 
   handleLeaveFaction = e => {
     let token = sessionStorage.getItem("token");
-    let error = false;
     fetch(
       `${process.env.REACT_APP_API_URL}/faction/leave/${
         this.state.gameInfo.id
@@ -97,33 +96,6 @@ export default class GameView extends React.Component {
       });
   };
 
-  handleLeaveFaction = e => {
-    if (window.confirm("Are you sure you want to leave your faction?")) {
-      let token = sessionStorage.getItem("token");
-      fetch(
-        `${process.env.REACT_APP_API_URL}/faction/leave/${
-          this.state.gameInfo.id
-        }`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: "Bearer " + token
-          }
-        }
-      )
-        .then(res => {
-          if (!res.ok) {
-          }
-          return res.json();
-        })
-        .then(res => {
-          alert(res.message);
-          this.getPlayerRole(this.state.gameInfo.id);
-        })
-        .catch(error => console.log(error));
-    }
-  };
-
   // setting the socket signal automatically fires shouldComponentUpdate function where socketSignal prop is present
   // setting socketSignal to null immediately after to avoid multiple database fetches
   getSocketSignal = data => {
@@ -146,86 +118,131 @@ export default class GameView extends React.Component {
   };
 
   render() {
-    console.log(this.state.gameInfo);
     const initialPosition = this.state.gameInfo
       ? [this.state.gameInfo.center.lat, this.state.gameInfo.center.lng]
       : null;
     return (
-      <div>
-        <Link to="/">
-          <button id="gameViewGameSelectionButton">Game selection</button>
-        </Link>
+      <div className="game-view-container">
         {this.state.gameInfo !== null && (
           <div>
-            {this.state.gameInfo.id && (
-              <ClientSocket
-                gameId={this.state.gameInfo.id}
-                getSocketSignal={this.getSocketSignal}
-                onSocketChange={this.onSocketChange}
-              />
-            )}
-            <div>Game Name: {this.state.gameInfo.name}</div>
-            {this.state.role === "" && (
-              <div>You don't have a role in this game</div>
-            )}
-            {this.state.role !== "" && (
-              <div>Your role in this game: {this.state.role}</div>
-            )}
-            {this.state.role === "admin" &&
-              this.state.gameInfo.state === "CREATED" && (
+            <ScoreCounter
+              gameId={this.state.gameInfo.id}
+              socketSignal={
+                this.state.socketSignal === null
+                  ? null
+                  : this.state.socketSignal.type
+              }
+            />
+            <div className="header">
+              {this.state.gameInfo !== null && (
+                <div>
+                  {this.state.gameInfo.id && (
+                    <ClientSocket
+                      gameId={this.state.gameInfo.id}
+                      getSocketSignal={this.getSocketSignal}
+                      onSocketChange={this.onSocketChange}
+                    />
+                  )}
+                </div>
+              )}
+              <div className="game-view-info-text">
+                Logged in as: {this.state.role === "" ? " -" : this.state.role}
+              </div>
+              <Link to="/">
+                <button id="gameViewGameSelectionButton">Game selection</button>
+              </Link>
+              {this.state.role === "admin" &&
+                this.state.gameInfo.state === "CREATED" && (
+                  <Link
+                    to={{
+                      pathname: "/edit/game",
+                      search: "?id=" + this.state.gameInfo.id
+                    }}
+                  >
+                    <button id="editGameButton">Edit</button>
+                  </Link>
+                )}
+              <Link
+                to={{
+                  pathname: "/info/game",
+                  search: "?id=" + this.state.gameInfo.id
+                }}
+              >
+                <button id="gameInfoButton">Game Info</button>
+              </Link>
+              {this.state.role === "" && (
                 <button
-                  id="editGameButton"
-                  onClick={() => this.setState({ form: "edit" })}
+                  id="joinGameButton"
+                  onClick={() => this.setState({ form: "join" })}
                 >
-                  Edit
+                  Join
                 </button>
               )}
-            <button
-              id="gameInfoButton"
-              onClick={() => this.setState({ form: "info" })}
-            >
-              Game Info
-            </button>
-            {this.state.role === "" && (
-              <button
-                id="joinGameButton"
-                onClick={() => this.setState({ form: "join" })}
-              >
-                Join
-              </button>
-            )}
-            <button
-              id="showPlayersButton"
-              onClick={() => this.setState({ form: "players" })}
-            >
-              Players
-            </button>
-            {this.state.role !== "" && (
-              <button
-                id="notificationsButton"
-                onClick={() => this.setState({ form: "notifications" })}
-              >
-                Notifications
-              </button>
-            )}
-            {this.state.role !== "" && (
-              <TaskListButton
-                gameId={this.state.gameInfo.id}
-                role={this.state.role}
-                factions={this.state.gameInfo.factions}
-              />
-            )}
-            {this.state.role !== "admin" && this.state.role !== "" && (
-              <button id="leaveFactionButton" onClick={this.handleLeaveFaction}>
-                Leave Faction
-              </button>
-            )}
-            {this.state.role === "admin" && (
-              <GameStateButtons
-                gameState={this.state.gameInfo.state}
-                gameId={this.state.gameInfo.id}
-              />
-            )}
+              {this.state.role !== "" && (
+                <NotificationButton
+                  gameId={this.state.gameInfo.id}
+                  socket={this.state.socket}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
+                />
+              )}
+              {this.state.role !== "" && (
+                <PlayerListButton
+                  gameId={this.state.gameInfo.id}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
+                />
+              )}
+              {this.state.role !== "" && (
+                <TaskListButton
+                  gameId={this.state.gameInfo.id}
+                  role={this.state.role}
+                  factions={this.state.gameInfo.factions}
+                  socketSignal={this.state.socketSignal}
+                />
+              )}
+              {this.state.role === "admin" && (
+                <AddScoreButton
+                  gameId={this.state.gameInfo.id}
+                  factions={this.state.gameInfo.factions}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
+                />
+              )}
+              {this.state.role !== "admin" && this.state.role !== "" && (
+                <button
+                  id="leaveFactionButton"
+                  onClick={this.handleLeaveFaction}
+                >
+                  Leave Faction
+                </button>
+              )}
+              {this.state.role === "admin" && (
+                <GameStateButtons
+                  gameState={this.state.gameInfo.state}
+                  gameId={this.state.gameInfo.id}
+                />
+              )}
+              {this.state.form === "join" && (
+                <JoinGameForm
+                  gameId={this.state.gameInfo.id}
+                  toggleView={() => this.setState({ form: "" })}
+                  onJoin={() => this.getPlayerRole(this.state.gameInfo.id)}
+                />
+              )}
+            </div>
             {initialPosition && (
               <UserMap
                 position={initialPosition}
@@ -238,49 +255,10 @@ export default class GameView extends React.Component {
                     : this.state.socketSignal.type
                 }
                 role={this.state.role}
+                gameState={this.state.gameInfo.state}
               >
                 <NotificationPopup socketSignal={this.state.socketSignal} />
               </UserMap>
-            )}
-            {this.state.form === "edit" && (
-              <EditGameForm
-                gameId={this.state.gameInfo.id}
-                toggleView={() => this.setState({ form: "" })}
-                onEditSave={() => this.getGameInfo(this.state.gameInfo.id)}
-              />
-            )}
-            {this.state.form === "join" && (
-              <JoinGameForm
-                gameId={this.state.gameInfo.id}
-                toggleView={() => this.setState({ form: "" })}
-                onJoin={() => this.getPlayerRole(this.state.gameInfo.id)}
-              />
-            )}
-            {this.state.form === "players" && (
-              <PlayerlistView
-                gameId={this.state.gameInfo.id}
-                role={this.state.role}
-                toggleView={() => this.setState({ form: "" })}
-              />
-            )}
-            {this.state.form === "notifications" && (
-              <NotificationView
-                gameId={this.state.gameInfo.id}
-                toggleView={() => this.setState({ form: "" })}
-                socket={this.state.socket}
-                role={this.state.role}
-                gameState={
-                  this.state.gameInfo !== undefined
-                    ? this.state.gameInfo.state
-                    : ""
-                }
-              />
-            )}
-            {this.state.form === "info" && (
-              <GameInfoView
-                gameInfo={this.state.gameInfo}
-                toggleView={() => this.setState({ form: "" })}
-              />
             )}
           </div>
         )}

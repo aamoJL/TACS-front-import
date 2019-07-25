@@ -5,21 +5,22 @@ export default class TaskListButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
-      // newTasks: 0
+      open: false,
+      newTasksCount: 0
     };
 
     this.handleClick = this.handleClick.bind(this);
   }
 
-  componentDidMount() {
-    this.getNewTask();
-  }
-
-  getNewTask() {
-    this.setState({
-      newTasks: this.state.open ? 0 : this.state.newTasks + 1
-    });
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.socketSignal !== null) {
+      if (prevProps.socketSignal.type === "task-update") {
+        console.log("task updated");
+        this.setState({
+          newTasksCount: this.state.open ? 0 : this.state.newTasksCount + 1
+        });
+      }
+    }
   }
 
   handleClick = e => {
@@ -28,11 +29,10 @@ export default class TaskListButton extends React.Component {
         open: !this.state.open
       },
       () => {
-        // Websocket task notification template
         // Set new task cout to zero when the tasklist opens
-        // if (this.state.open) {
-        //   this.setState({ newTasks: 0 });
-        // }
+        if (this.state.open) {
+          this.setState({ newTasksCount: 0 });
+        }
       }
     );
   };
@@ -41,14 +41,18 @@ export default class TaskListButton extends React.Component {
     return (
       <Fragment>
         <button id="tasklistButton" onClick={this.handleClick}>
-          {/* Tasks ({this.state.newTasks}) */}
           Tasks
+          {/* {this.state.newTasksCount === 0
+            ? "Tasks"
+            : `Tasks (${this.state.newTasksCount})`} */}
         </button>
         {this.state.open && (
           <TaskList
+            toggleView={() => this.setState({ open: false })}
             gameId={this.props.gameId}
             role={this.props.role}
             factions={this.props.factions}
+            socketSignal={this.props.socketSignal}
           />
         )}
       </Fragment>

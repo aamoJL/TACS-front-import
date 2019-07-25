@@ -1,60 +1,95 @@
 import React from "react";
 import { Map, TileLayer } from "react-leaflet";
+import { Link } from "react-router-dom";
 
 export default class GameInfoView extends React.Component {
-  componentDidMount() {
-    document.addEventListener("keyup", this.handleEsc);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keyup", this.handleEsc);
-  }
-
-  handleEsc = e => {
-    if (e.keyCode === 27) {
-      this.props.toggleView();
-    }
+  state = {
+    gameInfo: null,
+    center: []
   };
 
+  componentDidMount() {
+    let gameId = new URL(window.location.href).searchParams.get("id");
+    this.getGameInfo(gameId);
+  }
+
+  getGameInfo(gameId) {
+    let error = false;
+    // Get game info
+    fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
+      .then(response => {
+        if (!response.ok) {
+          error = true;
+        }
+        return response.json();
+      })
+      .then(json => {
+        if (error) {
+          throw Error("Game not found");
+        } else {
+          this.setState({ gameInfo: json });
+        }
+      })
+      .catch(error => {
+        alert(error);
+        window.document.location.href = "/";
+      });
+  }
+
+  getFormattedDate(date) {
+    let day = date.substring(8, 10);
+    let month = date.substring(5, 7);
+    let year = date.substring(0, 4);
+    return day + "." + month + "." + year;
+  }
+
+  getFormattedTime(date) {
+    let time = date.substring(11, 16);
+    return time;
+  }
+
   render() {
-    if (this.props.gameInfo === undefined) {
+    if (this.state.gameInfo === null) {
       return false;
     }
     return (
-      <div className="fade-main">
-        <div className="sticky">
-          <span
-            id="closeGameInfoX"
-            className="close"
-            onClick={this.props.toggleView}
-          >
-            ×
-          </span>
-        </div>
-        <div className="">
-          <h1>Game Info</h1>
-          <p>Game name: {this.props.gameInfo.name}</p>
-          <p>Description: {this.props.gameInfo.desc}</p>
-          <p>Start date: {this.props.gameInfo.startdate}</p>
-          <p>End date: {this.props.gameInfo.enddate}</p>
-          <h2>Factions</h2>
-          <div>
-            {this.props.gameInfo.factions.map(faction => (
+      <div>
+        <h1 className="edit-game-title">Game Info</h1>
+        <div className="game-info-view-container">
+          <div className="game-info-view-inner-container">
+            <p>Game name: </p>
+            <p>{this.state.gameInfo.name}</p>
+            <p>Description: </p>
+            <p>{this.state.gameInfo.desc}</p>
+            <p>Date:</p>{" "}
+            <p>
+              {this.getFormattedDate(this.state.gameInfo.startdate)}{" "}
+              {this.getFormattedTime(this.state.gameInfo.startdate)} -{" "}
+              {this.getFormattedDate(this.state.gameInfo.enddate)}{" "}
+              {this.getFormattedTime(this.state.gameInfo.enddate)}
+            </p>
+            <h2>Factions</h2>
+            {this.state.gameInfo.factions.map(faction => (
               <p key={faction.factionId} style={{ color: faction.colour }}>
                 {faction.factionName}
               </p>
             ))}
           </div>
-          <div>
+          <div className="game-info-view-inner-container">
             <Map
               id="gameInfoCenterMap"
-              className=""
-              center={[
-                this.props.gameInfo.center.lat,
-                this.props.gameInfo.center.lng
-              ]}
-              zoom="13"
-              maxZoom="13"
+              scrollWheelZoom={false}
+              doubleClickZoom={false}
+              dragging={false}
+              boxZoom={false}
+              zoomControl={false}
+              viewport={{
+                center: [
+                  this.state.gameInfo.center.lat,
+                  this.state.gameInfo.center.lng
+                ],
+                zoom: 13
+              }}
               style={{ height: "400px", width: "400px" }}
             >
               <TileLayer
@@ -63,6 +98,24 @@ export default class GameInfoView extends React.Component {
               />
             </Map>
           </div>
+        </div>
+        <div className="edit-game-form-buttons">
+          <Link
+            to={{
+              pathname: "/game",
+              search: "?id=" + this.state.gameInfo.id
+            }}
+          >
+            <button id="infoToGameButton">Back to the game</button>
+          </Link>
+          <Link
+            to={{
+              pathname: "/",
+              search: "?id=" + this.state.gameInfo.id
+            }}
+          >
+            <button id="infoToGameSelectionButton">Game selection</button>
+          </Link>
         </div>
       </div>
     );

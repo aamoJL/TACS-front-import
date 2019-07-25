@@ -1,5 +1,7 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
+import Draggable from "react-draggable";
 import PlayerlistFaction from "./PlayerlistFaction";
 
 export default class PlayerlistView extends React.Component {
@@ -64,22 +66,33 @@ export default class PlayerlistView extends React.Component {
         faction={faction}
         role={this.props.role}
         gameId={this.props.gameId}
+        gameState={this.props.gameState}
       />
     ));
 
-    return (
-      <div className="fade-main">
-        <div className="sticky">
-          <span
+    return ReactDOM.createPortal(
+      <Draggable
+        bounds="body"
+        className="draggableContainer"
+        enableUserSelectHack={false}
+        cancel=".input-cancel-drag"
+      >
+        <div className="tasklist">
+          <h1>Playerlist</h1>
+          <button
             id="closePlayerlistX"
             className="close"
             onClick={() => this.props.toggleView()}
           >
-            ×
-          </span>
+            x
+          </button>
+
+          <div className="task-items-container input-cancel-drag">
+            {factionlistItems}
+          </div>
         </div>
-        {factionlistItems}
-      </div>
+      </Draggable>,
+      document.getElementById("tasklist")
     );
   }
 }

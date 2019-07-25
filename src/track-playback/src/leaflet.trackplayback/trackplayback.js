@@ -30,7 +30,8 @@ export const TrackPlayBack = L.Class.extend({
       {
         tracks: this.tracks,
         scores: data.scores,
-        drawings: data.drawings
+        drawings: data.drawings,
+        objectivepoints: data.objectivepoints
       },
       this.draw
     );
@@ -132,6 +133,9 @@ export const TrackPlayBack = L.Class.extend({
   // pass current drawings to control panel
   passDrawings: function() {
     return this.trackController._activeDrawings;
+  },
+  passFlagboxes: function() {
+    return this.trackController._activeFlagboxes;
   },
   dispose: function() {
     this.clock.off("tick", this._tick);

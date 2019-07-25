@@ -1,5 +1,3 @@
-import React from "react";
-
 var options = {
   trackPointOptions: {
     // whether to draw track point

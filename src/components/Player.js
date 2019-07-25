@@ -1,14 +1,17 @@
+// https://github.com/YUzhva/react-leaflet-markercluster
+// https://github.com/Leaflet/Leaflet.markercluster#all-options
+
 import React, { Component } from "react";
 import { Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-markercluster";
+
+import { playerIcon, clusterIcon } from "./DrawToolsPanel";
 
 class Player extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      players: null,
-      timer: null
-    };
-  }
+  state = {
+    factions: [],
+    playerFetch: null
+  };
 
   getPlayers = () => {
     fetch(
@@ -27,8 +30,7 @@ class Player extends Component {
         // don't do anything if data is not an array, as it breaks the map function at render
         if (Array.isArray(data)) {
           this.setState({
-            players: data,
-            timer: null // state for updating player positions every minute
+            factions: data
           });
         }
       })
@@ -37,65 +39,59 @@ class Player extends Component {
       });
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    // do not update component until players have been fetched and game ID is available
-    if (this.props.currentGameId === null) {
-      return false;
-    }
-    /*
-    if (this.props.socketSignal !== "tracking-update") {
-      return false;
-    }
-    */
-    return true;
-    /*
-    if (nextProps.currentGameId === null) {
-      return false;
-    } else if (this.state.players === null) {
-      this.getPlayers();
-      return false;
-    } else {
-      return true;
-    }
-    */
+  componentDidMount() {
+    this.getPlayers();
+    this.setState({
+      playerFetch: setInterval(this.getPlayers, 60000)
+    });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.socketSignal === "tracking-update") {
-      // start updating interval
-      if (prevState.timer === null) {
-        this.getPlayers();
-        this.setState({
-          timer: setInterval(this.getPlayers, 60000)
-        });
-      }
-    }
+  componentWillUnmount() {
+    clearInterval(this.state.playerFetch);
   }
 
   render() {
     return (
-      <div>
-        {this.state.players !== null &&
-          this.state.players.map(player => {
-            return (
-              <Marker
-                key={Math.random()}
-                position={[player.coordinates.lat, player.coordinates.lng]}
-                factionId={player.factionId}
-                gamepersonId={player.gamepersonId}
-                gamepersonRole={player.gamepersonRole}
-              >
-                <Popup>
-                  <b>factionId:</b> {player.factionId}
-                  <br />
-                  <b>gamepersonId:</b> {player.gamepersonId}
-                  <br />
-                  <b>gamepersonRole:</b> {player.gamepersonRole}
-                </Popup>
-              </Marker>
-            );
+      <React.Fragment>
+        {this.state.factions &&
+          this.state.factions.map(faction => {
+            return faction.map(group => {
+              if (group.length === 0) return false;
+              return (
+                <MarkerClusterGroup
+                  key={`${group[0].factionId}-${group[0].icon}`}
+                  iconCreateFunction={clusterIcon}
+                  showCoverageOnHover={false}
+                >
+                  {group.map(player => {
+                    return (
+                      <Marker
+                        key={Math.random()}
+                        position={[
+                          player.coordinates.lat,
+                          player.coordinates.lng
+                        ]}
+                        icon={playerIcon(player.icon, player.factionColour)}
+                        riseOnHover={true}
+                        factionId={player.factionId}
+                        gamepersonId={player.gamepersonId}
+                        gamepersonRole={player.gamepersonRole}
+                        colour={player.factionColour}
+                        clusterIcon={player.icon}
+                      >
+                        <Popup>
+                          <b>Username:</b> {player.username}
+                          <br />
+                          <b>Role:</b> {player.gamepersonRole}
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
+                </MarkerClusterGroup>
+              );
+            });
           })}
-      </div>
+      </React.Fragment>
     );
   }
 }

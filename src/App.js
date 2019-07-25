@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../node_modules/leaflet-draw/dist/leaflet.draw.css";
-import "./App.css";
+import "./css/App.css";
 import {
   BrowserRouter as Router,
   Route,
@@ -12,6 +12,8 @@ import RegisterForm from "./components/RegisterForm";
 import GameSelection from "./components/GameSelection";
 import GameView from "./components/GameView";
 import ReplayMap from "./components/ReplayMap";
+import EditGameForm from "./components/EditGameForm";
+import GameInfoView from "./components/GameInfoView";
 
 export default class App extends Component {
   constructor() {
@@ -24,6 +26,19 @@ export default class App extends Component {
       authenticateComplete: false
     };
   }
+
+  componentDidMount() {
+    let gameId = new URL(window.location.href).searchParams.get("id");
+    this.setState(
+      {
+        gameId: gameId
+      },
+      () => {
+        this.getGameInfo(gameId);
+      }
+    );
+  }
+
   // Toggles through the list and changes the mapUrl state
   handleLayerChange = () => {
     const maps = [
@@ -91,43 +106,21 @@ export default class App extends Component {
   }
 
   loginForm = () => {
-    return (
-      <Route
-        render={props =>
-          !this.state.logged ? (
-            <LoginForm view="" handleState={this.handleState} />
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/"
-              }}
-            />
-          )
-        }
-      />
-    );
+    return <LoginForm view="" handleState={this.handleState} />;
   };
 
   registerForm = () => {
-    return (
-      <Route
-        render={props =>
-          !this.state.logged ? (
-            <RegisterForm view="" handleState={this.handleState} />
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/"
-              }}
-            />
-          )
-        }
-      />
-    );
+    return <RegisterForm view="" handleState={this.handleState} />;
   };
 
   replay = () => {
     return <ReplayMap />;
+  };
+
+  handleLogout = () => {
+    sessionStorage.setItem("token", "");
+    sessionStorage.setItem("name", "");
+    this.setState({ logged: false, authenticateComplete: true });
   };
 
   render() {
@@ -140,23 +133,6 @@ export default class App extends Component {
       <div>
         <Router>
           <div>
-            {/* Debug Sign out button ------------------------ */}
-            {this.state.logged && (
-              <div>
-                <label>Logged in: {sessionStorage.getItem("name")}</label>
-                <button
-                  id="signOutButton"
-                  onClick={() => {
-                    sessionStorage.setItem("token", "");
-                    this.setState({ logged: false });
-                  }}
-                >
-                  Sign out
-                </button>
-              </div>
-            )}
-            {/* Debug End ----------------------- */}
-
             {!this.state.logged && (
               <Switch>
                 <Route exact path="/replay" component={this.replay} />
@@ -168,18 +144,15 @@ export default class App extends Component {
             )}
             {this.state.logged && (
               <Switch>
+                <Route path="/edit/game" component={() => <EditGameForm />} />
+                <Route path="/info/game" component={() => <GameInfoView />} />
                 <Route exact path="/replay" component={this.replay} />
-                <Route
-                  path="/game"
-                  component={() => {
-                    return <GameView />;
-                  }}
-                />
+                <Route path="/game" component={() => <GameView />} />
                 <Route
                   exact
                   path="/"
                   component={() => {
-                    return <GameSelection />;
+                    return <GameSelection onLogout={this.handleLogout} />;
                   }}
                 />
                 {/* Redirect from any other path to root */}

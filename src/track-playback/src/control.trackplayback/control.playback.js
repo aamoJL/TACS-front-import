@@ -1,4 +1,5 @@
 import L from "leaflet";
+import { flagboxIcon } from "../../../components/DrawToolsPanel";
 
 export const TrackPlayBackControl = L.Control.extend({
   options: {
@@ -11,69 +12,54 @@ export const TrackPlayBackControl = L.Control.extend({
 
   initialize: function(trackplayback, map, options) {
     this.map = map;
+    this.factions = [];
     L.Control.prototype.initialize.call(this, options);
     this.trackPlayBack = trackplayback;
     this.trackPlayBack.on("tick", this._tickCallback, this);
     this.leafletDrawings = [];
+    this.mapflagboxes = [];
   },
 
-  // absolutely disgusting, never use geojson
   // init object to pass drawing data to right function
-  _drawFunction: function(data) {
+  _drawFunction: function(data, time) {
     // create leaflet objects
     var createMarker = data => {
-      data.geometry.coordinates = [
-        data.geometry.coordinates[1],
-        data.geometry.coordinates[0]
-      ];
-      return L.marker(data.geometry.coordinates).addTo(this.map);
+      return L.marker(data.coordinates).addTo(this.map);
     };
     var createPolyline = data => {
-      data.geometry.coordinates = data.geometry.coordinates.map(cords => {
-        return [cords[1], cords[0]];
-      });
-      return L.polyline(data.geometry.coordinates, {
-        color: data.properties.color
+      return L.polyline(data.coordinates, {
+        color: data.color || "#0000ff",
+        time: time
       }).addTo(this.map);
     };
     var createPolygon = data => {
-      // geoJSON has lat lng wrong way so turn them around
-      data.geometry.coordinates = data.geometry.coordinates[0].map(cords => {
-        return [cords[1], cords[0]];
-      });
-      return L.polygon(data.geometry.coordinates, {
-        color: data.properties.color
+      return L.polygon(data.coordinates, {
+        color: data.color || "#0000ff",
+        time: time
       }).addTo(this.map);
     };
     var createRectangle = data => {
-      return L.rectangle(data.geometry.coordinates, {
-        color: data.properties.color
+      return L.rectangle(data.coordinates, {
+        color: data.color || "#0000ff",
+        time: time
       }).addTo(this.map);
     };
     var createCircle = data => {
-      data.geometry.coordinates = [
-        data.geometry.coordinates[1],
-        data.geometry.coordinates[0]
-      ];
-      return L.circle(data.geometry.coordinates, {
-        radius: data.properties.radius
+      return L.circle(data.coordinates, {
+        radius: data.radius,
+        color: data.color || "#0000ff",
+        time: time
       }).addTo(this.map);
     };
-    // handle faulty cords
-    if (!data.geometry.coordinates[0][0] && !data.geometry.type === "Point") {
-      return null;
-    }
-    if (data.geometry.type === "Point" && !data.properties.radius) {
-      data.geometry.type = "Marker";
-    }
     var obj = {
-      Marker: createMarker,
-      LineString: createPolyline,
-      Polygon: createPolygon,
-      Rectangle: createRectangle,
-      Point: createCircle
+      marker: createMarker,
+      polyline: createPolyline,
+      polygon: createPolygon,
+      rectangle: createRectangle,
+      circle: createCircle,
+      textbox: null
     };
-    return obj[data.geometry.type](data);
+    return obj[data.type](data);
   },
 
   onAdd: function(map) {
@@ -97,47 +83,6 @@ export const TrackPlayBackControl = L.Control.extend({
       ${new Date(time).toLocaleDateString("en-US")} 
       ${new Date(time * 1e3).toISOString().slice(-13, -5)}
     `;
-    /*     time = parseInt(time * 1000);
-    let newDate = new Date(time);
-    let year = newDate.getFullYear();
-    let month =
-      newDate.getMonth() + 1 < 10
-        ? "0" + (newDate.getMonth() + 1)
-        : newDate.getMonth() + 1;
-    let day =
-      newDate.getDate() < 10 ? "0" + newDate.getDate() : newDate.getDate();
-    let hours =
-      newDate.getHours() < 10 ? "0" + newDate.getHours() : newDate.getHours();
-    let minuts =
-      newDate.getMinutes() < 10
-        ? "0" + newDate.getMinutes()
-        : newDate.getMinutes();
-    let seconds =
-      newDate.getSeconds() < 10
-        ? "0" + newDate.getSeconds()
-        : newDate.getSeconds();
-    let ret;
-    if (accuracy === "d") {
-      ret = year + "-" + month + "-" + day;
-    } else if (accuracy === "h") {
-      ret = year + "-" + month + "-" + day + " " + hours;
-    } else if (accuracy === "m") {
-      ret = year + "-" + month + "-" + day + " " + hours + ":" + minuts;
-    } else {
-      ret =
-        year +
-        "-" +
-        month +
-        "-" +
-        day +
-        " " +
-        hours +
-        ":" +
-        minuts +
-        ":" +
-        seconds;
-    }
-    return ret; */
   },
 
   _initContainer: function() {
@@ -198,9 +143,9 @@ export const TrackPlayBackControl = L.Control.extend({
       this._filterContainer
     );
     // get factions in replay
-    let factions = this.trackPlayBack.passFactions();
+    this.factions = this.trackPlayBack.passFactions();
     // create checkboxes for filtering persons based on their faction
-    this._factionCheckboxes = factions.map(faction => {
+    this._factionCheckboxes = this.factions.map(faction => {
       return this._createCheckbox(
         `show ${faction.name}`,
         `show-${faction.name}`,
@@ -210,18 +155,22 @@ export const TrackPlayBackControl = L.Control.extend({
     });
     // create a div container for score replay
     this._scoreContainer = this._createContainer(
-      "scoreContainer",
+      "score-container-replay",
       this._container
     );
     // create score blocks for each faction
-    this._factionScoreboxes = factions.map(faction => {
-      return this._createInfo(
-        `${faction.name}: `,
-        0,
-        "scoreBlock",
-        this._scoreContainer
-      );
+    // don't create an admin scorebox
+    this._factionScoreboxes = this.factions.map(faction => {
+      if (faction.name !== "admin")
+        return this._createInfo(
+          `${faction.name}: `,
+          0,
+          "scoreBlock",
+          this._scoreContainer
+        );
     });
+    // pop the admin faction
+    this._factionScoreboxes.pop();
 
     this._playBtn = this._createButton(
       "play",
@@ -379,13 +328,28 @@ export const TrackPlayBackControl = L.Control.extend({
     this.trackPlayBack.toggleMechanized(e.target.checked);
   },
   _showFaction(e) {
-    this.trackPlayBack.toggleFactions(
-      e.target.checked,
-      e.target.parentNode.className.substring(
-        5,
-        e.target.parentNode.className.indexOf(" ")
-      )
+    let target = e.target.parentNode.className.substring(
+      5,
+      e.target.parentNode.className.indexOf(" ")
     );
+    this.trackPlayBack.toggleFactions(e.target.checked, target);
+    for (let faction of this.factions) {
+      if (faction.name === target) {
+        faction.active = e.target.checked;
+        break;
+      }
+    }
+  },
+
+  _resetMap() {
+    this.leafletDrawings.forEach(drawing => {
+      if (drawing) this.map.removeLayer(drawing);
+    });
+    this.leafletDrawings = [];
+    this.mapflagboxes.forEach(box => {
+      if (box) this.map.removeLayer(box);
+    });
+    this.mapflagboxes = [];
   },
 
   _play: function() {
@@ -405,6 +369,7 @@ export const TrackPlayBackControl = L.Control.extend({
 
   _restart: function() {
     // 播放开始改变播放按钮样式
+    this._resetMap();
     L.DomUtil.removeClass(this._playBtn, "btn-stop");
     L.DomUtil.addClass(this._playBtn, "btn-start");
     this._playBtn.setAttribute("title", "stop");
@@ -432,6 +397,7 @@ export const TrackPlayBackControl = L.Control.extend({
   },
 
   _scrollchange: function(e) {
+    this._resetMap();
     let val = Number(e.target.value);
     this.trackPlayBack.setCursor(val);
   },
@@ -453,29 +419,82 @@ export const TrackPlayBackControl = L.Control.extend({
       this._factionScoreboxes[i].innerHTML = this.trackPlayBack.passScores(i);
     }
     // tick drawings
-    let drawings = this.trackPlayBack.passDrawings();
-    for (let i = 0; i < drawings.length; i++) {
-      // skip if undefined
-      if (!drawings[i] && this.leafletDrawings[i]) {
-        this.map.removeLayer(this.leafletDrawings[i]);
-        this.leafletDrawings[i] = null;
-        return;
-      }
-      if (!drawings[i]) return;
-      // remove if it's not active
-      if (!drawings[i].drawingIsActive && this.leafletDrawings[i]) {
-        this.map.removeLayer(this.leafletDrawings[i]);
-        this.leafletDrawings[i] = null;
-        return;
-      }
-      // else draw the marker if it's not drawn
-      if (drawings[i].drawingIsActive && !this.leafletDrawings[i]) {
-        this.leafletDrawings[i] = this._drawFunction(drawings[i].data);
-        console.log(this.leafletDrawings[i]);
+    this._tickDrawings(e.time);
+    // tick flagboxes
+    let flagboxes = this.trackPlayBack.passFlagboxes();
+    for (let i = 0; i < flagboxes.length; i++) {
+      if (!this.mapflagboxes[i]) {
+        this.mapflagboxes[i] = this._createFlagbox(flagboxes[i]);
+        this.mapflagboxes[i].bindPopup(this._createPopup(flagboxes[i]));
+      } else if (
+        flagboxes[i].history.timestamp > this.mapflagboxes[i].options.time
+      ) {
+        this.map.removeLayer(this.mapflagboxes[i]);
+        this.mapflagboxes[i] = this._createFlagbox(flagboxes[i]);
+        this.mapflagboxes[i].bindPopup(this._createPopup(flagboxes[i]));
       }
     }
     //
     // 更新时间轴
+  },
+
+  _createPopup: function(box) {
+    return `
+    NodeId: ${box.objectivePointDescription} <br />
+    Value: ${box.objectivePointMultiplier} <br />
+    Owner: ${box.history.owner.factionName} <br />
+    Status: ${box.history.action.message}
+  `;
+  },
+
+  _createFlagbox: function(box) {
+    return L.marker(box.data.coordinates, {
+      icon: flagboxIcon(box.history.owner.colour, box.history.action.status),
+      time: box.history.timestamp
+    }).addTo(this.map);
+  },
+
+  _tickDrawings: function(time) {
+    // tick drawings
+    let drawings = this.trackPlayBack.passDrawings();
+    for (let i = 0; i < drawings.length; i++) {
+      let show = true;
+      // check if drawing is filtered by faction
+      // only if drawing is not null
+      if (drawings[i]) {
+        let index = this.factions.findIndex(
+          x => x.name === drawings[i].data.faction
+        );
+        show = this.factions[index].active;
+      }
+      // if the drawing is null, remove the layer from map if it exists
+      // if the drawing is not null, but set to inactive, remove the layer
+      // if the faction has been filtered, remove the layer
+      if (!drawings[i] || !drawings[i].drawingIsActive || !show) {
+        if (this.leafletDrawings[i]) {
+          this.map.removeLayer(this.leafletDrawings[i]);
+          this.leafletDrawings[i] = null;
+        }
+      }
+      // draw layer if it's active
+      else if (drawings[i].drawingIsActive && !this.leafletDrawings[i]) {
+        this.leafletDrawings[i] = this._drawFunction(
+          drawings[i].data,
+          drawings[i].timestamp
+        );
+      }
+      // draw the element again if it has been updated
+      else if (
+        this.leafletDrawings[i] &&
+        drawings[i].timestamp > this.leafletDrawings[i].options.time
+      ) {
+        this.map.removeLayer(this.leafletDrawings[i]);
+        this.leafletDrawings[i] = this._drawFunction(
+          drawings[i].data,
+          drawings[i].timestamp
+        );
+      }
+    }
   }
 });
 

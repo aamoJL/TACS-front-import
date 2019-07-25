@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import GameCard from "./GameCard";
 
 class GameList extends React.Component {
@@ -86,11 +86,7 @@ class GameList extends React.Component {
       />
     ));
 
-    return (
-      <div className="gamelist">
-        <div className="gamelist-item">{gamelistItems}</div>
-      </div>
-    );
+    return <div className="gamelist">{gamelistItems}</div>;
   }
 }
 
