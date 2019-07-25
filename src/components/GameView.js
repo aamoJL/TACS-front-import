@@ -122,7 +122,7 @@ export default class GameView extends React.Component {
       ? [this.state.gameInfo.center.lat, this.state.gameInfo.center.lng]
       : null;
     return (
-      <div>
+      <div className="game-view-container">
         {this.state.gameInfo !== null && (
           <div>
             <ScoreCounter

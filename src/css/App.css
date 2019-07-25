@@ -194,9 +194,10 @@ textarea:focus {
   border-style: none;
 }
 
-#newGameSubmitButton {
+/* #newGameSubmitButton {
   background-color: #afca17;
   border-radius: 30px;
+  margin: 5px 10px;
   height: 40px;
   color: white;
   width: 80px;
@@ -208,6 +209,22 @@ textarea:focus {
   transition-duration: 0.4s;
   background-color: rgb(96, 112, 33);
 }
+
+#closeNewGameFormX {
+  background-color: #afca17;
+  border-radius: 30px;
+  height: 40px;
+  padding: 10px;
+  color: white;
+  width: 80px;
+  border-style: none;
+}
+
+#closeNewGameFormX:hover {
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  background-color: rgb(96, 112, 33);
+} */
 
 .border-right {
   border-right: #ffffff;
@@ -258,12 +275,16 @@ input {
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 
+.card-body {
+  overflow: hidden;
+}
+
 .card-img-top {
   width: 100%;
 }
 
 .gamesheader {
-  padding: 50px;
+  padding: 30px;
 }
 
 .map {
@@ -523,6 +544,9 @@ div.fade-main {
 }
 
 .gamecard {
+  display: flex;
+  flex-direction: column;
+  max-width: 30%;
   border: 5px solid #647828;
   padding: 10px;
   margin: 10px;
@@ -530,11 +554,15 @@ div.fade-main {
 }
 
 .gamelist {
+  justify-content: center;
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
   background-color: #1d1d1b;
-  border: 2px solid white;
+  border: 2px solid #556023;
   max-width: 80%;
   max-height: 600px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .tasklist {
@@ -615,6 +643,64 @@ div.fade-main {
 .notification-input > * {
   padding: 5px;
   margin: 5px;
+}
+
+.new-game-popup {
+  position: fixed;
+  width: 80%;
+  height: 85%;
+  padding: 20px;
+  border-radius: 15px;
+  top: 10%;
+  left: 10%;
+  z-index: 2021;
+  background-color: #1d1d1b;
+}
+
+.new-game-outer-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.new-game-inner-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.new-game-inner-container > * {
+  justify-content: center;
+  display: flex;
+}
+
+.new-game-button-container {
+  display: flex;
+  justify-content: center;
+  margin: 30px;
+}
+
+.new-game-button {
+  background-color: #afca17;
+  border-radius: 30px;
+  margin: 5px 10px;
+  height: 40px;
+  color: white;
+  width: 80px;
+  border-style: none;
+}
+
+.new-game-button:hover {
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  background-color: rgb(96, 112, 33);
+}
+
+.new-game-input {
+  margin: auto;
+  width: 50%;
+  min-width: 150px;
 }
 
 .edit-game-container {

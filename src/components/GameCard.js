@@ -52,72 +52,66 @@ export default class GameCard extends React.Component {
     }
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-md-4">
-            <div className="gamecard card mb-4 shadow-sm">
-              <img
-                className="card-img-top"
-                src={this.state.gameInfo.image}
-                alt="Game Logo"
-              />
-              <div className="card-body">
-                <label>Name: {this.state.gameInfo.name}</label>
-                <br />
-                <label>Description: {this.state.gameInfo.desc}</label>
-                <br />
-                <label>
-                  Date: {this.getFormattedDate(this.state.gameInfo.startdate)}{" "}
-                  {this.getFormattedTime(this.state.gameInfo.startdate)} -{" "}
-                  {this.getFormattedDate(this.state.gameInfo.enddate)}{" "}
-                  {this.getFormattedTime(this.state.gameInfo.enddate)}
-                </label>
-                <br />
-                <label>State: {this.state.gameInfo.state}</label>
-                <br />
-                <Link
-                  to={{
-                    pathname: "/game",
-                    search: "?id=" + this.state.gameInfo.id
-                  }}
-                >
-                  <button type="button" className="select-game-button">
-                    Select
-                  </button>
-                </Link>
-                <Link
-                  to={{
-                    pathname: "/info/game",
-                    search: "?id=" + this.state.gameInfo.id
-                  }}
-                >
-                  <button
-                    id={`info${this.state.gameInfo.name}`}
-                    type="button"
-                    className="select-game-button"
-                  >
-                    Info
-                  </button>
-                </Link>
-                {this.state.gameInfo.state === "ENDED" && (
-                  <Link
-                    to={{
-                      pathname: "/replay",
-                      search: "?id=" + this.state.gameInfo.id
-                    }}
-                  >
-                    <button
-                      id={`replay${this.state.gameInfo.name}`}
-                      type="button"
-                      className="select-game-button"
-                    >
-                      Replay
-                    </button>
-                  </Link>
-                )}
-              </div>
-            </div>
-          </div>
+      <div className="gamecard col-md-4">
+        <img
+          className="card-img-top"
+          src={this.state.gameInfo.image}
+          alt="Game Logo"
+        />
+        <div className="card-body">
+          <label>Name: {this.state.gameInfo.name}</label>
+          <br />
+          <label>Description: {this.state.gameInfo.desc}</label>
+          <br />
+          <label>
+            Date: {this.getFormattedDate(this.state.gameInfo.startdate)}{" "}
+            {this.getFormattedTime(this.state.gameInfo.startdate)} -{" "}
+            {this.getFormattedDate(this.state.gameInfo.enddate)}{" "}
+            {this.getFormattedTime(this.state.gameInfo.enddate)}
+          </label>
+          <br />
+          <label>State: {this.state.gameInfo.state}</label>
+          <br />
+          <Link
+            to={{
+              pathname: "/game",
+              search: "?id=" + this.state.gameInfo.id
+            }}
+          >
+            <button type="button" className="select-game-button">
+              Select
+            </button>
+          </Link>
+          <Link
+            to={{
+              pathname: "/info/game",
+              search: "?id=" + this.state.gameInfo.id
+            }}
+          >
+            <button
+              id={`info${this.state.gameInfo.name}`}
+              type="button"
+              className="select-game-button"
+            >
+              Info
+            </button>
+          </Link>
+          {this.state.gameInfo.state === "ENDED" && (
+            <Link
+              to={{
+                pathname: "/replay",
+                search: "?id=" + this.state.gameInfo.id
+              }}
+            >
+              <button
+                id={`replay${this.state.gameInfo.name}`}
+                type="button"
+                className="select-game-button"
+              >
+                Replay
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     );
