@@ -420,6 +420,18 @@ div.fade-main {
   overflow: scroll;
 }
 
+/* PLAYER & CLUSTER MARKER CLASS */
+.player-marker,
+.cluster-marker {
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+.player-marker:hover,
+.cluster-marker:hover {
+  opacity: 1;
+  box-shadow: 0 0 4px 4px rgba(29, 29, 27, 0.75);
+}
 /* REPLAY SIVU */
 .leaflet-control-playback {
   position: relative;

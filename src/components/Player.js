@@ -61,6 +61,7 @@ class Player extends Component {
                 <MarkerClusterGroup
                   key={`${group[0].factionId}-${group[0].icon}`}
                   iconCreateFunction={clusterIcon}
+                  showCoverageOnHover={false}
                 >
                   {group.map(player => {
                     return (
@@ -71,6 +72,7 @@ class Player extends Component {
                           player.coordinates.lng
                         ]}
                         icon={playerIcon(player.icon, player.factionColour)}
+                        riseOnHover={true}
                         factionId={player.factionId}
                         gamepersonId={player.gamepersonId}
                         gamepersonRole={player.gamepersonRole}
