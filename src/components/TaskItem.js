@@ -1,5 +1,4 @@
 import React from "react";
-import { isUndefined } from "util";
 
 class TaskItem extends React.Component {
   constructor(props) {
