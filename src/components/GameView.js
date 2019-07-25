@@ -8,7 +8,6 @@ import NotificationView from "./NotificationView";
 import GameStateButtons from "./GameStateButtons";
 import ClientSocket from "./Socket";
 import NotificationPopup from "./NotificationPopup";
-import GameInfoView from "./GameInfoView";
 import ScoreCounter from "./ScoreCounter";
 import ScoreForm from "./ScoreForm";
 
@@ -167,12 +166,14 @@ export default class GameView extends React.Component {
                     <button id="editGameButton">Edit</button>
                   </Link>
                 )}
-              <button
-                id="gameInfoButton"
-                onClick={() => this.setState({ form: "info" })}
+              <Link
+                to={{
+                  pathname: "/info/game",
+                  search: "?id=" + this.state.gameInfo.id
+                }}
               >
-                Game Info
-              </button>
+                <button id="gameInfoButton">Game Info</button>
+              </Link>
               {this.state.role === "" && (
                 <button
                   id="joinGameButton"
@@ -252,12 +253,6 @@ export default class GameView extends React.Component {
                       ? this.state.gameInfo.state
                       : ""
                   }
-                />
-              )}
-              {this.state.form === "info" && (
-                <GameInfoView
-                  gameInfo={this.state.gameInfo}
-                  toggleView={() => this.setState({ form: "" })}
                 />
               )}
               {this.state.form === "score" && (

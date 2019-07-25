@@ -13,6 +13,7 @@ import GameSelection from "./components/GameSelection";
 import GameView from "./components/GameView";
 import ReplayMap from "./components/ReplayMap";
 import EditGameForm from "./components/EditGameForm";
+import GameInfoView from "./components/GameInfoView";
 
 export default class App extends Component {
   constructor() {
@@ -25,6 +26,19 @@ export default class App extends Component {
       authenticateComplete: false
     };
   }
+
+  componentDidMount() {
+    let gameId = new URL(window.location.href).searchParams.get("id");
+    this.setState(
+      {
+        gameId: gameId
+      },
+      () => {
+        this.getGameInfo(gameId);
+      }
+    );
+  }
+
   // Toggles through the list and changes the mapUrl state
   handleLayerChange = () => {
     const maps = [
@@ -131,6 +145,7 @@ export default class App extends Component {
             {this.state.logged && (
               <Switch>
                 <Route path="/edit/game" component={() => <EditGameForm />} />
+                <Route path="/info/game" component={() => <GameInfoView />} />
                 <Route exact path="/replay" component={this.replay} />
                 <Route path="/game" component={() => <GameView />} />
                 <Route
