@@ -1,4 +1,5 @@
 import React from "react";
+import { isUndefined } from "util";
 
 class TaskItem extends React.Component {
   constructor(props) {
@@ -28,7 +29,8 @@ class TaskItem extends React.Component {
       .then(result => {
         this.setState({
           factions: result.factions,
-          selectedFactionId: result.factions[0].factionId
+          selectedFactionId:
+            result.factions.length === 0 ? null : result.factions[0].factionId
         });
       })
       .catch(error => console.log(error));

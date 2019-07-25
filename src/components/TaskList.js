@@ -17,6 +17,14 @@ class TaskList extends React.Component {
     this.getTasks(this.props.gameId);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.socketSignal !== null) {
+      if (prevProps.socketSignal.type === "task-update") {
+        this.getTasks(this.props.gameId);
+      }
+    }
+  }
+
   getTasks(gameId) {
     let token = sessionStorage.getItem("token");
     fetch(`${process.env.REACT_APP_API_URL}/task/get-tasks/${gameId}`, {
