@@ -53,29 +53,31 @@ export default class GameInfoView extends React.Component {
       return false;
     }
     return (
-      <div className="fade-main">
-        <div className="">
-          <h1>Game Info</h1>
-          <p>Game name: {this.state.gameInfo.name}</p>
-          <p>Description: {this.state.gameInfo.desc}</p>
-          <p>
-            Date: {this.getFormattedDate(this.state.gameInfo.startdate)}{" "}
-            {this.getFormattedTime(this.state.gameInfo.startdate)} -{" "}
-            {this.getFormattedDate(this.state.gameInfo.enddate)}{" "}
-            {this.getFormattedTime(this.state.gameInfo.enddate)}
-          </p>
-          <h2>Factions</h2>
-          <div>
+      <div>
+        <h1 className="edit-game-title">Game Info</h1>
+        <div className="game-info-view-container">
+          <div className="game-info-view-inner-container">
+            <p>Game name: </p>
+            <p>{this.state.gameInfo.name}</p>
+            <p>Description: </p>
+            <p>{this.state.gameInfo.desc}</p>
+            <p>Date:</p>{" "}
+            <p>
+              {this.getFormattedDate(this.state.gameInfo.startdate)}{" "}
+              {this.getFormattedTime(this.state.gameInfo.startdate)} -{" "}
+              {this.getFormattedDate(this.state.gameInfo.enddate)}{" "}
+              {this.getFormattedTime(this.state.gameInfo.enddate)}
+            </p>
+            <h2>Factions</h2>
             {this.state.gameInfo.factions.map(faction => (
               <p key={faction.factionId} style={{ color: faction.colour }}>
                 {faction.factionName}
               </p>
             ))}
           </div>
-          <div>
+          <div className="game-info-view-inner-container">
             <Map
               id="gameInfoCenterMap"
-              className=""
               scrollWheelZoom={false}
               doubleClickZoom={false}
               dragging={false}
@@ -96,24 +98,24 @@ export default class GameInfoView extends React.Component {
               />
             </Map>
           </div>
-          <div>
-            <Link
-              to={{
-                pathname: "/game",
-                search: "?id=" + this.state.gameInfo.id
-              }}
-            >
-              <button id="infoToGameButton">Go to the game</button>
-            </Link>
-            <Link
-              to={{
-                pathname: "/",
-                search: "?id=" + this.state.gameInfo.id
-              }}
-            >
-              <button id="infoToGameSelectionButton">Game selection</button>
-            </Link>
-          </div>
+        </div>
+        <div className="edit-game-form-buttons">
+          <Link
+            to={{
+              pathname: "/game",
+              search: "?id=" + this.state.gameInfo.id
+            }}
+          >
+            <button id="infoToGameButton">Back to the game</button>
+          </Link>
+          <Link
+            to={{
+              pathname: "/",
+              search: "?id=" + this.state.gameInfo.id
+            }}
+          >
+            <button id="infoToGameSelectionButton">Game selection</button>
+          </Link>
         </div>
       </div>
     );

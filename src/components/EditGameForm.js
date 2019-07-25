@@ -473,14 +473,6 @@ export default class EditGameForm extends React.Component {
           borderRadius: "2px",
           background: `${this.state.factionColorInput}`
         },
-        swatch: {
-          padding: "5px",
-          background: "#fff",
-          borderRadius: "1px",
-          boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
-          display: "inline-block",
-          cursor: "pointer"
-        },
         popover: {
           position: "absolute",
           zIndex: "2"
@@ -497,221 +489,222 @@ export default class EditGameForm extends React.Component {
 
     return (
       <div className="fade-main">
-        <div className="">
-          <form id="gameEditForm" onSubmit={this.handleGameSave} />
-          <form id="factionAddFrom" onSubmit={this.handleFactionAdd} />
-          <form id="gameDeletionForm" onSubmit={this.handleGameDeletion} />
-          <form
-            id="objectivePointAddFrom"
-            onSubmit={this.handleObjectivePointAdd}
-          />
+        <form id="gameEditForm" onSubmit={this.handleGameSave} />
+        <form id="factionAddFrom" onSubmit={this.handleFactionAdd} />
+        <form id="gameDeletionForm" onSubmit={this.handleGameDeletion} />
+        <form
+          id="objectivePointAddFrom"
+          onSubmit={this.handleObjectivePointAdd}
+        />
 
-          <h1>Game Editor</h1>
-          <br />
-          <input
-            placeholder="Game name"
-            name="gamename"
-            value={this.state.gamename}
-            onChange={this.handleChange}
-            id="editGameNameInput"
-            form="gameEditForm"
-            required
-          />
-          <br />
-          <input
-            placeholder="Description"
-            type="text"
-            name="description"
-            value={this.state.description}
-            onChange={this.handleChange}
-            id="editGameDescriptionInput"
-            form="gameEditForm"
-            required
-          />
-          <br />
-          <label className="">Start:</label>
-          <input
-            className="formDate"
-            type="date"
-            name="startDate"
-            value={this.state.startDate}
-            onChange={this.handleChange}
-            id="editGameDateStartInput"
-            form="gameEditForm"
-            required
-          />
-          <input
-            className="formTime"
-            type="time"
-            name="startTime"
-            value={this.state.startTime}
-            onChange={this.handleChange}
-            sid="editGameTimeStartInput"
-            form="gameEditForm"
-            required
-          />
-          <br />
-          <label className="">End:</label>
-          <input
-            className="formDate"
-            type="date"
-            name="endDate"
-            value={this.state.endDate}
-            onChange={this.handleChange}
-            min={this.state.startDate}
-            id="editGameDateEndInput"
-            form="gameEditForm"
-            required
-          />
-          <input
-            className="formTime"
-            type="time"
-            name="endTime"
-            value={this.state.endTime}
-            onChange={this.handleChange}
-            id="editGameTimeEndInput"
-            form="gameEditForm"
-            required
-          />
-          <br />
-          <br />
-          <label>Factions</label>
-          <br />
-          <input
-            id="editGameFactionNameInput"
-            name="factionNameInput"
-            value={this.state.factionNameInput}
-            minLength="2"
-            onChange={this.handleChange}
-            placeholder="Add new faction"
-            form="factionAddFrom"
-          />
-          <input
-            id="editGameFactionPasswordInput"
-            name="factionPasswordInput"
-            value={this.state.factionPasswordInput}
-            minLength="3"
-            onChange={this.handleChange}
-            placeholder="Faction password"
-            type="password"
-            form="factionAddFrom"
-          />
-          <div
-            id="editGameColorPickerButton"
-            style={styles.swatch}
-            onClick={() =>
-              this.setState({
-                displayColorPicker: !this.state.displayColorPicker
-              })
-            }
-          >
-            <div style={styles.color} />
+        <h1 className="edit-game-title">Game Editor</h1>
+        <div className="edit-game-container">
+          <div className="edit-game-inner-container">
+            <label>Name:</label>
+            <input
+              placeholder="Game name"
+              name="gamename"
+              value={this.state.gamename}
+              onChange={this.handleChange}
+              id="editGameNameInput"
+              form="gameEditForm"
+              required
+            />
+            <label>Description:</label>
+            <textarea
+              placeholder="Description"
+              type="text"
+              name="description"
+              value={this.state.description}
+              onChange={this.handleChange}
+              id="editGameDescriptionInput"
+              form="gameEditForm"
+              required
+            />
+            <label className="">Start:</label>
+            <input
+              className="formDate"
+              type="date"
+              name="startDate"
+              value={this.state.startDate}
+              onChange={this.handleChange}
+              id="editGameDateStartInput"
+              form="gameEditForm"
+              required
+            />
+            <input
+              className="formTime"
+              type="time"
+              name="startTime"
+              value={this.state.startTime}
+              onChange={this.handleChange}
+              sid="editGameTimeStartInput"
+              form="gameEditForm"
+              required
+            />
+            <label className="">End:</label>
+            <input
+              className="formDate"
+              type="date"
+              name="endDate"
+              value={this.state.endDate}
+              onChange={this.handleChange}
+              min={this.state.startDate}
+              id="editGameDateEndInput"
+              form="gameEditForm"
+              required
+            />
+            <input
+              className="formTime"
+              type="time"
+              name="endTime"
+              value={this.state.endTime}
+              onChange={this.handleChange}
+              id="editGameTimeEndInput"
+              form="gameEditForm"
+              required
+            />
           </div>
-          {this.state.displayColorPicker && (
-            <div
-              id="editGameColorPicker"
-              style={styles.cover}
-              onClick={() => this.setState({ displayColorPicker: false })}
-            >
-              <SketchPicker
-                color={this.state.factionColorInput}
-                onChangeComplete={color =>
-                  this.setState({ factionColorInput: color.hex })
+          <div className="edit-game-inner-container">
+            <label>Factions</label>
+            <input
+              id="editGameFactionNameInput"
+              name="factionNameInput"
+              value={this.state.factionNameInput}
+              minLength="2"
+              onChange={this.handleChange}
+              placeholder="Add new faction"
+              form="factionAddFrom"
+            />
+            <input
+              id="editGameFactionPasswordInput"
+              name="factionPasswordInput"
+              value={this.state.factionPasswordInput}
+              minLength="3"
+              onChange={this.handleChange}
+              placeholder="Faction password"
+              type="password"
+              form="factionAddFrom"
+            />
+            <div className="edit-game-faction-color">
+              <label>Faction color:</label>
+              <div
+                id="editGameColorPickerButton"
+                className="edit-game-color-picker-button"
+                onClick={() =>
+                  this.setState({
+                    displayColorPicker: !this.state.displayColorPicker
+                  })
                 }
-              />
+              >
+                <div style={styles.color} />
+              </div>
+              {this.state.displayColorPicker && (
+                <div
+                  id="editGameColorPicker"
+                  className="edit-game-color-picker"
+                  style={styles.cover}
+                  onClick={() => this.setState({ displayColorPicker: false })}
+                >
+                  <SketchPicker
+                    className="edit-game-color-picker"
+                    color={this.state.factionColorInput}
+                    onChangeComplete={color =>
+                      this.setState({ factionColorInput: color.hex })
+                    }
+                  />
+                </div>
+              )}
             </div>
-          )}
-          <button
-            id="editGameFactionSubmitButton"
-            type="submit"
-            form="factionAddFrom"
-          >
-            Add
-          </button>
-          <ul>{factions}</ul>
-          <br />
-          <br />
-          <label>Objective points</label>
-          <br />
-          <input
-            id="editGameObjectivePointDescriptionInput"
-            name="objectivePointDescriptionInput"
-            type="number"
-            value={this.state.objectivePointDescriptionInput}
-            onChange={this.handleChange}
-            placeholder="Objective point id"
-            min="1000000"
-            form="objectivePointAddFrom"
-          />
-          <input
-            id="editGameObjectivePointMultiplierInput"
-            name="objectivePointMultiplierInput"
-            type="number"
-            value={this.state.objectivePointMultiplierInput}
-            onChange={this.handleChange}
-            placeholder="Objective point multiplier"
-            form="objectivePointAddFrom"
-          />
-          <button
-            id="editGameObjectivePointSubmitButton"
-            type="submit"
-            form="objectivePointAddFrom"
-          >
-            Add
-          </button>
-          <ul>{objectivePoints}</ul>
-          <br />
-          <br />
-          <label>Node things (set if objective points are in the game)</label>
-          <br />
-          <br />
-          <label className="" form="gameEditForm">
-            Capture time:
-          </label>
-          <input
-            id="editGameCaptureTimeInput"
-            name="capture_time"
-            type="number"
-            value={this.state.capture_time}
-            form="gameEditForm"
-            onChange={this.handleChange}
-          />
-          <label className="">Confimation time:</label>
-          <input
-            id="editGameConfirmationTimeInput"
-            name="confirmation_time"
-            type="number"
-            value={this.state.confirmation_time}
-            form="gameEditForm"
-            onChange={this.handleChange}
-          />
-          <br />
-          <br />
-          <label>Map things</label>
-          <br />
-          <Map
-            id="editGameCenterMap"
-            className=""
-            center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
-            zoom={this.state.zoom}
-            maxZoom="13"
-            style={{ height: "400px", width: "400px" }}
-            onmoveend={e => this.setState({ mapCenter: e.target.getCenter() })}
-            onzoomend={e => this.setState({ zoom: e.target.getZoom() })}
-          >
-            <TileLayer
-              attribution="Maanmittauslaitoksen kartta"
-              url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+            <button
+              id="editGameFactionSubmitButton"
+              type="submit"
+              form="factionAddFrom"
+            >
+              Add
+            </button>
+            <ul>{factions}</ul>
+
+            <label>Objective points</label>
+            <input
+              id="editGameObjectivePointDescriptionInput"
+              name="objectivePointDescriptionInput"
+              type="number"
+              value={this.state.objectivePointDescriptionInput}
+              onChange={this.handleChange}
+              placeholder="Objective point id"
+              min="1000000"
+              form="objectivePointAddFrom"
             />
-            <EditGameFormToolbar
-              pushFlagbox={this.pushFlagbox}
-              updateFlagbox={this.updateFlagbox}
-              deleteFlagbox={this.deleteFlagbox}
-              flagboxlocations={this.state.objectivePoints}
-              gameId={this.state.gameId}
+            <input
+              id="editGameObjectivePointMultiplierInput"
+              name="objectivePointMultiplierInput"
+              type="number"
+              value={this.state.objectivePointMultiplierInput}
+              onChange={this.handleChange}
+              placeholder="Objective point multiplier"
+              form="objectivePointAddFrom"
             />
-          </Map>
-          <br />
+            <button
+              id="editGameObjectivePointSubmitButton"
+              type="submit"
+              form="objectivePointAddFrom"
+            >
+              Add
+            </button>
+            <ul>{objectivePoints}</ul>
+            <label>Node things (set if objective points are in the game)</label>
+            <label className="" form="gameEditForm">
+              Capture time:
+            </label>
+            <input
+              id="editGameCaptureTimeInput"
+              name="capture_time"
+              type="number"
+              value={this.state.capture_time}
+              form="gameEditForm"
+              onChange={this.handleChange}
+            />
+            <label className="">Confimation time:</label>
+            <input
+              id="editGameConfirmationTimeInput"
+              name="confirmation_time"
+              type="number"
+              value={this.state.confirmation_time}
+              form="gameEditForm"
+              onChange={this.handleChange}
+            />
+          </div>
+
+          <div className="edit-game-inner-container">
+            <label>Map things</label>
+            <Map
+              id="editGameCenterMap"
+              className=""
+              center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
+              zoom={this.state.zoom}
+              maxZoom="13"
+              style={{ height: "400px", width: "400px" }}
+              onmoveend={e =>
+                this.setState({ mapCenter: e.target.getCenter() })
+              }
+              onzoomend={e => this.setState({ zoom: e.target.getZoom() })}
+            >
+              <TileLayer
+                attribution="Maanmittauslaitoksen kartta"
+                url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
+              />
+              <EditGameFormToolbar
+                pushFlagbox={this.pushFlagbox}
+                updateFlagbox={this.updateFlagbox}
+                deleteFlagbox={this.deleteFlagbox}
+                flagboxlocations={this.state.objectivePoints}
+                gameId={this.state.gameId}
+              />
+            </Map>
+          </div>
+        </div>
+        <div className="edit-game-form-buttons">
           <button
             id="editGameDeleteGameButton"
             style={{ backgroundColor: "red" }}

@@ -42,8 +42,12 @@ export default class ImageUpload extends Component {
   render() {
     return (
       <div>
-        <label>Upload an image</label>
-        <input type="file" id="imageUploadInput" onChange={this.onChange} />
+        <input
+          className="new-game-input"
+          type="file"
+          id="imageUploadInput"
+          onChange={this.onChange}
+        />
         <div className="errorMessage">{this.state.errorMsg}</div>
       </div>
     );

@@ -3,13 +3,13 @@ import UserMap from "./UserMap";
 import TaskListButton from "./TaskListButton";
 import { Link } from "react-router-dom";
 import JoinGameForm from "./JoinGameForm";
-import PlayerlistView from "./PlayerlistView";
-import NotificationView from "./NotificationView";
 import GameStateButtons from "./GameStateButtons";
 import ClientSocket from "./Socket";
 import NotificationPopup from "./NotificationPopup";
 import ScoreCounter from "./ScoreCounter";
-import ScoreForm from "./ScoreForm";
+import NotificationButton from "./NotificationButton";
+import AddScoreButton from "./AddScoreButton";
+import PlayerListButton from "./PlayerListButton";
 
 export default class GameView extends React.Component {
   state = {
@@ -122,7 +122,7 @@ export default class GameView extends React.Component {
       ? [this.state.gameInfo.center.lat, this.state.gameInfo.center.lng]
       : null;
     return (
-      <div>
+      <div className="game-view-container">
         {this.state.gameInfo !== null && (
           <div>
             <ScoreCounter
@@ -134,9 +134,6 @@ export default class GameView extends React.Component {
               }
             />
             <div className="header">
-              <Link to="/">
-                <button id="gameViewGameSelectionButton">Game selection</button>
-              </Link>
               {this.state.gameInfo !== null && (
                 <div>
                   {this.state.gameInfo.id && (
@@ -148,13 +145,12 @@ export default class GameView extends React.Component {
                   )}
                 </div>
               )}
-              <div>Game Name: {this.state.gameInfo.name}</div>
-              {this.state.role === "" && (
-                <div>You don't have a role in this game</div>
-              )}
-              {this.state.role !== "" && (
-                <div>Your role in this game: {this.state.role}</div>
-              )}
+              <div className="game-view-info-text">
+                Logged in as: {this.state.role === "" ? " -" : this.state.role}
+              </div>
+              <Link to="/">
+                <button id="gameViewGameSelectionButton">Game selection</button>
+              </Link>
               {this.state.role === "admin" &&
                 this.state.gameInfo.state === "CREATED" && (
                   <Link
@@ -183,20 +179,27 @@ export default class GameView extends React.Component {
                 </button>
               )}
               {this.state.role !== "" && (
-                <button
-                  id="notificationsButton"
-                  onClick={() => this.setState({ form: "notifications" })}
-                >
-                  Notifications
-                </button>
+                <NotificationButton
+                  gameId={this.state.gameInfo.id}
+                  socket={this.state.socket}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
+                />
               )}
               {this.state.role !== "" && (
-                <button
-                  id="showPlayersButton"
-                  onClick={() => this.setState({ form: "players" })}
-                >
-                  Players
-                </button>
+                <PlayerListButton
+                  gameId={this.state.gameInfo.id}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
+                />
               )}
               {this.state.role !== "" && (
                 <TaskListButton
@@ -207,12 +210,16 @@ export default class GameView extends React.Component {
                 />
               )}
               {this.state.role === "admin" && (
-                <button
-                  id="scoreFormButton"
-                  onClick={() => this.setState({ form: "score" })}
-                >
-                  Add score
-                </button>
+                <AddScoreButton
+                  gameId={this.state.gameInfo.id}
+                  factions={this.state.gameInfo.factions}
+                  role={this.state.role}
+                  gameState={
+                    this.state.gameInfo !== undefined
+                      ? this.state.gameInfo.state
+                      : ""
+                  }
+                />
               )}
               {this.state.role !== "admin" && this.state.role !== "" && (
                 <button
@@ -233,40 +240,6 @@ export default class GameView extends React.Component {
                   gameId={this.state.gameInfo.id}
                   toggleView={() => this.setState({ form: "" })}
                   onJoin={() => this.getPlayerRole(this.state.gameInfo.id)}
-                />
-              )}
-              {this.state.form === "players" && (
-                <PlayerlistView
-                  gameId={this.state.gameInfo.id}
-                  gameState={this.state.gameInfo.state}
-                  role={this.state.role}
-                  toggleView={() => this.setState({ form: "" })}
-                />
-              )}
-              {this.state.form === "notifications" && (
-                <NotificationView
-                  gameId={this.state.gameInfo.id}
-                  toggleView={() => this.setState({ form: "" })}
-                  socket={this.state.socket}
-                  role={this.state.role}
-                  gameState={
-                    this.state.gameInfo !== undefined
-                      ? this.state.gameInfo.state
-                      : ""
-                  }
-                />
-              )}
-              {this.state.form === "score" && (
-                <ScoreForm
-                  gameId={this.state.gameInfo.id}
-                  factions={this.state.gameInfo.factions}
-                  toggleView={() => this.setState({ form: "" })}
-                  role={this.state.role}
-                  gameState={
-                    this.state.gameInfo !== undefined
-                      ? this.state.gameInfo.state
-                      : ""
-                  }
                 />
               )}
             </div>

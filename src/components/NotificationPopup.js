@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 
 export default class NotificationPopup extends React.Component {
   state = {
@@ -28,28 +29,31 @@ export default class NotificationPopup extends React.Component {
 
   render() {
     if (this.state.lastNotification !== null && this.state.visible) {
-      return (
-        <div
-          className={
-            this.state.lastNotification.type === "alert"
-              ? "notification-popup alert"
-              : "notification-popup warning"
-          }
-        >
-          <button
-            id="NotificationPopupCloseButton"
-            onClick={() => {
-              this.setState({ visible: false });
-            }}
+      return ReactDOM.createPortal(
+        <div className="notification-container">
+          <div
+            className={
+              this.state.lastNotification.type === "alert"
+                ? "notification-popup alert"
+                : "notification-popup note"
+            }
           >
-            Close
-          </button>
-          <br />
-          <label>
-            {this.state.lastNotification.type === "alert" ? "ALERT" : "Note"}
-          </label>
-          <p>{this.state.lastNotification.message}</p>
-        </div>
+            <button
+              id="NotificationPopupCloseButton"
+              className="notification-popup-close"
+              onClick={() => {
+                this.setState({ visible: false });
+              }}
+            >
+              ×
+            </button>
+            <label>
+              {this.state.lastNotification.type === "alert" ? "ALERT" : "Note"}
+            </label>
+            <p>{this.state.lastNotification.message}</p>
+          </div>
+        </div>,
+        document.getElementById("popup")
       );
     }
 

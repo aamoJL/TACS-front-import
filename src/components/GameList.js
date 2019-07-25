@@ -86,11 +86,7 @@ class GameList extends React.Component {
       />
     ));
 
-    return (
-      <div className="gamelist">
-        <div className="gamelist-item">{gamelistItems}</div>
-      </div>
-    );
+    return <div className="gamelist">{gamelistItems}</div>;
   }
 }
 

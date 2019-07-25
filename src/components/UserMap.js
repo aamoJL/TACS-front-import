@@ -20,9 +20,9 @@ class UserMap extends Component {
   }
 
   componentDidMount() {
-    this.getCurrentPosition(position => {
-      this.setCurrentPosition(position);
-    });
+    // this.getCurrentPosition(position => {
+    //   this.setCurrentPosition(position);
+    // });
   }
 
   shouldComponentUpdate(nextProps, nextState) {

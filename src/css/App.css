@@ -3,7 +3,6 @@
 body {
   background-color: #2c2c2c;
   color: #ffffff;
-  overflow: scroll;
   height: 100%;
 }
 
@@ -195,9 +194,10 @@ textarea:focus {
   border-style: none;
 }
 
-#newGameSubmitButton {
+/* #newGameSubmitButton {
   background-color: #afca17;
   border-radius: 30px;
+  margin: 5px 10px;
   height: 40px;
   color: white;
   width: 80px;
@@ -209,6 +209,22 @@ textarea:focus {
   transition-duration: 0.4s;
   background-color: rgb(96, 112, 33);
 }
+
+#closeNewGameFormX {
+  background-color: #afca17;
+  border-radius: 30px;
+  height: 40px;
+  padding: 10px;
+  color: white;
+  width: 80px;
+  border-style: none;
+}
+
+#closeNewGameFormX:hover {
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  background-color: rgb(96, 112, 33);
+} */
 
 .border-right {
   border-right: #ffffff;
@@ -259,25 +275,16 @@ input {
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
 
+.card-body {
+  overflow: hidden;
+}
+
 .card-img-top {
   width: 100%;
 }
 
 .gamesheader {
-  padding: 50px;
-}
-
-.alert {
-  width: 30vw;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  position: none;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 0;
-  overflow: hidden;
-  background-color: #1d1d1b;
-  color: #ffffff;
+  padding: 30px;
 }
 
 .map {
@@ -330,7 +337,7 @@ div.scoreContainer {
   max-width: 400px;
   margin: auto;
   top: 5px;
-  left: calc(50vw - 100px);
+  left: calc(50vw - 200px);
   align-items: center;
   justify-content: center;
   z-index: 1000;
@@ -373,7 +380,7 @@ div.header {
   top: 0;
   right: 0;
   height: 100vh;
-  width: 100px;
+  width: 200px;
   opacity: 0.95;
   background: #1d1d1b;
   z-index: 1000;
@@ -484,192 +491,6 @@ div.fade-main {
   cursor: pointer;
 }
 
-/* div.sticky {
-  position: fixed;
-  to
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-  transform: rotate(90deg);
-}
-
-div.login {
-  height: 60vh;
-  width: 40vw;
-  margin: auto;
-  margin-top: 5%;
-  padding-top: 25px;
-}
-  ri
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-  transform: rotate(90deg);
-}
-
-div.login {
-  height: 60vh;
-  width: 40vw;
-  margin: auto;
-  margin-top: 5%;
-  padding-top: 25px;
-}
-  he
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-  transform: rotate(90deg);
-}
-
-div.login {
-  height: 60vh;
-  width: 40vw;
-  margin: auto;
-  margin-top: 5%;
-  padding-top: 25px;
-}
-  wi
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-  transform: rotate(90deg);
-}
-
-div.login {
-  height: 60vh;
-  width: 40vw;
-  margin: auto;
-  margin-top: 5%;
-  padding-top: 25px;
-}
-  ma
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-  transform: rotate(90deg);
-}
-
-div.login {
-  height: 60vh;
-  width: 40vw;
-  margin: auto;
-  margin-top: 5%;
-  padding-top: 25px;
-}
-} */
-/* .close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-  transform: rotate(90deg);
-} */
-
-/* div.login {
-  height: 60vh;
-  width: 40vw;
-  margin: auto;
-  margin-top: 5%;
-  padding-top: 25px;
-} */
-
-/* .close {
-  position: fixed;
-  color: #f1f1f1;
-  height: 85px;
-  font-size: 100px;
-  font-weight: bold;
-  transition: transform 0.4s ease-in-out;
-  line-height: 70%;
-} */
-/* 
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-  transform: rotate(90deg);
-}
-
-div.login {
-  height: 60vh;
-  width: 40vw;
-  margin: auto;
-  margin-top: 5%;
-  padding-top: 25px;
-} */
-/* 
-div.login h1 {
-  color: rgb(0, 200, 255);
-  margin-bottom: 0.5em;
-  font-size: 3em;
-} */
-
-/* div.login h2 {
-  color: rgb(255, 0, 0);
-  margin-top: 2em;
-  font-size: 1.5em;
-} */
-
-/* div.login input {
-  background: none;
-  border: none;
-  outline: none;
-  width: 60%;
-  padding: 12px 20px;
-  margin-bottom: 1em;
-  display: inline-block;
-  box-sizing: border-box;
-  font-size: 180%;
-  color: white;
-  border-bottom: 3px solid rgb(0, 200, 255);
-} */
-
-/* div.login button {
-  transition-property: background-color;
-  transition-duration: 0.5s;
-  transition-timing-function: ease;
-  background-color: #279fd9;
-  color: white;
-  font-weight: bold;
-  border: 0px;
-  padding: 0.5em;
-  margin: 0em 2em;
-  width: 20%;
-  font-size: 20px;
-} */
-
-/* div.login button:hover {
-  background-color: darkblue;
-  cursor: pointer;
-} */
-
-/* .login .formDate {
-  width: 30%;
-} */
-
-/* .login label.formDate {
-  color: white;
-  width: 10%;
-  margin-left: 10%;
-  font-size: 180%;
-} */
-
-/* .login .formTime {
-  width: 30%;
-  margin-right: 20%;
-} */
-
 /* Editing text button in the toolbar */
 .leaflet-draw-toolbar .leaflet-draw-draw-textbox {
   background-image: url("../icons/button-textbox.png");
@@ -718,27 +539,335 @@ div.login h1 {
   font-weight: normal;
 } */
 
-.gamelist {
-  background-color: #1d1d1b;
-  max-width: 500px;
+.game-view-container {
+  overflow: hidden;
+}
+
+.gamecard {
+  display: flex;
+  flex-direction: column;
+  max-width: 30%;
+  border: 5px solid #647828;
   padding: 10px;
+  margin: 10px;
+  background-color: #859b28;
+}
+
+.gamelist {
+  justify-content: center;
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  background-color: #1d1d1b;
+  border: 2px solid #556023;
+  max-width: 80%;
+  max-height: 600px;
+  overflow-y: scroll;
 }
 
 .tasklist {
-  position: fixed;
-  margin: auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  padding: 5px;
+  position: absolute;
+  top: 20%;
+  right: 50%;
   z-index: 2020;
   background-color: #1d1d1b;
   color: #ffffff;
+  max-width: 500px;
+  min-width: 300px;
+}
+
+.tasklist > * {
+  padding: 5px;
+  margin: 5px;
 }
 
 .tasklist-item {
-  margin: 20px;
+  max-width: 300px;
+  padding: 10px;
+  background-color: #2c2c28;
+  margin: 10px;
 }
 
 .task-form {
   display: flex;
   flex-direction: column;
 }
+.task-form > * {
+  padding: 5px;
+  margin: 5px;
+}
 
-/* VANHAA */
+.task-items-container {
+  overflow-y: scroll;
+  max-height: 400px;
+}
+
+.close {
+  position: absolute;
+  color: #f1f1f1;
+  top: 10px;
+  right: 20px;
+  font-size: 25px;
+  font-weight: bold;
+}
+.close:hover {
+  color: rgb(65, 65, 65);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.notification {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  padding: 5px;
+  position: absolute;
+  top: 20%;
+  right: 50%;
+  margin: auto;
+  z-index: 2020;
+  min-width: 260px;
+  background-color: #1d1d1b;
+  color: #ffffff;
+}
+
+.notification > * {
+  padding: 5px;
+  margin: 5px;
+}
+
+.notification-input > * {
+  padding: 5px;
+  margin: 5px;
+}
+
+.new-game-popup {
+  position: fixed;
+  width: 80%;
+  height: 85%;
+  padding: 20px;
+  border-radius: 15px;
+  top: 10%;
+  left: 10%;
+  z-index: 2021;
+  background-color: #1d1d1b;
+}
+
+.new-game-outer-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.new-game-inner-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.new-game-inner-container > * {
+  justify-content: center;
+  display: flex;
+}
+
+.new-game-button-container {
+  display: flex;
+  justify-content: center;
+  margin: 30px;
+}
+
+.new-game-button {
+  background-color: #afca17;
+  border-radius: 30px;
+  margin: 5px 10px;
+  height: 40px;
+  color: white;
+  width: 80px;
+  border-style: none;
+}
+
+.new-game-button:hover {
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  background-color: rgb(96, 112, 33);
+}
+
+.new-game-input {
+  margin: auto;
+  width: 50%;
+  min-width: 150px;
+}
+
+.edit-game-container {
+  display: flex;
+  flex-direction: row;
+  left: 0;
+}
+
+.edit-game-inner-container {
+  display: flex;
+  flex-direction: column;
+  width: 33%;
+}
+
+.edit-game-inner-container > * {
+  margin: 5px 10%;
+  padding: 5px;
+  max-width: 400px;
+}
+
+.edit-game-title {
+  display: flex;
+  justify-content: center;
+  margin: 2%;
+}
+
+.edit-game-color-picker {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  padding: "5px";
+  border-radius: "1px";
+  box-shadow: "0 0 0 1px rgba(0,0,0,.1)";
+  cursor: "pointer";
+}
+
+.edit-game-color-picker-button {
+  margin: 5px;
+  padding: 0 10px;
+}
+
+.edit-game-faction-color {
+  display: flex;
+  flex-direction: row;
+}
+
+.edit-game-form-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 50px;
+}
+
+.edit-game-form-buttons > * {
+  margin: 10px;
+  padding: 5px;
+}
+
+.game-info-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: scroll-y;
+  align-items: center;
+  padding: 10px;
+}
+
+.game-info-view > * {
+  margin: 10px;
+}
+
+.info-map-container {
+  flex: 2;
+}
+
+.game-view-info-text {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.game-info-view-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info-view-inner-container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-info-view-inner-container > p {
+  width: 40%;
+  white-space: pre-wrap; /* CSS3 */
+  white-space: -moz-pre-wrap; /* Firefox */
+  white-space: -pre-wrap; /* Opera <7 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word;
+}
+
+.game-info-view-inner-container > * {
+  margin: 5px 10%;
+  padding: 5px;
+}
+
+.notification-container {
+  top: 10%;
+  position: fixed;
+  z-index: 2000;
+}
+
+.notification-popup {
+  left: calc(50vw - 200px);
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 15px;
+  border-color: #2c2c2c;
+  border-style: solid;
+  border-width: 2px;
+}
+
+button.notification-popup-close {
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.notification-popup-close {
+  float: right;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.5;
+  text-decoration: none;
+  position: absolute;
+
+  top: 10px;
+  right: 20px;
+  font-size: 25px;
+  font-weight: bold;
+}
+.notification-popup-close:hover {
+  color: rgb(65, 65, 65);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.notification-popup.note {
+  background-color: rgba(255, 255, 0, 0.9);
+  color: black;
+}
+
+.notification-popup.alert {
+  background-color: rgba(255, 0, 0, 0.9);
+}

@@ -1,5 +1,7 @@
+import ReactDOM from "react-dom";
 import React from "react";
 import NotificationCard from "./NotificationCard";
+import Draggable from "react-draggable";
 
 export default class NotificationView extends React.Component {
   state = {
@@ -49,20 +51,28 @@ export default class NotificationView extends React.Component {
       <NotificationCard key={notification.id} notification={notification} />
     ));
 
-    return (
-      <div className="fade-main">
-        <button
-          id="notificationViewCloseButton"
-          onClick={() => this.props.toggleView()}
-        >
-          Close
-        </button>
-        <div>
+    return ReactDOM.createPortal(
+      <Draggable
+        bounds="body"
+        className="draggableContainer"
+        enableUserSelectHack={false}
+        cancel=".input-cancel-drag"
+      >
+        <div className="notification">
+          <button
+            className="close"
+            id="notificationViewCloseButton"
+            onClick={() => this.props.toggleView()}
+          >
+            ×
+          </button>
+          <h1>Notifications</h1>
           {this.props.role === "admin" &&
             this.props.gameState !== "ENDED" &&
             this.props.gameState !== "CREATED" && (
-              <form onSubmit={this.handleSend}>
+              <form className="notification-input" onSubmit={this.handleSend}>
                 <select
+                  className="input-cancel-drag"
                   id="notificationViewTypeSelect"
                   value={this.state.notificationTypeInput}
                   onChange={e =>
@@ -73,15 +83,22 @@ export default class NotificationView extends React.Component {
                   <option value="alert">Alert</option>
                 </select>
                 <input
+                  className="input-cancel-drag"
                   id="notificationViewMessageInput"
                   type="text"
+                  maxLength="63"
                   value={this.state.notificationInput}
                   onChange={e =>
                     this.setState({ notificationInput: e.target.value })
                   }
                   placeholder="Notification message..."
+                  required
                 />
-                <button id="notificationSubmitButton" type="submit">
+                <button
+                  className="input-cancel-drag"
+                  id="notificationSubmitButton"
+                  type="submit"
+                >
                   Send Notification
                 </button>
               </form>
@@ -91,9 +108,14 @@ export default class NotificationView extends React.Component {
               this.props.gameState === "CREATED") && (
               <p>Notifications can only be sent if the game is ongoing</p>
             )}
+
+          <label>Notification history</label>
+          <div className="task-items-container input-cancel-drag">
+            {notifications}
+          </div>
         </div>
-        {notifications}
-      </div>
+      </Draggable>,
+      document.getElementById("tasklist")
     );
   }
 }

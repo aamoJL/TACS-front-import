@@ -1,4 +1,6 @@
+import ReactDOM from "react-dom";
 import React from "react";
+import Draggable from "react-draggable";
 
 export default class ScoreForm extends React.Component {
   state = {
@@ -62,32 +64,53 @@ export default class ScoreForm extends React.Component {
       </option>
     ));
 
-    return (
-      <div className="fade-main">
-        <button
-          id="notificationViewCloseButton"
-          onClick={() => this.props.toggleView()}
-        >
-          Close
-        </button>
-        <div>
-          <label>Add Score</label>
-          <select
-            value={this.state.selectedFaction}
-            onChange={e => this.setState({ selectedFaction: e.target.value })}
+    return ReactDOM.createPortal(
+      <Draggable
+        bounds="body"
+        className="draggableContainer"
+        enableUserSelectHack={false}
+        cancel=".input-cancel-drag"
+      >
+        <div className="notification">
+          <button
+            className="close"
+            id="scoreformCloseButton"
+            onClick={() => this.props.toggleView()}
           >
-            {factionOptions}
-          </select>
-          <input
-            type="number"
-            value={this.state.scoreInput}
-            onChange={this.handleInputChange}
-            placeholder="Add score to faction..."
-            max="99"
-          />
-          <button onClick={this.handleSend}>Add</button>
+            ×
+          </button>
+
+          <h1>Add score</h1>
+          <form className="notification-input" onSubmit={this.handleSend}>
+            <select
+              className="input-cancel-drag"
+              id="scoreformSelectFaction"
+              value={this.state.selectedFaction}
+              onChange={e => this.setState({ selectedFaction: e.target.value })}
+            >
+              {factionOptions}
+            </select>
+            <input
+              className="input-cancel-drag"
+              id="scoreformScoreInput"
+              type="number"
+              value={this.state.scoreInput}
+              onChange={this.handleInputChange}
+              placeholder="Add score to faction..."
+              max="99"
+              required
+            />
+            <button
+              className="input-cancel-drag"
+              id="scoreformAddScoreButton"
+              type="submit"
+            >
+              Add
+            </button>
+          </form>
         </div>
-      </div>
+      </Draggable>,
+      document.getElementById("tasklist")
     );
   }
 }

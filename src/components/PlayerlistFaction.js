@@ -36,7 +36,6 @@ export default class PlayerlistFaction extends React.Component {
           <h2>
             {group.name} - {group.class}
           </h2>
-
           {group.players.map(player => {
             return (
               <PlayerlistPlayerCard
