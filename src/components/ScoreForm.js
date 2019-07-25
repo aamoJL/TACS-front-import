@@ -55,7 +55,6 @@ export default class ScoreForm extends React.Component {
   };
 
   render() {
-    console.log(this.props.factions);
     let factionOptions = this.props.factions.map(faction => (
       <option key={faction.factionId} value={faction.factionId}>
         {faction.factionName}

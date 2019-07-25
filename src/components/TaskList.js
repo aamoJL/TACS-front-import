@@ -17,9 +17,23 @@ class TaskList extends React.Component {
     this.getTasks(this.props.gameId);
   }
 
+  // SocketSignal format: message:{factionId}, type:{string}
+  // FactionId is empty if the task is for every faction
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.socketSignal !== null) {
-      if (prevProps.socketSignal.type === "task-update") {
+      // Admin updates on every task creation
+      if (
+        this.props.role === "admin" &&
+        prevProps.socketSignal.type === "task-update"
+      ) {
+        this.getTasks(this.props.gameId);
+      }
+      // Other roles updates when their faction gets a task
+      else if (
+        prevProps.socketSignal.type === "task-update" &&
+        (prevProps.socketSignal.message === "" ||
+          prevProps.socketSignal.message === this.props.userFaction)
+      ) {
         this.getTasks(this.props.gameId);
       }
     }
@@ -89,7 +103,6 @@ class TaskList extends React.Component {
           taskDescriptionInput: "",
           taskNameInput: ""
         });
-        this.getTasks(this.props.gameId);
       })
       .catch(error => console.log(error));
   };
@@ -124,10 +137,7 @@ class TaskList extends React.Component {
           return result.json();
         }
       })
-      .then(result => {
-        alert(result.message);
-        this.getTasks(this.props.gameId);
-      })
+      .then(result => {})
       .catch(error => console.log(error));
   };
 
@@ -156,10 +166,7 @@ class TaskList extends React.Component {
           return result.json();
         }
       })
-      .then(result => {
-        alert(result.message);
-        this.getTasks(this.props.gameId);
-      })
+      .then(result => {})
       .catch(error => console.log(error));
   };
 

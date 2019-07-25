@@ -27,18 +27,6 @@ export default class App extends Component {
     };
   }
 
-  componentDidMount() {
-    let gameId = new URL(window.location.href).searchParams.get("id");
-    this.setState(
-      {
-        gameId: gameId
-      },
-      () => {
-        this.getGameInfo(gameId);
-      }
-    );
-  }
-
   // Toggles through the list and changes the mapUrl state
   handleLayerChange = () => {
     const maps = [
@@ -51,13 +39,6 @@ export default class App extends Component {
         maps.indexOf(this.state.mapUrl) < maps.length - 1
           ? maps[maps.indexOf(this.state.mapUrl) + 1]
           : maps[0]
-    });
-  };
-
-  // function to be sent to Header -> GameList to get changed game ID
-  handleGameChange = gameId => {
-    this.setState({
-      currentGameId: gameId
     });
   };
 
