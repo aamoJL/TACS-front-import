@@ -128,7 +128,6 @@ export class NewGameForm extends React.Component {
         <div className="">
           <form id="gameCreationForm" onSubmit={this.handleGameCreation} />
           <h1>Demo Game Creation</h1>
-          <br />
           <label className="">Name: &nbsp;</label>
           <input
             placeholder="Game name"
@@ -137,9 +136,10 @@ export class NewGameForm extends React.Component {
             onChange={this.handleChange}
             id="newGameNameInput"
             form="gameCreationForm"
+            minLength="3"
+            maxLength="30"
             required
           />
-          <br />
           <label className="">Description: &nbsp;</label>
           <input
             placeholder="Description"
@@ -149,9 +149,10 @@ export class NewGameForm extends React.Component {
             onChange={this.handleChange}
             id="newGameDescriptionInput"
             form="gameCreationForm"
+            minLength="1"
+            maxLength="255"
             required
           />
-          <br />
           <label className="">Start: &nbsp;</label>
           <input
             className="formDate"
@@ -172,7 +173,6 @@ export class NewGameForm extends React.Component {
             form="gameCreationForm"
             required
           />
-          <br />
           <label className="">End: &nbsp; </label>
           <input
             className="formDate"
@@ -194,11 +194,8 @@ export class NewGameForm extends React.Component {
             form="gameCreationForm"
             required
           />
-          <br />
           <ImageUpload handleImagePath={this.handleImagePath} />
-          <br />
           <label>Map things</label>
-          <br />
           <Map
             id="newGameCenterMap"
             className=""
@@ -213,7 +210,6 @@ export class NewGameForm extends React.Component {
               url=" https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg"
             />
           </Map>
-          <br />
           <button
             id="newGameSubmitButton"
             type="submit"

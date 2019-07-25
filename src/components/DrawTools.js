@@ -38,7 +38,7 @@ class DrawTools extends Component {
     // start updating interval
     if (prevState.timer === null) {
       this.setState({
-        timer: setInterval(this.animation, 2000)
+        timer: setInterval(this.animation, 5000)
       });
     }
   }
@@ -55,17 +55,13 @@ class DrawTools extends Component {
         if (boxes[i].style) {
           boxes[i].style.width = "100px";
           boxes[i].style.height = "100px";
-          boxes[i].style.marginLeft = "-47px";
-          boxes[i].style.marginTop = "-77px";
-          boxes[i].style.borderRadius = "0%";
+          boxes[i].style.borderRadius = "50%";
           boxes[i].style.backgroundColor = boxes[i].title;
           await this.sleep(400);
-          boxes[i].style.backgroundColor = "#ebd7d5";
           boxes[i].style.width = "75px";
           boxes[i].style.height = "75px";
-          boxes[i].style.marginLeft = "-47px";
-          boxes[i].style.marginTop = "-77px";
-          boxes[i].style.borderRadius = "50%";
+          boxes[i].style.borderRadius = "75%";
+          boxes[i].style.backgroundColor = "rgba(0,0,0,0)";
           await this.sleep(400);
         }
       }

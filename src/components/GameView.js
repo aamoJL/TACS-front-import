@@ -6,7 +6,6 @@ import JoinGameForm from "./JoinGameForm";
 import GameStateButtons from "./GameStateButtons";
 import ClientSocket from "./Socket";
 import NotificationPopup from "./NotificationPopup";
-import GameInfoView from "./GameInfoView";
 import ScoreCounter from "./ScoreCounter";
 import NotificationButton from "./NotificationButton";
 import AddScoreButton from "./AddScoreButton";
@@ -146,13 +145,9 @@ export default class GameView extends React.Component {
                   )}
                 </div>
               )}
-              <div>Game Name: {this.state.gameInfo.name}</div>
-              {this.state.role === "" && (
-                <div>You don't have a role in this game</div>
-              )}
-              {this.state.role !== "" && (
-                <div>Your role in this game: {this.state.role}</div>
-              )}
+              <div className="game-view-info-text">
+                Logged in as: {this.state.role === "" ? " -" : this.state.role}
+              </div>
               <Link to="/">
                 <button id="gameViewGameSelectionButton">Game selection</button>
               </Link>
@@ -167,12 +162,14 @@ export default class GameView extends React.Component {
                     <button id="editGameButton">Edit</button>
                   </Link>
                 )}
-              <button
-                id="gameInfoButton"
-                onClick={() => this.setState({ form: "info" })}
+              <Link
+                to={{
+                  pathname: "/info/game",
+                  search: "?id=" + this.state.gameInfo.id
+                }}
               >
-                Game Info
-              </button>
+                <button id="gameInfoButton">Game Info</button>
+              </Link>
               {this.state.role === "" && (
                 <button
                   id="joinGameButton"
@@ -209,6 +206,7 @@ export default class GameView extends React.Component {
                   gameId={this.state.gameInfo.id}
                   role={this.state.role}
                   factions={this.state.gameInfo.factions}
+                  socketSignal={this.state.socketSignal}
                 />
               )}
               {this.state.role === "admin" && (
@@ -242,13 +240,6 @@ export default class GameView extends React.Component {
                   gameId={this.state.gameInfo.id}
                   toggleView={() => this.setState({ form: "" })}
                   onJoin={() => this.getPlayerRole(this.state.gameInfo.id)}
-                />
-              )}
-
-              {this.state.form === "info" && (
-                <GameInfoView
-                  gameInfo={this.state.gameInfo}
-                  toggleView={() => this.setState({ form: "" })}
                 />
               )}
             </div>

@@ -77,7 +77,7 @@ export default class ScoreForm extends React.Component {
             id="scoreformCloseButton"
             onClick={() => this.props.toggleView()}
           >
-            x
+            ×
           </button>
 
           <h1>Add score</h1>

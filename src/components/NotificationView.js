@@ -64,7 +64,7 @@ export default class NotificationView extends React.Component {
             id="notificationViewCloseButton"
             onClick={() => this.props.toggleView()}
           >
-            x
+            ×
           </button>
           <h1>Notifications</h1>
           {this.props.role === "admin" &&
@@ -109,7 +109,10 @@ export default class NotificationView extends React.Component {
               <p>Notifications can only be sent if the game is ongoing</p>
             )}
 
-          {notifications}
+          <label>Notification history</label>
+          <div className="task-items-container input-cancel-drag">
+            {notifications}
+          </div>
         </div>
       </Draggable>,
       document.getElementById("tasklist")
