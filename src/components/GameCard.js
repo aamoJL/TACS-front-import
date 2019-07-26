@@ -52,11 +52,16 @@ export default class GameCard extends React.Component {
     }
 
     return (
-      <div className="gamecard col-md-4">
-        <img
-          className="card-img-top"
-          src={this.state.gameInfo.image}
-          alt="Game Logo"
+      <div className="gamecard ">
+        <div
+          className="gamecard-img-container"
+          style={{
+            backgroundImage: `url(${this.state.gameInfo.image})`,
+            width: "300px",
+            height: "300px",
+            backgroundSize: "cover",
+            backgroundPosition: "50% 50%"
+          }}
         />
         <div className="card-body">
           <label>Name: {this.state.gameInfo.name}</label>
@@ -78,7 +83,11 @@ export default class GameCard extends React.Component {
               search: "?id=" + this.state.gameInfo.id
             }}
           >
-            <button type="button" className="select-game-button">
+            <button
+              type="button"
+              id={`select${this.state.gameInfo.name}`}
+              className="select-game-button"
+            >
               Select
             </button>
           </Link>

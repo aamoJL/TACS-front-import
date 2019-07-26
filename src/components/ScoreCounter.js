@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 export default class ScoreCounter extends Component {
   constructor(props) {
@@ -41,32 +41,38 @@ export default class ScoreCounter extends Component {
     if (prevProps.socketSignal === "score-update") this.getScoresAndFactions();
   }
 
+  // Render scores and colors of the factions
   render() {
     return (
       <div className="scoreContainer">
-        <span
-          className="scoreCircle"
-          style={{
-            backgroundColor: this.state.scores
-              ? this.state.scores[0].faction.colour
-              : "red"
-          }}
-        />
-        <div className="scoreBlock">
-          {this.state.scores ? this.state.scores[0].score : 0}
-        </div>
-        <div className="scoreDivider" />
-        <div className="scoreBlock">
-          {this.state.scores ? this.state.scores[1].score : 0}
-        </div>
-        <span
-          className="scoreCircle"
-          style={{
-            backgroundColor: this.state.scores
-              ? this.state.scores[1].faction.colour
-              : "blue"
-          }}
-        />
+        {this.state.scores ? (
+          this.state.scores.map((score, i) => {
+            if (i !== this.state.scores.length - 1) {
+              return (
+                <Fragment>
+                  <span
+                    className="score-circle"
+                    style={{ backgroundColor: score.colour }}
+                  />
+                  <div className="score-block">{score.score}</div>
+                  <div className="score-divider" />
+                </Fragment>
+              );
+            } else {
+              return (
+                <Fragment>
+                  <span
+                    className="score-circle"
+                    style={{ backgroundColor: score.colour }}
+                  />
+                  <div className="score-block">{score.score}</div>
+                </Fragment>
+              );
+            }
+          })
+        ) : (
+          <div />
+        )}
       </div>
     );
   }
