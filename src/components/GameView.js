@@ -15,6 +15,7 @@ export default class GameView extends React.Component {
   state = {
     gameInfo: null,
     role: "", //empty, soldier, factionleader, admin
+    userFaction: undefined,
     form: "",
     lat: 62.2416479,
     lng: 25.7597186,
@@ -41,7 +42,8 @@ export default class GameView extends React.Component {
     })
       .then(res => res.json())
       .then(res => {
-        this.setState({ role: res.role });
+        console.log(res);
+        this.setState({ role: res.role, userFaction: res.factionId });
       })
       .catch(error => console.log(error));
   }
@@ -207,6 +209,7 @@ export default class GameView extends React.Component {
                   role={this.state.role}
                   factions={this.state.gameInfo.factions}
                   socketSignal={this.state.socketSignal}
+                  userFaction={this.state.userFaction}
                 />
               )}
               {this.state.role === "admin" && (
