@@ -264,6 +264,14 @@ input {
 .gamecard {
   border-radius: 10px;
   padding: 10px;
+  min-width: 400px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  border: 5px solid #647828;
+  padding: 10px;
+  margin: 10px;
+  background-color: #859b28;
   color: black;
 }
 
@@ -279,8 +287,16 @@ input {
   overflow: hidden;
 }
 
-.card-img-top {
-  width: 100%;
+.gamecard-img-container {
+  min-width: 370px;
+  min-height: 300px;
+  max-height: 300px;
+  max-width: 300px;
+
+  height: 300px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
 }
 
 .gamesheader {
@@ -541,16 +557,6 @@ div.fade-main {
 
 .game-view-container {
   overflow: hidden;
-}
-
-.gamecard {
-  display: flex;
-  flex-direction: column;
-  max-width: 30%;
-  border: 5px solid #647828;
-  padding: 10px;
-  margin: 10px;
-  background-color: #859b28;
 }
 
 .gamelist {
