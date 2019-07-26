@@ -95,6 +95,7 @@ class UserMap extends Component {
         else throw Error(res.statusText);
       })
       .then(data => {
+        console.log(data);
         this.setState({
           drawings: data
         });

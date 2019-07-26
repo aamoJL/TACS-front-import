@@ -81,6 +81,13 @@ L.Draw.MarkerTextBox = L.Draw.Marker.extend({
 // Just adding one new button though lol
 L.DrawToolbar.include({
   getModeHandlers: function(map) {
+    /*
+    this.options.polyline = {
+      shapeOptions: {
+        color: this.props.color
+      }
+    };
+    */
     return [
       {
         enabled: this.options.polyline,

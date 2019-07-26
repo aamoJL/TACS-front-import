@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { FeatureGroup } from "react-leaflet";
+import { ChromePicker } from "react-color";
+import Control from "react-leaflet-control";
 import "leaflet-draw";
 import DrawingFormatter, { initialTextSetup } from "./DrawingFormatter";
 import DrawLeafletObjects from "./DrawLeafletObjects.js";
@@ -12,7 +14,8 @@ class DrawTools extends Component {
       editModeActive: false,
       deleteModeActive: false,
       flagboxes: [],
-      timer: null
+      timer: null,
+      color: "#000"
     };
   }
 
@@ -72,6 +75,10 @@ class DrawTools extends Component {
     }
   };
 
+  handleChangeComplete = color => {
+    this.setState({ color: color.hex });
+  };
+
   checkTextOnBlur = drawing => {
     let text = drawing._tooltip._container.innerText;
 
@@ -114,6 +121,7 @@ class DrawTools extends Component {
 
   // send drawing to database when it's created
   _onCreated = e => {
+    console.log(e);
     // handle one point polylines
     if (e.layerType === "polyline" && e.layer.getLatLngs().length === 1) {
       e.layer.remove();
@@ -127,13 +135,15 @@ class DrawTools extends Component {
       document.getElementById(e.layer._leaflet_id).focus();
       return;
     }
+    e.layer.options.color = this.state.color;
     // use DrawingFormatter to format data for database
     let data = DrawingFormatter[e.layerType](e.layer);
 
     let obj = {
       gameId: this.props.currentGameId,
       drawingIsActive: true,
-      data: data
+      data: data,
+      color: this.state.color
     };
     this.props.sendGeoJSON(obj);
 
@@ -198,7 +208,6 @@ class DrawTools extends Component {
   // used to deny component update when deleting is active
   _onDeleteStart = () => {
     this.setState({ deleteModeActive: true });
-    console.log(this.state.deleteModeActive);
   };
 
   _onDeleteStop = () => {
@@ -220,8 +229,21 @@ class DrawTools extends Component {
               onDeleteStart={this._onDeleteStart}
               onEditStop={this._onEditStop}
               onDeleteStop={this._onDeleteStop}
+              color={this.state.color}
             />
           )}
+          <Control position="bottomleft">
+            {/*
+            <a
+              className={"leaflet-draw-edit-color"}
+              onClick={() => console.log("click")}
+            />
+            */}
+            <ChromePicker
+              color={this.state.pickedcolor}
+              onChangeComplete={this.handleChangeComplete}
+            />
+          </Control>
           <DrawLeafletObjects
             drawings={this.props.drawings}
             textboxSetup={this.textboxSetup}
