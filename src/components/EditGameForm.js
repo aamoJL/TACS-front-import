@@ -680,11 +680,10 @@ export default class EditGameForm extends React.Component {
             <label>Map things</label>
             <Map
               id="editGameCenterMap"
-              className=""
+              className="edit-game-map"
               center={[this.state.mapCenter.lat, this.state.mapCenter.lng]}
               zoom={this.state.zoom}
               maxZoom="13"
-              style={{ height: "400px", width: "400px" }}
               onmoveend={e =>
                 this.setState({ mapCenter: e.target.getCenter() })
               }

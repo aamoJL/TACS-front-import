@@ -713,7 +713,6 @@ div.fade-main {
 .edit-game-container {
   display: flex;
   flex-direction: row;
-  left: 0;
 }
 
 .edit-game-inner-container {
@@ -725,7 +724,19 @@ div.fade-main {
 .edit-game-inner-container > * {
   margin: 5px 10%;
   padding: 5px;
+  flex-wrap: wrap;
+}
+
+.edit-game-inner-container > input,
+textarea,
+button {
   max-width: 400px;
+}
+
+.edit-game-map {
+  height: 100%;
+  width: 100%;
+  max-width: 600px;
 }
 
 .edit-game-title {
@@ -764,6 +775,8 @@ div.fade-main {
   margin: 10px;
   padding: 5px;
 }
+
+/*style={{ height: "400px", width: "400px" }}*/
 
 .game-info-view {
   display: flex;
