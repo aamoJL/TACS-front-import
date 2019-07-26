@@ -80,6 +80,7 @@ export class RegisterForm extends React.Component {
                 <p className="register-text">Register</p>
                 <br />
                 <input
+                  id="registerUsernameInput"
                   className="form-control1"
                   placeholder="Enter username"
                   name="username"
@@ -90,6 +91,7 @@ export class RegisterForm extends React.Component {
                 />
                 <br />
                 <input
+                  id="registerPasswordInput"
                   className="form-control2"
                   placeholder="Enter password"
                   type="password"
@@ -100,6 +102,7 @@ export class RegisterForm extends React.Component {
                 />
                 <br />
                 <input
+                  id="registerPasswordVerifyInput"
                   className="form-control3"
                   placeholder="Verify password"
                   type="password"
@@ -126,7 +129,7 @@ export class RegisterForm extends React.Component {
               <br />
               Back to
               <Link to="/">
-                <p id="loginButton"> Login </p>
+                <p id="openLoginFormButton"> Login </p>
               </Link>
             </div>
           </div>
