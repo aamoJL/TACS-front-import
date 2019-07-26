@@ -70,6 +70,7 @@ body {
 .tacs-icon-neg {
   justify-content: left;
   width: 5%;
+  min-width: 55px;
 }
 
 .form-control1 {
