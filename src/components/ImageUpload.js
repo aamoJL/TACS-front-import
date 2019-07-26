@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 
+/*
+Component for game creation image upload
+*/
+
 export default class ImageUpload extends Component {
   constructor(props) {
     super(props);

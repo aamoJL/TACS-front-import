@@ -1,16 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
+/*
+Component for showing game's information in game selection page
+*/
+
 export default class GameCard extends React.Component {
   state = {
     editForm: false,
     gameInfo: {}
   };
 
-  // Get game info
+  // Get game info when the page loads
   componentDidMount() {
     this.getGameInfo();
   }
 
+  // Gets the game's information from server and sets the information to state
   getGameInfo() {
     fetch(`${process.env.REACT_APP_API_URL}/game/${this.props.gameId}`)
       .then(res => {
@@ -34,6 +40,7 @@ export default class GameCard extends React.Component {
       .catch(error => console.log(error));
   }
 
+  // Formats date from ISO format to dd.mm.yyyy
   getFormattedDate(date) {
     let day = date.substring(8, 10);
     let month = date.substring(5, 7);
@@ -41,6 +48,7 @@ export default class GameCard extends React.Component {
     return day + "." + month + "." + year;
   }
 
+  // Formats time from ISO format to hh:mm
   getFormattedTime(date) {
     let time = date.substring(11, 16);
     return time;

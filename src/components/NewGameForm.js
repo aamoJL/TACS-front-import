@@ -3,6 +3,10 @@ import ReactDOM from "react-dom";
 import { Map, TileLayer } from "react-leaflet";
 import ImageUpload from "./ImageUpload";
 
+/*
+Component for form to create new games
+*/
+
 export class NewGameForm extends React.Component {
   constructor(props) {
     super(props);
@@ -25,10 +29,7 @@ export class NewGameForm extends React.Component {
     this.handleMapDrag = this.handleMapDrag.bind(this);
   }
 
-  handleError = error => {
-    this.setState({ errorMsg: error });
-  };
-
+  // Change state value
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
@@ -46,24 +47,28 @@ export class NewGameForm extends React.Component {
     }
   };
 
+  // Changes map position state when the map has been dragged
   handleMapDrag = e => {
     this.setState({
       mapCenter: e.target.getCenter()
     });
   };
 
+  // Changes map zoom state when the map has been zoomed
   handleMapScroll = e => {
     this.setState({
       zoom: e.target.getZoom()
     });
   };
 
+  // Changes image path state when the path has been changed
   handleImagePath = path => {
     this.setState({
       filepath: path
     });
   };
 
+  // Sends new game's information to server
   handleGameCreation = e => {
     let startDate =
       this.state.startDate + "T" + this.state.startTime + ":00.000Z";
@@ -105,14 +110,17 @@ export class NewGameForm extends React.Component {
       .catch(error => console.log("Error: ", error));
   };
 
+  // Sets keyup event for the component when the component has been loaded
   componentDidMount() {
     document.addEventListener("keyup", this.handleEsc);
   }
 
+  // Removes the keyup event from the component when the component has been removed
   componentWillUnmount() {
     document.removeEventListener("keyup", this.handleEsc);
   }
 
+  // Renders a React portal in popup element
   render() {
     return ReactDOM.createPortal(
       <div className="new-game-popup">

@@ -11,6 +11,13 @@ import NotificationButton from "./NotificationButton";
 import AddScoreButton from "./AddScoreButton";
 import PlayerListButton from "./PlayerListButton";
 
+/*
+Component that displays:
+  - ScoreCounter
+  - Sidebar for buttons
+  - Game's map
+*/
+
 export default class GameView extends React.Component {
   state = {
     gameInfo: null,
@@ -25,12 +32,14 @@ export default class GameView extends React.Component {
     socket: null
   };
 
+  // Gets game's id from the URL when the page loads
   componentDidMount() {
     let gameId = new URL(window.location.href).searchParams.get("id");
     this.getGameInfo(gameId);
     this.getPlayerRole(gameId);
   }
 
+  // Gets user's role and faction in the game and sets them in state
   getPlayerRole(gameId) {
     let token = sessionStorage.getItem("token");
 
@@ -48,6 +57,8 @@ export default class GameView extends React.Component {
       .catch(error => console.log(error));
   }
 
+  // Gets game's info and sets them in state
+  // Redirects the user to root if the game was not found
   getGameInfo(gameId) {
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
       .then(res => {
@@ -68,6 +79,7 @@ export default class GameView extends React.Component {
       });
   }
 
+  // Sends request to the server to leave faction
   handleLeaveFaction = e => {
     let token = sessionStorage.getItem("token");
     fetch(
@@ -93,8 +105,7 @@ export default class GameView extends React.Component {
         this.getPlayerRole(this.state.gameInfo.id);
       })
       .catch(error => {
-        alert("Game not found");
-        window.document.location.href = "/";
+        console.log(error);
       });
   };
 
@@ -113,6 +124,7 @@ export default class GameView extends React.Component {
     );
   };
 
+  // Sets socket to state if it changes
   onSocketChange = newSocket => {
     this.setState({
       socket: newSocket
@@ -122,7 +134,7 @@ export default class GameView extends React.Component {
   render() {
     const initialPosition = this.state.gameInfo
       ? [this.state.gameInfo.center.lat, this.state.gameInfo.center.lng]
-      : null;
+      : null; // Get game's center point
     return (
       <div className="game-view-container">
         {this.state.gameInfo !== null && (

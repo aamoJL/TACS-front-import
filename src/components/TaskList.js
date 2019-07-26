@@ -3,6 +3,10 @@ import React from "react";
 import TaskItem from "./TaskItem";
 import Draggable from "react-draggable";
 
+/*
+Component for displaying TaskItems for complete and incomplete tasks
+*/
+
 class TaskList extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +18,7 @@ class TaskList extends React.Component {
     };
   }
 
+  // Gets tasks when the component loads
   componentDidMount() {
     this.getTasks(this.props.gameId);
   }
@@ -40,6 +45,7 @@ class TaskList extends React.Component {
     }
   }
 
+  // Gets tasks from the server
   getTasks(gameId) {
     let token = sessionStorage.getItem("token");
     fetch(`${process.env.REACT_APP_API_URL}/task/get-tasks/${gameId}`, {
@@ -63,6 +69,7 @@ class TaskList extends React.Component {
       .catch(error => console.log(error));
   }
 
+  // Sends task creation request to the server
   handleTaskCreation = e => {
     e.preventDefault();
     if (this.state.taskNameInput === "") {
@@ -108,12 +115,14 @@ class TaskList extends React.Component {
       .catch(error => console.log(error));
   };
 
+  // Change selected faction state
   handleFactionChange = e => {
     this.setState({
       selectedFactionId: e.target.value
     });
   };
 
+  // Sends winner selection request to the server
   onTaskEditSave = (task, winnerFactionId) => {
     let token = sessionStorage.getItem("token");
     fetch(
@@ -142,6 +151,7 @@ class TaskList extends React.Component {
       .catch(error => console.log(error));
   };
 
+  // Sends task deletion request to the server
   onTaskDeletion = taskId => {
     if (taskId === (undefined || null)) {
       return;
@@ -170,9 +180,7 @@ class TaskList extends React.Component {
       .then(result => {})
       .catch(error => console.log(error));
   };
-  handleOnClick() {
-    this.props.toggleView();
-  }
+
   render() {
     let incompleteTasks = [];
     let completedTasks = [];

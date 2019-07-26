@@ -1,7 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import logo from "../icons/tacs-logo-neg.png";
+
+/*
+Component for login page
+*/
 
 export class LoginForm extends React.Component {
   constructor(props) {
@@ -14,15 +17,18 @@ export class LoginForm extends React.Component {
     };
   }
 
+  // Sets error message state
   handleError = error => {
     this.setState({ errorMsg: error });
   };
 
+  // Changes state value
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   };
 
+  // Sends login request to the server
   handleLogin = e => {
     const name = this.state.username;
     const password = this.state.password;

@@ -4,11 +4,16 @@ import PropTypes from "prop-types";
 import Draggable from "react-draggable";
 import PlayerlistFaction from "./PlayerlistFaction";
 
+/*
+Component for displaying factions' information
+*/
+
 export default class PlayerlistView extends React.Component {
   state = {
     factions: null
   };
 
+  // Gets factions from the server when the component loads
   componentDidMount() {
     // Add event to close the playerlist if "esc" is pressed
     document.addEventListener("keyup", this.handleEsc);
@@ -51,6 +56,7 @@ export default class PlayerlistView extends React.Component {
     }
   };
 
+  // Removes keyup event from the component when the component is removed
   componentWillUnmount() {
     document.removeEventListener("keyup", this.handleEsc);
   }
@@ -96,7 +102,3 @@ export default class PlayerlistView extends React.Component {
     );
   }
 }
-
-PlayerlistView.propTypes = {
-  gameId: PropTypes.string
-};

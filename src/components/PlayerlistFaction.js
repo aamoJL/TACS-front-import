@@ -1,16 +1,21 @@
 import React from "react";
 import PlayerlistPlayerCard from "./PlayerlistPlayerCard";
 
+/*
+Component for displaying faction groups and playerCards
+*/
+
 export default class PlayerlistFaction extends React.Component {
   state = {
     factionGroups: null
   };
 
-  // get faction members
+  // get faction members when the component loads
   componentDidMount() {
     this.getFactionGroups();
   }
 
+  // Gets faction's groups from the server
   getFactionGroups() {
     fetch(
       `${process.env.REACT_APP_API_URL}/faction/get-groups/${
