@@ -538,7 +538,7 @@ export default class EditGameForm extends React.Component {
               name="startTime"
               value={this.state.startTime}
               onChange={this.handleChange}
-              sid="editGameTimeStartInput"
+              id="editGameTimeStartInput"
               form="gameEditForm"
               required
             />
