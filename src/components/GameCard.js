@@ -78,7 +78,11 @@ export default class GameCard extends React.Component {
               search: "?id=" + this.state.gameInfo.id
             }}
           >
-            <button type="button" className="select-game-button">
+            <button 
+              id={`select${this.state.gameInfo.name}`} 
+              type="button" 
+              className="select-game-button"
+            >
               Select
             </button>
           </Link>
