@@ -23,3 +23,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# robot framework
+geckodriver.log
+log.html
+output.xml
+report.html
