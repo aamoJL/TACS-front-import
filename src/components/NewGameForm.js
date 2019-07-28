@@ -116,7 +116,7 @@ export class NewGameForm extends React.Component {
   render() {
     return ReactDOM.createPortal(
       <div className="new-game-popup">
-        <h1 className="edit-game-title">Demo Game Creation</h1>
+        <h1 className="edit-game-title">Game Creation</h1>
         <div className="new-game-outer-container">
           <div className="new-game-inner-container">
             <form id="gameCreationForm" onSubmit={this.handleGameCreation} />
@@ -187,6 +187,7 @@ export class NewGameForm extends React.Component {
               form="gameCreationForm"
               required
             />
+            <label>Game Image:</label>
             <ImageUpload handleImagePath={this.handleImagePath} />
           </div>
           <div className="new-game-inner-container">

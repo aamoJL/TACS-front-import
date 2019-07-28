@@ -64,7 +64,8 @@ export class RegisterForm extends React.Component {
     }
   };
 
-  // UNCOMMENT "REQUIRED" FOR PRODUCTION
+  // TODO: UNCOMMENT "REQUIRED" FOR PRODUCTION
+  // RF TESTS ALSO VERIFY BACKEND ERROR HANDLING
   render() {
     return (
       <div className="container">
@@ -80,33 +81,36 @@ export class RegisterForm extends React.Component {
                 <p className="register-text">Register</p>
                 <br />
                 <input
+                  id="registerUsernameInput"
                   className="form-control1"
                   placeholder="Enter username"
                   name="username"
                   value={this.state.username}
                   onChange={this.handleChange}
                   autoFocus
-                  required
+                  //required
                 />
                 <br />
                 <input
+                  id="registerPasswordInput"
                   className="form-control2"
                   placeholder="Enter password"
                   type="password"
                   name="password"
                   value={this.state.password}
                   onChange={this.handleChange}
-                  required
+                  //required
                 />
                 <br />
                 <input
+                  id="registerPasswordVerifyInput"
                   className="form-control3"
                   placeholder="Verify password"
                   type="password"
                   name="password2"
                   value={this.state.password2}
                   onChange={this.handleChange}
-                  required
+                  //required
                 />
                 <br />
 
@@ -118,7 +122,10 @@ export class RegisterForm extends React.Component {
                   Register
                 </button>
                 {this.state.errorMsg && (
-                  <div className="d-flex flex-fill justify-content-center text-center">
+                  <div
+                    id="registerErrorMessage"
+                    className="d-flex flex-fill justify-content-center text-center"
+                  >
                     {this.state.errorMsg}
                   </div>
                 )}
@@ -126,7 +133,7 @@ export class RegisterForm extends React.Component {
               <br />
               Back to
               <Link to="/">
-                <p id="loginButton"> Login </p>
+                <p id="openLoginFormButton"> Login </p>
               </Link>
             </div>
           </div>

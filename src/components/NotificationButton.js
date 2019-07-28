@@ -29,7 +29,7 @@ export default class NotificationButton extends React.Component {
             gameId={this.props.gameId}
             socket={this.props.socket}
             role={this.props.role}
-            gameState={this.props.gameInfo}
+            gameState={this.props.gameState}
           />
         )}
       </Fragment>
