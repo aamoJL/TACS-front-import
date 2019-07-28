@@ -503,6 +503,7 @@ export default class EditGameForm extends React.Component {
     }
 
     // Color picker style settings
+    // More information: https://casesandberg.github.io/react-color/#examples
     const styles = reactCSS({
       default: {
         color: {
@@ -527,7 +528,7 @@ export default class EditGameForm extends React.Component {
 
     return (
       <div className="fade-main">
-        {/* Separate froms for the game information and faction/objective point additions */}
+        {/* Separate forms for the game information and faction/objective point additions */}
         <form id="gameEditForm" onSubmit={this.handleGameSave} />
         <form id="factionAddFrom" onSubmit={this.handleFactionAdd} />
         <form id="gameDeletionForm" onSubmit={this.handleGameDeletion} />
