@@ -17,6 +17,7 @@ Join Game And Faction
     Registration Process
     Select Game
     Join Game       ${faction}  ${password}
+    Return To Main Menu
     Log Out
 
 Registration Process

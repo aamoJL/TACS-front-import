@@ -23,6 +23,7 @@ Login With Invalid Credentials Should Fail
 
 Login Should Have Failed        #Checks the error message.
     [Arguments]     ${error_text}
-    Element Text Should Be      css=h2      ${error_text}
+    Wait Until Page Contains Element     id=loginErrorMessage
+    Element Text Should Be          id=loginErrorMessage      ${error_text}
     #Title Should Be    Error Page      #If there's going to be an error page.
 

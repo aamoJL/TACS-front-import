@@ -42,7 +42,8 @@ Registration With Invalid Options Should Fail
 
 Registration Should Have Failed        #Checks the error message.
     [Arguments]     ${error_text}
-    Element Text Should Be      css=h2      ${error_text}
+    Wait Until Page Contains Element     id=registerErrorMessage
+    Element Text Should Be          id=registerErrorMessage      ${error_text}
     #Title Should Be    Error Page      #If there's going to be an error page.
 
 Differing Password
@@ -50,7 +51,8 @@ Differing Password
     Generate Username       31
     Generate Differing Password     8
     Submit Credentials Registration
-    Element Text Should Be      css=h2      ${P_NOMATCH}
+    Wait Until Page Contains Element    id=registerErrorMessage
+    Element Text Should Be      id=registerErrorMessage      ${P_NOMATCH}
     Back To Login Screen
 
 Existing Account Correct Password
@@ -58,7 +60,8 @@ Existing Account Correct Password
     Input Valid Username
     Input Valid Password
     Submit Credentials Registration
-    Element Text Should Be      css=h2      ${ACC_EXISTS}
+    Wait Until Page Contains Element     id=registerErrorMessage
+    Element Text Should Be      id=registerErrorMessage      ${ACC_EXISTS}
     Back To Login Screen
 
 Existing Account New Password
@@ -66,7 +69,8 @@ Existing Account New Password
     Input Valid Username
     Generate Password  4
     Submit Credentials Registration
-    Element Text Should Be      css=h2      ${ACC_EXISTS}
+    Wait Until Page Contains Element     id=registerErrorMessage
+    Element Text Should Be      id=registerErrorMessage      ${ACC_EXISTS}
     Back To Login Screen
 
 

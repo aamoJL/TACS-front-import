@@ -4,6 +4,9 @@ Resource        resource.robot
 Suite Setup     Open Browser To Login Page
 Suite Teardown  Close Browser
 
+*** Variables ***
+${DELAY}    0.2
+
 *** Test Cases ***
 Task Edit
     Valid Login

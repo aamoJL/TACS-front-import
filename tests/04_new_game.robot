@@ -11,6 +11,7 @@ Create A New Game
     Create Game
 #    Refresh Browser
     Check Game List
+    Return To Main Menu
     Log Out
 
 *** Keywords ***

@@ -13,6 +13,7 @@ Promote Player To Faction Leader
     Go To Players
     Promote
     Close Players
+    Return To Main Menu
     Log Out
 
 *** Keywords ***

@@ -13,6 +13,7 @@ Edit Existing Game
     Edit Factions
     Edit Objective Points
     Save Game
+    Return To Main Menu
     Log Out
 
 *** Keywords ***
