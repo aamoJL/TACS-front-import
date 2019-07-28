@@ -83,6 +83,7 @@ export class RegisterForm extends React.Component {
                   className="form-control1"
                   placeholder="Enter username"
                   name="username"
+                  id="registerUsernameInput"
                   value={this.state.username}
                   onChange={this.handleChange}
                   autoFocus
@@ -94,6 +95,7 @@ export class RegisterForm extends React.Component {
                   placeholder="Enter password"
                   type="password"
                   name="password"
+                  id="registerPasswordInput"
                   value={this.state.password}
                   onChange={this.handleChange}
                   required
@@ -104,6 +106,7 @@ export class RegisterForm extends React.Component {
                   placeholder="Verify password"
                   type="password"
                   name="password2"
+                  id="registerPasswordVerifyInput"
                   value={this.state.password2}
                   onChange={this.handleChange}
                   required
