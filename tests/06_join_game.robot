@@ -6,7 +6,7 @@ Resource            resource.robot
 Test Template       Join Game And Faction
 
 *** Variables ***
-${DELAY}    0.1
+${DELAY}    0.2
 
 
 *** Test Cases ***

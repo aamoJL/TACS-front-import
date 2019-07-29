@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation       A resource file with reusable keywords and variables.
-Library     SeleniumLibrary
+Library     SeleniumLibrary     run_on_failure=Fail
 Library     String
 Library     DateTime
 Library    Collections
@@ -9,7 +9,7 @@ Library    Collections
 ${SERVER}           %{SITE_URL}
 ${BROWSER}          ff
 ${DELAY}            0
-${VALID USER}       ville
+${VALID USER}       ville   # overridden in suite 00
 ${VALID PASSWORD}   koira
 ${LOGIN URL}        https://${SERVER}/
 ${WELCOME URL}      #You can use this if there's a different page after login page.
@@ -30,7 +30,7 @@ ${SU_LP}            Validation failed: name must be longer than or equal to 3 ch
 ${LU_SP}            Validation failed: name must be shorter than or equal to 31 characters, password must be longer than or equal to 3 characters
 ${ACC_EXISTS}       User already exists
 ${P_NOMATCH}        Passwords do not match
-${VALID_GAME}       QWE
+${VALID_GAME}       QWE     # overridden in suite 04
 
 ## New Game /
 # B = Button / I = Input
@@ -91,12 +91,17 @@ ${B_CLOSEPLAYERS}   id=closePlayerlistX
 @{PLAYERS}
 *** Keywords ***
 
+Fail
+    capture page screenshot
+    sleep   1
+
 #Valid Login
 Open Browser To Login Page
     Open Browser        ${LOGIN URL}      ${BROWSER}
     Set Window Size     1920        1080
     Set Selenium Speed      ${DELAY}
     Login Page Should be Open
+
 
 Login Page Should be Open
     Title Should Be     TACS
