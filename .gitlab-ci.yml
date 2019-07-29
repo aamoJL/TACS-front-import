@@ -31,7 +31,7 @@ docker-build:
     - docker run --name front -p 3000:80 -d overflow2019/frontend:test
 
 rf-test:
-  image: overflow2019/rf-docker
+  image: gitlab.labranet.jamk.fi:4567/wimma-lab-2019/mysticons/devsecops/robot
   stage: rf-test
   tags: ["docker"]
   only:
