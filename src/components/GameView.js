@@ -22,11 +22,14 @@ export default class GameView extends React.Component {
     zoom: 13,
     mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg",
     socketSignal: null,
-    socket: null
+    socket: null,
+    showNavbar: true,
+    showNavbarText: "Hide"
   };
 
   componentDidMount() {
     let gameId = new URL(window.location.href).searchParams.get("id");
+
     this.getGameInfo(gameId);
     this.getPlayerRole(gameId);
   }
@@ -119,6 +122,20 @@ export default class GameView extends React.Component {
     });
   };
 
+  handleShowNavbar = e => {
+    if (this.state.showNavbar) {
+      this.setState({
+        showNavbar: false,
+        showNavbarText: "Show"
+      });
+    } else {
+      this.setState({
+        showNavbar: true,
+        showNavbarText: "Hide"
+      });
+    }
+  };
+
   render() {
     const initialPosition = this.state.gameInfo
       ? [this.state.gameInfo.center.lat, this.state.gameInfo.center.lng]
@@ -135,7 +152,14 @@ export default class GameView extends React.Component {
                   : this.state.socketSignal.type
               }
             />
-            <div className="header">
+            <button
+              id="showNavbarButton"
+              className="show-navbar-button"
+              onClick={this.handleShowNavbar}
+            >
+              {this.state.showNavbarText}
+            </button>
+            <div className={this.state.showNavbar ? "header" : "hidden"}>
               {this.state.gameInfo !== null && (
                 <div>
                   {this.state.gameInfo.id && (
@@ -147,6 +171,7 @@ export default class GameView extends React.Component {
                   )}
                 </div>
               )}
+
               <div className="game-view-info-text">
                 Logged in as: {this.state.role === "" ? " -" : this.state.role}
               </div>

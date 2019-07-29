@@ -344,17 +344,17 @@ input {
 /* Score Counter */
 div.scoreContainer {
   border-radius: 8px;
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: row;
   color: white;
   background-color: #1d1d1b;
   opacity: 0.9;
   height: 50px;
-  max-width: 400px;
   margin: auto;
-  top: 5px;
-  left: calc(50vw - 200px);
+  max-width: 400px;
+  top: 35px;
+  right: calc(50vw - 105px);
   align-items: center;
   justify-content: center;
   z-index: 1000;
@@ -396,6 +396,7 @@ div.header {
   position: absolute;
   top: 0;
   right: 0;
+  padding-top: 3%;
   height: 100vh;
   width: 200px;
   opacity: 0.95;
@@ -425,6 +426,26 @@ div.header:hover {
 }
 
 div.header button:hover {
+  background-color: #556023;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.show-navbar-button {
+  background-color: #1d1d1b;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 2020;
+  position: absolute;
+  width: 200px;
+  right: 0;
+}
+
+.show-navbar-button:hover {
   background-color: #556023;
   cursor: pointer;
 }
