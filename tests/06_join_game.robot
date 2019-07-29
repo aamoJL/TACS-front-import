@@ -1,8 +1,8 @@
 *** Settings ***
 Documentation       A test suite for players to join game.
 Resource            resource.robot
-Suite Setup         Open Browser To Login Page
-Suite Teardown      Close Browser
+#Suite Setup         Open Browser To Login Page
+#Suite Teardown      Close Browser
 Test Template       Join Game And Faction
 
 
@@ -14,11 +14,13 @@ Second Player       Faction2    Pass2
 #
 Join Game And Faction
     [Arguments]     ${faction}  ${password}
+    Open Browser To Login Page
     Registration Process
     Select Game
     Join Game       ${faction}  ${password}
     Return To Main Menu
     Log Out
+    Close Browser
 
 Registration Process
     Open Registration

@@ -63,9 +63,3 @@ Add Task
     Select Faction      ${faction}
     Submit Task
     Alert Should Be Present     text=Task added     action=ACCEPT       timeout=None
-
-Select Game
-    ${x} =              Format String           select{}     ${VALID_GAME}
-    Wait Until Page Contains Element        id=${x}     1
-    Click Button        id=${x}
-    Log                 Game Selected

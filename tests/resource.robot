@@ -9,7 +9,7 @@ Library    Collections
 ${SERVER}           %{SITE_URL}
 ${BROWSER}          ff
 ${DELAY}            0
-${VALID USER}       #ville
+${VALID USER}       ville
 ${VALID PASSWORD}   koira
 ${LOGIN URL}        https://${SERVER}/
 ${WELCOME URL}      #You can use this if there's a different page after login page.
@@ -30,6 +30,7 @@ ${SU_LP}            Validation failed: name must be longer than or equal to 3 ch
 ${LU_SP}            Validation failed: name must be shorter than or equal to 31 characters, password must be longer than or equal to 3 characters
 ${ACC_EXISTS}       User already exists
 ${P_NOMATCH}        Passwords do not match
+${VALID_GAME}       QWE
 
 ## New Game /
 # B = Button / I = Input
@@ -307,10 +308,13 @@ Map Movement
 # Leaflet write text
 
 Write Text
+    wait until page contains element    css=a[class=leaflet-draw-draw-textbox]
     Click Element       css=a[class=leaflet-draw-draw-textbox]
     Click Element At Coordinates    css=div[class=leaflet-control-container]        50        500
+    wait until page contains element    css=div[placeholder="Click out to save"]
     Press Key         css=div[placeholder="Click out to save"]        Hello :)     #Press Key is deprecated in seleniumlibrary 4.0 use Press Keys instead.
     Click Element At Coordinates    css=div[class=leaflet-control-container]        100        400
+    wait until page contains element    css=div[placeholder="Click out to save"]
     Element Text Should Be      css=div[placeholder="Click out to save"]        Hello :)      #Checks that the text is right.
 
 # ------------------------------------------------------------------------------
@@ -318,12 +322,15 @@ Write Text
 # Adding New Task / 09_tasks
 
 Click Tasks
+    wait until page contains element    id=tasklistButton
     Click Element       id=tasklistButton
 
 Generate Task Name/Description
     [Arguments]     ${TASK_NAME}      ${TASK_DESCRIPTION}
     ${TASK_N} =     Generate Random String      ${TASK_NAME}            [LETTERS][NUMBERS]
     ${TASK_D} =     Generate Random String      ${TASK_DESCRIPTION}     [LETTERS][NUMBERS]
+
+    wait until page contains element            id=taskNameInput
     Input Text      id=taskNameInput            ${TASK_N}
     Input Text      id=taskDescriptionInput     ${TASK_D}
 
@@ -334,9 +341,11 @@ Create Task List
 Generate Task Name
     [Arguments]     ${TASK_NAME}
     ${TASK_N} =     Generate Random String      ${TASK_NAME}            [LETTERS][NUMBERS]
+
+    wait until page contains element            id=taskNameInput
     Input Text      id=taskNameInput            ${TASK_N}
-    Append To List      ${TASK_NAMES}      ${TASK_N}
-    Log     ${TASK_NAMES}
+    Append To List  ${TASK_NAMES}               ${TASK_N}
+    Log             ${TASK_NAMES}
     [Return]        ${TASK_NAMES}
 
 Generate Task Description
@@ -578,7 +587,9 @@ Log
 #
 
 Delete Game
+    wait until page contains element    ${B_EDITGAME}
     Click Button       ${B_EDITGAME}
+    wait until page contains element    ${B_EDELETE}
     Click Button       ${B_EDELETE}
     Alert Should Be Present     text=Are you sure you want to delete this game     action=ACCEPT       timeout=None
     Alert Should Be Present     text=Game deleted     action=ACCEPT       timeout=None
