@@ -7,21 +7,17 @@ Component for displaying faction groups and playerCards
 
 export default class PlayerlistFaction extends React.Component {
   state = {
-    factionGroups: null
+    factionGroups: []
   };
 
   // get faction members when the component loads
   componentDidMount() {
-    this.getFactionGroups();
+    this.getFactionGroups(this.props.faction.factionId);
   }
 
   // Gets faction's groups from the server
-  getFactionGroups() {
-    fetch(
-      `${process.env.REACT_APP_API_URL}/faction/get-groups/${
-        this.props.faction.factionId
-      }`
-    )
+  getFactionGroups(factionId) {
+    fetch(`${process.env.REACT_APP_API_URL}/faction/get-groups/${factionId}`)
       .then(res => res.json())
       .then(res => {
         this.setState({ factionGroups: res });
@@ -29,8 +25,41 @@ export default class PlayerlistFaction extends React.Component {
       .catch(error => console.log(error));
   }
 
+  joinFactionGroup(groupid) {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/faction/join-group/${
+        this.props.gameId
+      }`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          groupId: groupid
+        })
+      }
+    )
+      .then(res => {
+        if (!res.ok) throw Error(res);
+      })
+      .then(_ => {
+        this.props.onJoinGame();
+        this.getFactionGroups(this.props.faction.factionId);
+        alert("joined group!");
+      })
+      .catch(error => console.log(error));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps !== this.props) {
+      this.getFactionGroups(this.props.faction.factionId);
+    }
+  }
+
   render() {
-    if (this.state.factionGroups === null) {
+    if (this.state.factionGroups.length === 0) {
       return false;
     }
 
@@ -41,6 +70,13 @@ export default class PlayerlistFaction extends React.Component {
           <h2>
             {group.name} - {group.class}
           </h2>
+          {group.name !== "No group" &&
+            this.props.role === "soldier" &&
+            !this.props.isJoinedGroup && (
+              <button onClick={() => this.joinFactionGroup(group.id)}>
+                Join this group
+              </button>
+            )}
           {group.players.map(player => {
             return (
               <PlayerlistPlayerCard
@@ -49,7 +85,9 @@ export default class PlayerlistFaction extends React.Component {
                 role={this.props.role}
                 gameId={this.props.gameId}
                 gameState={this.props.gameState}
-                onChange={() => this.getFactionGroups()}
+                onChange={() =>
+                  this.getFactionGroups(this.props.faction.factionId)
+                }
               />
             );
           })}
