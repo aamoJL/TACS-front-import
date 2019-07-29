@@ -4,11 +4,14 @@ import NotificationCard from "./NotificationCard";
 import Draggable from "react-draggable";
 
 export default class NotificationView extends React.Component {
-  state = {
-    notifications: [],
-    notificationInput: "",
-    notificationTypeInput: "note"
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      notifications: [],
+      notificationInput: "",
+      notificationTypeInput: "note"
+    };
+  }
 
   componentDidMount() {
     this.getNotifications(this.props.gameId);
