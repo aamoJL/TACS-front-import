@@ -62,6 +62,7 @@ class EditGameFormToolbar extends React.Component {
       return {
         gameId: this.props.gameId,
         objectivePointId: layer.options.id,
+        objectivePointDescription: layer.options.node,
         data: DrawingFormatter[layer.options.type](layer)
       };
     });
@@ -79,6 +80,7 @@ class EditGameFormToolbar extends React.Component {
       return {
         gameId: this.props.gameId,
         objectivePointId: layer.options.id,
+        objectivePointDescription: layer.options.node,
         data: DrawingFormatter[layer.options.type](layer)
       };
     });

@@ -69,7 +69,7 @@ export default class EditGameForm extends React.Component {
     let newData = [...this.state.objectivePoints];
     boxes.forEach(flagbox => {
       let i = newData.findIndex(
-        x => x.objectivePointId === flagbox.objectivePointId
+        x => x.objectivePointDescription === flagbox.objectivePointDescription
       );
       if (i !== -1) newData[i].data = flagbox.data;
     });
@@ -80,8 +80,10 @@ export default class EditGameForm extends React.Component {
   deleteFlagbox = boxes => {
     let newData = [...this.state.objectivePoints];
     boxes.forEach(flagbox => {
+      console.log(flagbox);
+      console.log(newData);
       let i = newData.findIndex(
-        x => x.objectivePointId === flagbox.objectivePointId
+        x => x.objectivePointDescription === flagbox.objectivePointDescription
       );
       if (i !== -1) newData.splice(i, 1);
     });

@@ -96,6 +96,7 @@ class DrawLeafletObjects extends React.Component {
           key={drawing.objectivePointId}
           position={drawing.data.coordinates}
           id={drawing.objectivePointId}
+          node={drawing.objectivePointDescription}
           icon={flagboxIcon(
             drawing.owner.colour,
             drawing.action.status,
@@ -118,6 +119,7 @@ class DrawLeafletObjects extends React.Component {
         key={drawing.objectivePointId}
         position={drawing.data.coordinates}
         id={drawing.objectivePointId}
+        node={drawing.objectivePointDescription}
         icon={flagboxIcon("#000000", 0, "#000000")}
         type="flagbox"
       >
