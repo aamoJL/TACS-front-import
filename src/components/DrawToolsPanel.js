@@ -117,6 +117,11 @@ L.DrawToolbar.include({
   }
 });
 
+// removing clear all button under delete button because it breaks things lmao
+L.EditToolbar.Delete.include({
+  removeAllLayers: false
+});
+
 class DrawToolsPanel extends Component {
   render() {
     return (
