@@ -307,39 +307,11 @@ Map Movement
 # Leaflet write text
 
 Write Text
-#    Select Game
     Click Element       css=a[class=leaflet-draw-draw-textbox]
-    Click Element At Coordinates    css=div[class=leaflet-control-container]        100        300
-    Input Text      css=div[placeholder="Click out to save"]        Hello
+    Click Element At Coordinates    css=div[class=leaflet-control-container]        50        500
+    Press Key         css=div[placeholder="Click out to save"]        Hello :)     #Press Key is deprecated in seleniumlibrary 4.0 use Press Keys instead.
     Click Element At Coordinates    css=div[class=leaflet-control-container]        100        400
-    Element Text Should Be      css=div[placeholder="Click out to save"]        Hello       #Checks that the text is right.
-    Sleep       2
-
-    Click Element       css=a[class=leaflet-draw-draw-textbox]
-    Click Element At Coordinates    css=div[class=leaflet-control-container]        100        500
-    Sleep       4
-    Input Text      css=div[placeholder="Click out to save"]       12345
-    Click Element At Coordinates    css=div[class=leaflet-control-container]        100        400
-    Element Text Should Be      css=div[placeholder="Click out to save"]        12345
-    :FOR        ${i}        IN RANGE        1000
-    \       ${status}       ${value} =  Run Keyword And Ignore Error    Page Should Contain Element     id={i}
-    \       Run Keyword if      '${status}'=='PASS'     Log     {i}
-#    :FOR    ${i}        IN RANGE        1000
-#    \       Run Keyword if      'id={i}'=='PASS'
-#    \       Run Keyword if       '{i}'=='5'        Log     ${i}
-#    Click Element       css=a[class=leaflet-draw-edit-edit]
-#    Mouse Down      class:leaflet-marker-icon:first-of-type
-#    Sleep       2
-#    Mouse Up        class:leaflet-tile-loaded:nth-child(4)
-#    Sleep       2
-#    Click Leaflet Panel     Save changes
-#    Sleep       2
-#    Click Element       css=a[class=leaflet-draw-edit-edit]
-#    Mouse Down      class:leaflet-marker-icon:first-of-type
-#    Mouse Up        class:leaflet-tile-loaded:nth-child(1)
-#    Sleep       2
-#    Click Leaflet Panel     Cancel editing, discards all changes
-#    Sleep       2
+    Element Text Should Be      css=div[placeholder="Click out to save"]        Hello :)      #Checks that the text is right.
 
 # ------------------------------------------------------------------------------
 
