@@ -58,6 +58,8 @@ export class LoginForm extends React.Component {
       );
   };
 
+  // TODO: UNCOMMENT "REQUIRED" FOR PRODUCTION
+  // RF TESTS ALSO VERIFY BACKEND ERROR HANDLING
   render() {
     return (
       <div className="container">
@@ -80,7 +82,7 @@ export class LoginForm extends React.Component {
                   onChange={this.handleChange}
                   id="loginUsernameInput"
                   autoFocus
-                  required
+                  //required
                 />
                 <br />
                 <input
@@ -91,7 +93,7 @@ export class LoginForm extends React.Component {
                   value={this.state.password}
                   onChange={this.handleChange}
                   id="loginPasswordInput"
-                  required
+                  //required
                 />
                 <br />
                 <br />
@@ -104,7 +106,10 @@ export class LoginForm extends React.Component {
                   Login
                 </button>
                 {this.state.errorMsg && (
-                  <div className="d-flex flex-fill justify-content-center text-center">
+                  <div
+                    id="loginErrorMessage"
+                    className="d-flex flex-fill justify-content-center text-center"
+                  >
                     {this.state.errorMsg}
                   </div>
                 )}

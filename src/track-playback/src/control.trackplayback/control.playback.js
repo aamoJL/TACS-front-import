@@ -450,7 +450,8 @@ export const TrackPlayBackControl = L.Control.extend({
   _createFlagbox: function(box) {
     return L.marker(box.data.coordinates, {
       icon: flagboxIcon(box.history.owner.colour, box.history.action.status),
-      time: box.history.timestamp
+      time: box.history.timestamp,
+      title: box.history.capture ? box.history.capture.colour : ""
     }).addTo(this.map);
   },
 
