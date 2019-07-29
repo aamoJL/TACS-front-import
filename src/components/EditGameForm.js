@@ -4,6 +4,14 @@ import { SketchPicker } from "react-color";
 import reactCSS from "reactcss";
 import EditGameFormToolbar from "./EditGameFormToolbar";
 
+/*
+Component that is used to:
+  - Edit game's information
+  - Add factions to the game
+  - Add objective points to the game
+  - Change map position
+*/
+
 export default class EditGameForm extends React.Component {
   constructor(props) {
     super(props);
@@ -37,6 +45,7 @@ export default class EditGameForm extends React.Component {
     };
   }
 
+  // Change inputs state value
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({ [name]: value, saved: false });
@@ -79,6 +88,7 @@ export default class EditGameForm extends React.Component {
     this.setState({ objectivePoints: newData });
   };
 
+  // Adds faction to state array, but does not send it to the server
   handleFactionAdd = e => {
     e.preventDefault();
 
@@ -89,6 +99,7 @@ export default class EditGameForm extends React.Component {
       return alert("Faction needs a name and password");
     }
 
+    // Faction existence check
     if (
       this.state.factions.findIndex(
         faction => faction.factionName === this.state.factionNameInput
@@ -99,6 +110,7 @@ export default class EditGameForm extends React.Component {
       );
     }
 
+    // Push new faction to the state faction array
     this.setState(state => {
       let factions = state.factions;
       factions.push({
@@ -115,14 +127,17 @@ export default class EditGameForm extends React.Component {
     });
   };
 
+  // Removes faction from state array, but does not remove it from the server
   removeFaction(factionName) {
     this.setState(state => {
+      // Faction existence check
       let factions = state.factions;
       const index = factions.findIndex(
         faction => faction.factionName === factionName
       );
 
       if (index !== -1) {
+        // Remove the faction from the array if it exists
         factions.splice(index, 1);
       } else {
         console.log("Faction is not in the faction list");
@@ -132,6 +147,7 @@ export default class EditGameForm extends React.Component {
     });
   }
 
+  // Adds objective point to state array, but does not send it to the server
   handleObjectivePointAdd = e => {
     e.preventDefault();
 
@@ -142,6 +158,7 @@ export default class EditGameForm extends React.Component {
       return alert("Capture point needs an ID and multiplier");
     }
 
+    // Campture point existence check
     if (
       this.state.objectivePoints.findIndex(
         point =>
@@ -156,6 +173,7 @@ export default class EditGameForm extends React.Component {
       );
     }
 
+    // Add the point to the state array
     this.setState(state => {
       let objectivePoints = state.objectivePoints;
       objectivePoints.push({
@@ -177,14 +195,17 @@ export default class EditGameForm extends React.Component {
     });
   };
 
+  // Removes objective point from the state array, but does not remove it from the server
   removeObjectivePoint(objectivePointId) {
     this.setState(state => {
+      // Objective point existence check
       let objectivePoints = state.objectivePoints;
       const index = objectivePoints.findIndex(
         point => point.objectivePointDescription === objectivePointId
       );
 
       if (index !== -1) {
+        // Remove point from the array if the point exists
         objectivePoints.splice(index, 1);
       } else {
         console.log("Objective point is not in the point list");
@@ -194,11 +215,13 @@ export default class EditGameForm extends React.Component {
     });
   }
 
+  // Deletes the game from the server database
   handleGameDeletion = e => {
     e.preventDefault();
 
     let token = sessionStorage.getItem("token");
 
+    // Ask user confirmation
     if (window.confirm("Are you sure you want to delete this game")) {
       fetch(
         `${process.env.REACT_APP_API_URL}/game/delete/${this.state.gameId}`,
@@ -213,6 +236,7 @@ export default class EditGameForm extends React.Component {
         .then(result => {
           this.setState({ saved: true }, () => {
             alert("Game deleted");
+            // Redirect user to root when the game has been deleted
             window.document.location.href = "/";
           });
         })
@@ -220,29 +244,35 @@ export default class EditGameForm extends React.Component {
     }
   };
 
+  // Redirects user to root
   handleGameSelectionClick = e => {
+    // Ask user confirmation
     if (
       this.state.saved ||
       window.confirm("Are you sure you want to leave without saving?")
     ) {
+      // Redirect user to root
       window.document.location.href = "/";
     }
   };
 
+  // Redirects user to game view
   handleBackToGameClick = e => {
+    // Ask user confirmation
     if (
       this.state.saved ||
       window.confirm("Are you sure you want to leave without saving?")
     ) {
+      // Redirect user to game view
       window.document.location.href = "/game?id=" + this.state.gameId;
     }
   };
 
-  handleMapScroll = e => {};
-
+  // Sends the form's information to the server.
   handleGameSave = e => {
     e.preventDefault();
 
+    // Format dates to ISO format
     let startDate =
       this.state.startDate + "T" + this.state.startTime + ":00.000Z";
     let endDate = this.state.endDate + "T" + this.state.endTime + ":00.000Z";
@@ -302,7 +332,8 @@ export default class EditGameForm extends React.Component {
               saved: true
             },
             () => {
-              window.document.location.href = "/game?id=" + this.state.gameId;
+              // Redirect to the game view
+              this.handleBackToGameClick();
             }
           );
         }
@@ -310,6 +341,7 @@ export default class EditGameForm extends React.Component {
       .catch(error => console.log("Error: ", error));
   };
 
+  // Gets the game id from the URL when the page loads
   componentDidMount() {
     let gameId = new URL(window.location.href).searchParams.get("id");
     this.setState(
@@ -322,6 +354,8 @@ export default class EditGameForm extends React.Component {
     );
   }
 
+  // Gets the game's information from server
+  // Redirects the user to root if the game's information was not found
   getGameInfo(gameId) {
     let token = sessionStorage.getItem("token");
     // Get player's role
@@ -346,16 +380,18 @@ export default class EditGameForm extends React.Component {
           alert(
             "The game was not found or you don't have permission to edit it"
           );
+          // Redirect user to root
           window.document.location.href = "/";
         }
       })
       .catch(error => console.log(error));
   }
 
+  // Sets game's information to state
   setGameInfoToState(json) {
     let token = sessionStorage.getItem("token");
 
-    // Get factions and passwordds
+    // Get factions and passwords
     fetch(
       `${process.env.REACT_APP_API_URL}/game/get-factions/${this.state.gameId}`,
       {
@@ -377,7 +413,6 @@ export default class EditGameForm extends React.Component {
           };
         });
 
-        // Remove objective point's id from the object
         let objectivePoints = json.objective_points.map(point => {
           return {
             objectivePointId: point.objectivePointId,
@@ -394,6 +429,7 @@ export default class EditGameForm extends React.Component {
             ? json.nodesettings.node_settings
             : undefined;
 
+        // Set the information to state
         this.setState({
           gamename: json.name,
           description: json.desc,
@@ -426,6 +462,7 @@ export default class EditGameForm extends React.Component {
       return false;
     }
 
+    // Faction list elements
     let factions = [];
     for (let i = 0; i < this.state.factions.length; i++) {
       const faction = this.state.factions[i];
@@ -444,6 +481,7 @@ export default class EditGameForm extends React.Component {
       );
     }
 
+    // Objective point list elements
     let objectivePoints = [];
     for (let i = 0; i < this.state.objectivePoints.length; i++) {
       const point = this.state.objectivePoints[i];
@@ -465,6 +503,7 @@ export default class EditGameForm extends React.Component {
     }
 
     // Color picker style settings
+    // More information: https://casesandberg.github.io/react-color/#examples
     const styles = reactCSS({
       default: {
         color: {
@@ -489,6 +528,7 @@ export default class EditGameForm extends React.Component {
 
     return (
       <div className="fade-main">
+        {/* Separate forms for the game information and faction/objective point additions */}
         <form id="gameEditForm" onSubmit={this.handleGameSave} />
         <form id="factionAddFrom" onSubmit={this.handleFactionAdd} />
         <form id="gameDeletionForm" onSubmit={this.handleGameDeletion} />

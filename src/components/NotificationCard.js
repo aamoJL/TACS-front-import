@@ -1,5 +1,9 @@
 import React from "react";
 
+/*
+Component for displaying notification's information
+*/
+
 export default class NotificationCard extends React.Component {
   render() {
     return (

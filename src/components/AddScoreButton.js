@@ -1,6 +1,10 @@
 import React, { Fragment } from "react";
 import ScoreForm from "./ScoreForm";
 
+/*
+Component that displays Add Score button and Add score form popup
+*/
+
 export default class AddScoreButton extends React.Component {
   constructor(props) {
     super(props);
@@ -11,6 +15,7 @@ export default class AddScoreButton extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  // Changes add score form's visibility state
   handleClick = e => {
     this.setState({
       open: !this.state.open

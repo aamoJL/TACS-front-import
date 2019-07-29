@@ -1,11 +1,16 @@
 import React, { Fragment } from "react";
 
+/*
+Component for dipslaying player's information
+*/
+
 export default class PlayerlistPlayerCard extends React.Component {
   state = {
     edit: false,
     roleInput: this.props.player.role
   };
 
+  // Sends promotion request to the server
   handleSave = () => {
     let token = sessionStorage.getItem("token");
 
@@ -52,7 +57,7 @@ export default class PlayerlistPlayerCard extends React.Component {
   };
 
   render() {
-    // Normal user view
+    // Normal user's view
     if (this.props.role !== "admin") {
       return (
         <div>
@@ -61,7 +66,7 @@ export default class PlayerlistPlayerCard extends React.Component {
       );
     }
 
-    // Admin edit view
+    // Admin's edit view
     else if (this.state.edit) {
       return (
         <div>
@@ -90,7 +95,7 @@ export default class PlayerlistPlayerCard extends React.Component {
         </div>
       );
     } else {
-      // Admin view without editing
+      // Admin's view without editing
       return (
         <div>
           {this.props.player.name} : {this.props.player.role}

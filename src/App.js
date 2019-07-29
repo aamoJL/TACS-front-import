@@ -15,13 +15,19 @@ import ReplayMap from "./components/ReplayMap";
 import EditGameForm from "./components/EditGameForm";
 import GameInfoView from "./components/GameInfoView";
 
+/*
+App.js is a starting point for the whole website and is always rendered.
+App authenticates user when the page loads.
+Uses React Router to render right components using URL path.
+More information about routing: https://reacttraining.com/react-router/web/guides/quick-start
+*/
+
 export default class App extends Component {
   constructor() {
     super();
 
     // set initial state
     this.state = {
-      socketSignal: null,
       logged: false,
       authenticateComplete: false
     };
@@ -42,6 +48,7 @@ export default class App extends Component {
     });
   };
 
+  // Sets authentication informations
   handleState = data => {
     sessionStorage.setItem("name", data.name);
     sessionStorage.setItem("token", data.token);
@@ -112,9 +119,11 @@ export default class App extends Component {
 
     return (
       <div>
+        {/* Router renders right components using URL path */}
         <Router>
           <div>
             {!this.state.logged && (
+              /* Switch selects the first valid path and renders that component */
               <Switch>
                 <Route exact path="/replay" component={this.replay} />
                 <Route exact path="/register" component={this.registerForm} />
@@ -124,6 +133,7 @@ export default class App extends Component {
               </Switch>
             )}
             {this.state.logged && (
+              /* Switch selects the first valid path and renders that component */
               <Switch>
                 <Route path="/edit/game" component={() => <EditGameForm />} />
                 <Route path="/info/game" component={() => <GameInfoView />} />

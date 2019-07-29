@@ -1,5 +1,9 @@
 import React, { Component, Fragment } from "react";
 
+/*
+Component for displaying factions' scores
+*/
+
 export default class ScoreCounter extends Component {
   constructor(props) {
     super(props);
@@ -33,10 +37,12 @@ export default class ScoreCounter extends Component {
       });
   };
 
+  // Gets factions and scores when the component loads
   componentWillMount() {
     this.getScoresAndFactions();
   }
 
+  // Catches incoming socket signals
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.socketSignal === "score-update") this.getScoresAndFactions();
   }

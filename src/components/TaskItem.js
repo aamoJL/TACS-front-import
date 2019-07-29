@@ -1,5 +1,9 @@
 import React from "react";
 
+/*
+Component for displaying task's information and edit form
+*/
+
 class TaskItem extends React.Component {
   constructor(props) {
     super(props);
@@ -10,10 +14,12 @@ class TaskItem extends React.Component {
     };
   }
 
+  // Gets factions when the component loads
   componentDidMount() {
     this.getFactionlist(this.props.gameId);
   }
 
+  // Gets factions from the server
   getFactionlist(gameId) {
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`, {
       method: "GET"
@@ -35,6 +41,7 @@ class TaskItem extends React.Component {
       .catch(error => console.log(error));
   }
 
+  // Sends onSave callback
   onSaveSubmit = e => {
     e.preventDefault();
     this.props.onSave(this.props.task, this.state.selectedFactionId);
@@ -43,12 +50,14 @@ class TaskItem extends React.Component {
     });
   };
 
+  // Sets selected faction state
   handleFactionChange = e => {
     this.setState({
       selectedFactionId: e.target.value
     });
   };
 
+  // Sends onDelete callback
   onTaskDelete = e => {
     e.preventDefault();
 

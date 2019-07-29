@@ -3,6 +3,10 @@ import { Map, TileLayer, ZoomControl, Marker, Popup } from "react-leaflet";
 import DrawTools from "./DrawTools.js";
 import Player from "./Player.js";
 
+/*
+Component for game's map and its functionalities
+*/
+
 class UserMap extends Component {
   constructor(props) {
     super(props);

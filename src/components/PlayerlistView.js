@@ -4,11 +4,16 @@ import PropTypes from "prop-types";
 import Draggable from "react-draggable";
 import PlayerlistFaction from "./PlayerlistFaction";
 
+/*
+Component for displaying factions' information
+*/
+
 export default class PlayerlistView extends React.Component {
   state = {
     factions: null
   };
 
+  // Gets factions from the server when the component loads
   componentDidMount() {
     let token = sessionStorage.getItem("token");
 
@@ -82,7 +87,3 @@ export default class PlayerlistView extends React.Component {
     );
   }
 }
-
-PlayerlistView.propTypes = {
-  gameId: PropTypes.string
-};

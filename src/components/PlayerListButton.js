@@ -1,6 +1,10 @@
 import React, { Fragment } from "react";
 import PlayerlistView from "./PlayerlistView";
 
+/*
+Component that displays button and view for player list
+*/
+
 export default class PlayerListButton extends React.Component {
   constructor(props) {
     super(props);
@@ -11,6 +15,7 @@ export default class PlayerListButton extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  // Changes player list view's state
   handleClick = e => {
     this.setState({
       open: !this.state.open

@@ -1,6 +1,10 @@
 import React, { Fragment } from "react";
 import TaskList from "./TaskList";
 
+/*
+Component for displaying task button and tasklist
+*/
+
 export default class TaskListButton extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +16,7 @@ export default class TaskListButton extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  // Catches incoming sockets and updates unreadChanges state
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.socketSignal !== null) {
       if (prevProps.socketSignal.type === "task-update") {
@@ -22,6 +27,7 @@ export default class TaskListButton extends React.Component {
     }
   }
 
+  // Changes tasklist visibility
   handleClick = e => {
     this.setState(
       {
