@@ -5,6 +5,9 @@ Resource            resource.robot
 #Suite Teardown      Close Browser
 Test Template       Join Game And Faction
 
+*** Variables ***
+${DELAY}    0.1
+
 
 *** Test Cases ***
 First Player        Faction1    Pass1
