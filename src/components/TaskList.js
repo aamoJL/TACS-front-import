@@ -231,7 +231,7 @@ class TaskList extends React.Component {
             id="tasklistCloseButton"
             onClick={this.props.toggleView}
           >
-            x
+            ×
           </button>
           <h1>Tasklist</h1>
           {this.props.role === "admin" && (
