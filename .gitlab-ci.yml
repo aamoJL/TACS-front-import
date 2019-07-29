@@ -9,7 +9,7 @@ docker-push:
   services:
     - docker:dind
   stage: purge
-  tags: ['docker']
+  tags: ["docker"]
   only:
     - testing
   script:
@@ -22,7 +22,7 @@ docker-build:
   services:
     - docker:dind
   stage: build
-  tags: ['docker']
+  tags: ["docker"]
   only:
     - testing
   script:
@@ -31,9 +31,9 @@ docker-build:
     - docker run --name front -p 3000:80 -d overflow2019/frontend:test
 
 rf-test:
-  image: gitlab.labranet.jamk.fi:4567/wimma-lab-2019/mysticons/devsecops/robot
+  image: overflow2019/rf-docker
   stage: rf-test
-  tags: ['docker']
+  tags: ["docker"]
   only:
     - testing
   script:
@@ -47,7 +47,7 @@ rf-test:
 
 push-results:
   stage: push-results
-  tags: ['shell']
+  tags: ["shell"]
   only:
     - testing
   when: always
