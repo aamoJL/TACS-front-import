@@ -50,6 +50,7 @@ export default class NotificationView extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     let notifications = this.state.notifications.map(notification => (
       <NotificationCard key={notification.id} notification={notification} />
     ));

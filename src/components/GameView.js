@@ -261,6 +261,7 @@ export default class GameView extends React.Component {
                 <GameStateButtons
                   gameState={this.state.gameInfo.state}
                   gameId={this.state.gameInfo.id}
+                  onStateChange={() => this.getGameInfo(this.state.gameInfo.id)}
                 />
               )}
               {this.state.form === "join" && (

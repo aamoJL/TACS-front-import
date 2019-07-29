@@ -38,6 +38,7 @@ export default class GameStateButtons extends React.Component {
           } else {
             alert(`Game state changed to ${state}`);
             this.setState({ gameState: state });
+            this.props.onStateChange();
           }
         })
         .catch(error => console.log(error));
