@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation       A resource file with reusable keywords and variables.
-Library     SeleniumLibrary    run_on_failure=nothing
+Library     SeleniumLibrary
 Library     String
 Library     DateTime
 Library    Collections
