@@ -300,7 +300,7 @@ Delete Layers
     Click Element At Coordinates    css=div[class=leaflet-control-container]        50        300
     Click Leaflet Panel     Cancel editing, discards all changes
     Click Element       css=a[class=leaflet-draw-edit-remove]
-    Click Element       css=a[title="Clear all layers"]
+    #Click Element       css=a[title="Clear all layers"]
     Log To Console      Deleting done
 
 Map Movement
@@ -382,7 +382,7 @@ Task Winner Select
     Click Button       ${game_name}
     Select From List By Label       ${winner}       ${FACTION2}
     Click Button        ${save_winner}
-    Alert Should Be Present     text=Task updated and closed     action=ACCEPT       timeout=None
+    #Alert Should Be Present     text=Task updated and closed     action=ACCEPT       timeout=None
 
 Delete Task
     ${delete_game} =    Catenate      SEPARATOR=      id=taskDeleteButton       @{TASK_NAMES}[1]
@@ -390,13 +390,13 @@ Delete Task
     Handle Alert        action=DISMISS      #Chooses "Cancel" on the popup.
     Click Button       ${delete_game}
     Alert Should Be Present     text=Are you sure you want to delete task "@{TASK_NAMES}[1]"    action=ACCEPT       timeout=None
-    Alert Should Be Present     text=Task deleted       action=ACCEPT       timeout=None
+    #Alert Should Be Present     text=Task deleted       action=ACCEPT       timeout=None
 
 Delete Completed Task
     ${delete_game} =    Catenate      SEPARATOR=      id=taskDeleteButton       @{TASK_NAMES}[0]
     Click Button        ${delete_game}
     Alert Should Be Present     text=Are you sure you want to delete task "@{TASK_NAMES}[0]"    action=ACCEPT       timeout=None
-    Alert Should Be Present     text=Task deleted       action=ACCEPT       timeout=None
+    #Alert Should Be Present     text=Task deleted       action=ACCEPT       timeout=None
 
 
 
