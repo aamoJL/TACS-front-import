@@ -60,9 +60,9 @@ class EditGameFormToolbar extends React.Component {
     // use DrawingFormatter to format data for database
     let objs = idsToEdit.map(layer => {
       return {
-        gameId: this.props.gameId,
         objectivePointId: layer.options.id,
         objectivePointDescription: layer.options.node,
+        objectivePointMultiplier: layer.options.multiplier,
         data: DrawingFormatter[layer.options.type](layer)
       };
     });
