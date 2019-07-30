@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import Draggable from "react-draggable";
 import PlayerlistFaction from "./PlayerlistFaction";
 import CreateGroupForm from "./CreateGroupForm";

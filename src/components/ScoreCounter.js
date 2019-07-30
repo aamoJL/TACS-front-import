@@ -55,7 +55,7 @@ export default class ScoreCounter extends Component {
           this.state.scores.map((score, i) => {
             if (i !== this.state.scores.length - 1) {
               return (
-                <Fragment>
+                <Fragment key={i}>
                   <span
                     className="score-circle"
                     style={{ backgroundColor: score.colour }}
@@ -66,7 +66,7 @@ export default class ScoreCounter extends Component {
               );
             } else {
               return (
-                <Fragment>
+                <Fragment key={i}>
                   <span
                     className="score-circle"
                     style={{ backgroundColor: score.colour }}
