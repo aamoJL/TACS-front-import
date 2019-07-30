@@ -1,16 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
+/*
+Component for showing game's information in game selection page
+*/
+
 export default class GameCard extends React.Component {
   state = {
     editForm: false,
     gameInfo: {}
   };
 
-  // Get game info
+  // Get game info when the page loads
   componentDidMount() {
     this.getGameInfo();
   }
 
+  // Gets the game's information from server and sets the information to state
   getGameInfo() {
     fetch(`${process.env.REACT_APP_API_URL}/game/${this.props.gameId}`)
       .then(res => {
@@ -34,6 +40,7 @@ export default class GameCard extends React.Component {
       .catch(error => console.log(error));
   }
 
+  // Formats date from ISO format to dd.mm.yyyy
   getFormattedDate(date) {
     let day = date.substring(8, 10);
     let month = date.substring(5, 7);
@@ -41,6 +48,7 @@ export default class GameCard extends React.Component {
     return day + "." + month + "." + year;
   }
 
+  // Formats time from ISO format to hh:mm
   getFormattedTime(date) {
     let time = date.substring(11, 16);
     return time;
@@ -52,11 +60,16 @@ export default class GameCard extends React.Component {
     }
 
     return (
-      <div className="gamecard col-md-4">
-        <img
-          className="card-img-top"
-          src={this.state.gameInfo.image}
-          alt="Game Logo"
+      <div className="gamecard ">
+        <div
+          className="gamecard-img-container"
+          style={{
+            backgroundImage: `url(${this.state.gameInfo.image})`,
+            width: "300px",
+            height: "300px",
+            backgroundSize: "cover",
+            backgroundPosition: "50% 50%"
+          }}
         />
         <div className="card-body">
           <label>Name: {this.state.gameInfo.name}</label>
@@ -78,9 +91,9 @@ export default class GameCard extends React.Component {
               search: "?id=" + this.state.gameInfo.id
             }}
           >
-            <button 
-              id={`select${this.state.gameInfo.name}`} 
-              type="button" 
+            <button
+              id={`select${this.state.gameInfo.name}`}
+              type="button"
               className="select-game-button"
             >
               Select

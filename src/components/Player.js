@@ -42,7 +42,7 @@ class Player extends Component {
   componentDidMount() {
     this.getPlayers();
     this.setState({
-      playerFetch: setInterval(this.getPlayers, 60000)
+      playerFetch: setInterval(this.getPlayers, 30000)
     });
   }
 

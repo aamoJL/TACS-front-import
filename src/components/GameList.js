@@ -1,6 +1,10 @@
 import React from "react";
 import GameCard from "./GameCard";
 
+/*
+Component for showing GameCards for games in a list
+*/
+
 class GameList extends React.Component {
   constructor(props) {
     super(props);
@@ -10,14 +14,14 @@ class GameList extends React.Component {
       editForm: false,
       joinForm: false
     };
-
-    this.toggleView = this.toggleView.bind(this);
   }
 
+  // Get games from the server when the component loads
   componentDidMount() {
     this.getGames();
   }
 
+  // Get games from the server and set them to state
   getGames() {
     fetch(`${process.env.REACT_APP_API_URL}/game/listgames`)
       .then(response => response.json())
@@ -41,43 +45,8 @@ class GameList extends React.Component {
       });
   }
 
-  handleChange = e => {
-    this.setState({
-      selectedGame: e.target.value
-    });
-    // taking the changed gameID to App.js (GameList.js -> GameSidebar.js -> Header.js -> App.js)
-    this.props.handleGameChange(e.target.value);
-  };
-
-  handleEditClick = e => {
-    if (this.state.selectedGame === undefined) {
-      alert("No game selected");
-    } else {
-      this.setState({
-        editForm: true
-      });
-    }
-  };
-
-  handleJoinClick = e => {
-    if (this.state.selectedGame === undefined) {
-      alert("No game selected");
-    } else {
-      this.setState({
-        joinForm: true,
-        editForm: false
-      });
-    }
-  };
-
-  toggleView = e => {
-    this.setState({
-      editForm: !this.state.editForm
-    });
-    this.getGames();
-  };
-
   render() {
+    // GameCard elements for the games
     let gamelistItems = this.props.games.map(game => (
       <GameCard
         key={game.id}

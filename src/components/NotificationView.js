@@ -3,17 +3,26 @@ import React from "react";
 import NotificationCard from "./NotificationCard";
 import Draggable from "react-draggable";
 
-export default class NotificationView extends React.Component {
-  state = {
-    notifications: [],
-    notificationInput: "",
-    notificationTypeInput: "note"
-  };
+/*
+Component that displays form for new notifications and list for the sent notifications
+*/
 
+export default class NotificationView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      notifications: [],
+      notificationInput: "",
+      notificationTypeInput: "note"
+    };
+  }
+
+  // Gets notifications when the components loads
   componentDidMount() {
     this.getNotifications(this.props.gameId);
   }
 
+  // Gets notification form the server and sets them in state
   getNotifications(gameId) {
     let token = sessionStorage.getItem("token");
     fetch(`${process.env.REACT_APP_API_URL}/notifications/${gameId}`, {
@@ -27,6 +36,7 @@ export default class NotificationView extends React.Component {
       });
   }
 
+  // Sends new notification to the server
   handleSend = e => {
     e.preventDefault();
 
@@ -47,6 +57,7 @@ export default class NotificationView extends React.Component {
   };
 
   render() {
+    // NotificationCard element list
     let notifications = this.state.notifications.map(notification => (
       <NotificationCard key={notification.id} notification={notification} />
     ));

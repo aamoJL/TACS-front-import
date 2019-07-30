@@ -34,7 +34,7 @@ var options = {
     maxSpeed: 100
   },
   toolTipOptions: {
-    offset: [0, 0],
+    offset: [0, -25],
     direction: "top",
     permanent: false
   }

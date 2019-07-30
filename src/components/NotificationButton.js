@@ -1,6 +1,10 @@
 import React, { Fragment } from "react";
 import NotificationView from "./NotificationView";
 
+/*
+Component that displays notification window and a button for the window's visibility
+*/
+
 export default class NotificationButton extends React.Component {
   constructor(props) {
     super(props);
@@ -11,6 +15,7 @@ export default class NotificationButton extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  // Changes notification windows visiblity
   handleClick = e => {
     this.setState({
       open: !this.state.open
@@ -29,7 +34,7 @@ export default class NotificationButton extends React.Component {
             gameId={this.props.gameId}
             socket={this.props.socket}
             role={this.props.role}
-            gameState={this.props.gameInfo}
+            gameState={this.props.gameState}
           />
         )}
       </Fragment>

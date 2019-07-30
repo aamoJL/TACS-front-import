@@ -1,6 +1,10 @@
 import React from "react";
 import io from "socket.io-client";
 
+/*
+Component for sending and catching sockets form server
+*/
+
 const socketUrl = process.env.REACT_APP_API_URL;
 
 export default class ClientSocket extends React.Component {

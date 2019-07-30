@@ -70,6 +70,7 @@ body {
 .tacs-icon-neg {
   justify-content: left;
   width: 5%;
+  min-width: 55px;
 }
 
 .form-control1 {
@@ -264,6 +265,14 @@ input {
 .gamecard {
   border-radius: 10px;
   padding: 10px;
+  min-width: 400px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  border: 5px solid #647828;
+  padding: 10px;
+  margin: 10px;
+  background-color: #859b28;
   color: black;
 }
 
@@ -279,8 +288,16 @@ input {
   overflow: hidden;
 }
 
-.card-img-top {
-  width: 100%;
+.gamecard-img-container {
+  min-width: 370px;
+  min-height: 300px;
+  max-height: 300px;
+  max-width: 300px;
+
+  height: 300px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
 }
 
 .gamesheader {
@@ -327,23 +344,23 @@ input {
 /* Score Counter */
 div.scoreContainer {
   border-radius: 8px;
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: row;
   color: white;
   background-color: #1d1d1b;
   opacity: 0.9;
   height: 50px;
-  max-width: 400px;
   margin: auto;
-  top: 5px;
-  left: calc(50vw - 200px);
+  max-width: 400px;
+  top: 35px;
+  right: calc(50vw - 105px);
   align-items: center;
   justify-content: center;
   z-index: 1000;
 }
 
-div.scoreBlock {
+.score-block {
   flex: 1;
   padding: 5px;
   max-width: 120px;
@@ -353,7 +370,7 @@ div.scoreBlock {
   font-size: 1.5em;
 }
 
-div.scoreDivider {
+.score-divider {
   background-color: white;
   float: left;
   flex: 1;
@@ -362,7 +379,7 @@ div.scoreDivider {
   margin: 5px;
 }
 
-span.scoreCircle {
+.score-circle {
   margin: 10px;
   height: 25px;
   width: 25px;
@@ -379,6 +396,7 @@ div.header {
   position: absolute;
   top: 0;
   right: 0;
+  padding-top: 3%;
   height: 100vh;
   width: 200px;
   opacity: 0.95;
@@ -408,6 +426,26 @@ div.header:hover {
 }
 
 div.header button:hover {
+  background-color: #556023;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.show-navbar-button {
+  background-color: #1d1d1b;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 2020;
+  position: absolute;
+  width: 200px;
+  right: 0;
+}
+
+.show-navbar-button:hover {
   background-color: #556023;
   cursor: pointer;
 }
@@ -541,16 +579,6 @@ div.fade-main {
 
 .game-view-container {
   overflow: hidden;
-}
-
-.gamecard {
-  display: flex;
-  flex-direction: column;
-  max-width: 30%;
-  border: 5px solid #647828;
-  padding: 10px;
-  margin: 10px;
-  background-color: #859b28;
 }
 
 .gamelist {
@@ -706,7 +734,6 @@ div.fade-main {
 .edit-game-container {
   display: flex;
   flex-direction: row;
-  left: 0;
 }
 
 .edit-game-inner-container {
@@ -718,7 +745,19 @@ div.fade-main {
 .edit-game-inner-container > * {
   margin: 5px 10%;
   padding: 5px;
+}
+
+.edit-game-inner-container > input,
+textarea,
+button {
   max-width: 400px;
+}
+
+.edit-game-map {
+  height: 100%;
+  width: 100%;
+  max-width: 500px;
+  max-height: 500px;
 }
 
 .edit-game-title {
@@ -757,6 +796,8 @@ div.fade-main {
   margin: 10px;
   padding: 5px;
 }
+
+/*style={{ height: "400px", width: "400px" }}*/
 
 .game-info-view {
   display: flex;

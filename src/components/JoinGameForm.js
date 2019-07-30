@@ -3,6 +3,10 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Draggable from "react-draggable";
 
+/*
+Component for join game form
+*/
+
 export default class JoinGameForm extends React.Component {
   constructor(props) {
     super(props);
@@ -14,8 +18,7 @@ export default class JoinGameForm extends React.Component {
     };
   }
 
-  // Get game info
-  //TODO: gameinfo from props
+  // Gets game info when the component loads
   componentDidMount() {
     if (this.props.gameId === undefined) {
       alert("game not selected");
@@ -33,10 +36,12 @@ export default class JoinGameForm extends React.Component {
     }
   }
 
+  // Sends callback for form closing.
   handleView = e => {
     this.props.toggleView(this.props.view);
   };
 
+  // Sends request to server to join the selected faction
   handleGameJoin = e => {
     e.preventDefault();
 

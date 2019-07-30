@@ -1,10 +1,15 @@
 import React, { Fragment } from "react";
 
+/*
+Component that displays buttons for game state changes
+*/
+
 export default class GameStateButtons extends React.Component {
   state = {
     gameState: this.props.gameState // valid values: CREATED,STARTED,PAUSED,ENDED
   };
 
+  // Sends request to server to change game's state
   setGameState(state) {
     if (
       window.confirm(`Are you sure you want to change game state to ${state}?`)
@@ -38,12 +43,14 @@ export default class GameStateButtons extends React.Component {
           } else {
             alert(`Game state changed to ${state}`);
             this.setState({ gameState: state });
+            this.props.onStateChange();
           }
         })
         .catch(error => console.log(error));
     }
   }
 
+  // The component renders different buttons depending on what state the game has.
   render() {
     if (this.state.gameState === "CREATED") {
       return (

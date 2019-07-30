@@ -2,17 +2,23 @@ import React from "react";
 import { Map, TileLayer } from "react-leaflet";
 import { Link } from "react-router-dom";
 
+/*
+Component for showing game's information
+*/
+
 export default class GameInfoView extends React.Component {
   state = {
     gameInfo: null,
     center: []
   };
 
+  // Gets game's id from the URL when the page loads
   componentDidMount() {
     let gameId = new URL(window.location.href).searchParams.get("id");
     this.getGameInfo(gameId);
   }
 
+  // Gets game's information from server and sets it to state
   getGameInfo(gameId) {
     let error = false;
     // Get game info
@@ -36,6 +42,7 @@ export default class GameInfoView extends React.Component {
       });
   }
 
+  // Formats date from ISO format to dd.mm.yyyy
   getFormattedDate(date) {
     let day = date.substring(8, 10);
     let month = date.substring(5, 7);
@@ -43,6 +50,7 @@ export default class GameInfoView extends React.Component {
     return day + "." + month + "." + year;
   }
 
+  // Formats time from ISO format to hh:mm
   getFormattedTime(date) {
     let time = date.substring(11, 16);
     return time;

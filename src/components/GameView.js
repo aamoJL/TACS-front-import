@@ -11,25 +11,38 @@ import NotificationButton from "./NotificationButton";
 import AddScoreButton from "./AddScoreButton";
 import PlayerListButton from "./PlayerListButton";
 
+/*
+Component that displays:
+  - ScoreCounter
+  - Sidebar for buttons
+  - Game's map
+*/
+
 export default class GameView extends React.Component {
   state = {
     gameInfo: null,
     role: "", //empty, soldier, factionleader, admin
+    userFaction: undefined,
     form: "",
     lat: 62.2416479,
     lng: 25.7597186,
     zoom: 13,
     mapUrl: "https://tiles.kartat.kapsi.fi/taustakartta/{z}/{x}/{y}.jpg",
     socketSignal: null,
-    socket: null
+    socket: null,
+    showNavbar: true,
+    showNavbarText: "Hide"
   };
 
+  // Gets game's id from the URL when the page loads
   componentDidMount() {
     let gameId = new URL(window.location.href).searchParams.get("id");
+
     this.getGameInfo(gameId);
     this.getPlayerRole(gameId);
   }
 
+  // Gets user's role and faction in the game and sets them in state
   getPlayerRole(gameId) {
     let token = sessionStorage.getItem("token");
 
@@ -41,11 +54,14 @@ export default class GameView extends React.Component {
     })
       .then(res => res.json())
       .then(res => {
-        this.setState({ role: res.role });
+        console.log(res);
+        this.setState({ role: res.role, userFaction: res.factionId });
       })
       .catch(error => console.log(error));
   }
 
+  // Gets game's info and sets them in state
+  // Redirects the user to root if the game was not found
   getGameInfo(gameId) {
     fetch(`${process.env.REACT_APP_API_URL}/game/${gameId}`)
       .then(res => {
@@ -66,6 +82,7 @@ export default class GameView extends React.Component {
       });
   }
 
+  // Sends request to the server to leave faction
   handleLeaveFaction = e => {
     let token = sessionStorage.getItem("token");
     fetch(
@@ -91,8 +108,7 @@ export default class GameView extends React.Component {
         this.getPlayerRole(this.state.gameInfo.id);
       })
       .catch(error => {
-        alert("Game not found");
-        window.document.location.href = "/";
+        console.log(error);
       });
   };
 
@@ -111,16 +127,31 @@ export default class GameView extends React.Component {
     );
   };
 
+  // Sets socket to state if it changes
   onSocketChange = newSocket => {
     this.setState({
       socket: newSocket
     });
   };
 
+  handleShowNavbar = e => {
+    if (this.state.showNavbar) {
+      this.setState({
+        showNavbar: false,
+        showNavbarText: "Show"
+      });
+    } else {
+      this.setState({
+        showNavbar: true,
+        showNavbarText: "Hide"
+      });
+    }
+  };
+
   render() {
     const initialPosition = this.state.gameInfo
       ? [this.state.gameInfo.center.lat, this.state.gameInfo.center.lng]
-      : null;
+      : null; // Get game's center point
     return (
       <div className="game-view-container">
         {this.state.gameInfo !== null && (
@@ -133,7 +164,14 @@ export default class GameView extends React.Component {
                   : this.state.socketSignal.type
               }
             />
-            <div className="header">
+            <button
+              id="showNavbarButton"
+              className="show-navbar-button"
+              onClick={this.handleShowNavbar}
+            >
+              {this.state.showNavbarText}
+            </button>
+            <div className={this.state.showNavbar ? "header" : "hidden"}>
               {this.state.gameInfo !== null && (
                 <div>
                   {this.state.gameInfo.id && (
@@ -145,6 +183,7 @@ export default class GameView extends React.Component {
                   )}
                 </div>
               )}
+
               <div className="game-view-info-text">
                 Logged in as: {this.state.role === "" ? " -" : this.state.role}
               </div>
@@ -207,6 +246,7 @@ export default class GameView extends React.Component {
                   role={this.state.role}
                   factions={this.state.gameInfo.factions}
                   socketSignal={this.state.socketSignal}
+                  userFaction={this.state.userFaction}
                 />
               )}
               {this.state.role === "admin" && (
@@ -233,6 +273,7 @@ export default class GameView extends React.Component {
                 <GameStateButtons
                   gameState={this.state.gameInfo.state}
                   gameId={this.state.gameInfo.id}
+                  onStateChange={() => this.getGameInfo(this.state.gameInfo.id)}
                 />
               )}
               {this.state.form === "join" && (

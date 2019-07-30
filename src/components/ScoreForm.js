@@ -2,6 +2,10 @@ import ReactDOM from "react-dom";
 import React from "react";
 import Draggable from "react-draggable";
 
+/*
+Component for adding score to factions
+*/
+
 export default class ScoreForm extends React.Component {
   state = {
     scoreInput: "", // less than 100
@@ -11,13 +15,12 @@ export default class ScoreForm extends React.Component {
         : null
   };
 
+  // Sends score addition to the server
   handleSend = e => {
     e.preventDefault();
 
     let score = parseInt(this.state.scoreInput);
     let factionId = this.state.selectedFaction;
-    console.log(factionId);
-    console.log(score);
 
     if (isNaN(score) || factionId === null) {
       return alert("score or factionId is invalid");
@@ -45,6 +48,7 @@ export default class ScoreForm extends React.Component {
       .catch(error => console.log(error));
   };
 
+  // Changes score input state
   handleInputChange = e => {
     let score = e.target.value;
     if (score > 99) {
@@ -57,7 +61,6 @@ export default class ScoreForm extends React.Component {
   };
 
   render() {
-    console.log(this.props.factions);
     let factionOptions = this.props.factions.map(faction => (
       <option key={faction.factionId} value={faction.factionId}>
         {faction.factionName}

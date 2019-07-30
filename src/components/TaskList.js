@@ -3,6 +3,10 @@ import React from "react";
 import TaskItem from "./TaskItem";
 import Draggable from "react-draggable";
 
+/*
+Component for displaying TaskItems for complete and incomplete tasks
+*/
+
 class TaskList extends React.Component {
   constructor(props) {
     super(props);
@@ -14,18 +18,34 @@ class TaskList extends React.Component {
     };
   }
 
+  // Gets tasks when the component loads
   componentDidMount() {
     this.getTasks(this.props.gameId);
   }
 
+  // SocketSignal format: message:{factionId}, type:{string}
+  // FactionId is empty if the task is for every faction
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.socketSignal !== null) {
-      if (prevProps.socketSignal.type === "task-update") {
+      // Admin updates on every task creation
+      if (
+        this.props.role === "admin" &&
+        prevProps.socketSignal.type === "task-update"
+      ) {
+        this.getTasks(this.props.gameId);
+      }
+      // Other roles updates when their faction gets a task
+      else if (
+        prevProps.socketSignal.type === "task-update" &&
+        (prevProps.socketSignal.message === "" ||
+          prevProps.socketSignal.message === this.props.userFaction)
+      ) {
         this.getTasks(this.props.gameId);
       }
     }
   }
 
+  // Gets tasks from the server
   getTasks(gameId) {
     let token = sessionStorage.getItem("token");
     fetch(`${process.env.REACT_APP_API_URL}/task/get-tasks/${gameId}`, {
@@ -49,6 +69,7 @@ class TaskList extends React.Component {
       .catch(error => console.log(error));
   }
 
+  // Sends task creation request to the server
   handleTaskCreation = e => {
     e.preventDefault();
     if (this.state.taskNameInput === "") {
@@ -90,17 +111,18 @@ class TaskList extends React.Component {
           taskDescriptionInput: "",
           taskNameInput: ""
         });
-        this.getTasks(this.props.gameId);
       })
       .catch(error => console.log(error));
   };
 
+  // Change selected faction state
   handleFactionChange = e => {
     this.setState({
       selectedFactionId: e.target.value
     });
   };
 
+  // Sends winner selection request to the server
   onTaskEditSave = (task, winnerFactionId) => {
     let token = sessionStorage.getItem("token");
     fetch(
@@ -125,13 +147,11 @@ class TaskList extends React.Component {
           return result.json();
         }
       })
-      .then(result => {
-        alert(result.message);
-        this.getTasks(this.props.gameId);
-      })
+      .then(result => {})
       .catch(error => console.log(error));
   };
 
+  // Sends task deletion request to the server
   onTaskDeletion = taskId => {
     if (taskId === (undefined || null)) {
       return;
@@ -157,15 +177,10 @@ class TaskList extends React.Component {
           return result.json();
         }
       })
-      .then(result => {
-        alert(result.message);
-        this.getTasks(this.props.gameId);
-      })
+      .then(result => {})
       .catch(error => console.log(error));
   };
-  handleOnClick() {
-    this.props.toggleView();
-  }
+
   render() {
     let incompleteTasks = [];
     let completedTasks = [];
@@ -224,7 +239,7 @@ class TaskList extends React.Component {
             id="tasklistCloseButton"
             onClick={this.props.toggleView}
           >
-            x
+            ×
           </button>
           <h1>Tasklist</h1>
           {this.props.role === "admin" && (

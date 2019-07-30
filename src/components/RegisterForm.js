@@ -2,6 +2,10 @@ import React from "react";
 import logo from "../icons/tacs-logo-neg.png";
 import { Link } from "react-router-dom";
 
+/*
+Component for register form page
+*/
+
 export class RegisterForm extends React.Component {
   constructor(props) {
     super(props);
@@ -25,6 +29,7 @@ export class RegisterForm extends React.Component {
     this.setState({ [name]: value });
   };
 
+  // Sends register request to the server
   handleRegister = e => {
     const name = this.state.username;
     const password = this.state.password;
@@ -81,6 +86,7 @@ export class RegisterForm extends React.Component {
                 <p className="register-text">Register</p>
                 <br />
                 <input
+                  id="registerUsernameInput"
                   className="form-control1"
                   placeholder="Enter username"
                   name="username"
@@ -92,6 +98,7 @@ export class RegisterForm extends React.Component {
                 />
                 <br />
                 <input
+                  id="registerPasswordInput"
                   className="form-control2"
                   placeholder="Enter password"
                   type="password"
@@ -103,6 +110,7 @@ export class RegisterForm extends React.Component {
                 />
                 <br />
                 <input
+                  id="registerPasswordVerifyInput"
                   className="form-control3"
                   placeholder="Verify password"
                   type="password"

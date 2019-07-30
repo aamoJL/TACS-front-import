@@ -1,22 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import Draggable from "react-draggable";
 import PlayerlistFaction from "./PlayerlistFaction";
+import CreateGroupForm from "./CreateGroupForm";
+import { isUndefined } from "util";
+
+/*
+Component for displaying factions' information
+*/
 
 export default class PlayerlistView extends React.Component {
   state = {
-    factions: null
+    factions: undefined,
+    isJoinedGroup: false
   };
 
-  componentDidMount() {
-    // Add event to close the playerlist if "esc" is pressed
-    document.addEventListener("keyup", this.handleEsc);
-
+  handleGroupFetch = _ => {
     let token = sessionStorage.getItem("token");
 
     if (this.props.role !== "soldier" && this.props.role !== "factionleader") {
-      // get all factions in the game
+      // ADMIN: get all factions in the game
       fetch(`${process.env.REACT_APP_API_URL}/game/${this.props.gameId}`)
         .then(res => res.json())
         .then(res => {
@@ -24,7 +27,7 @@ export default class PlayerlistView extends React.Component {
         })
         .catch(error => console.log(error));
     } else {
-      // get player's faction
+      // NOT ADMIN: get player's faction
       fetch(
         `${process.env.REACT_APP_API_URL}/faction/check-faction/${
           this.props.gameId
@@ -38,25 +41,19 @@ export default class PlayerlistView extends React.Component {
       )
         .then(res => res.json())
         .then(res => {
-          this.setState({ factions: [res] });
+          this.setState({ factions: [res], isJoinedGroup: res.group });
         })
         .catch(error => console.log(error));
     }
-  }
-
-  // remove view with "ESC"
-  handleEsc = e => {
-    if (e.keyCode === 27) {
-      this.props.toggleView();
-    }
   };
 
-  componentWillUnmount() {
-    document.removeEventListener("keyup", this.handleEsc);
+  // Gets factions from the server when the component loads
+  componentDidMount() {
+    this.handleGroupFetch();
   }
 
   render() {
-    if (this.state.factions === null) {
+    if (isUndefined(this.state.factions)) {
       return false;
     }
 
@@ -67,6 +64,8 @@ export default class PlayerlistView extends React.Component {
         role={this.props.role}
         gameId={this.props.gameId}
         gameState={this.props.gameState}
+        isJoinedGroup={this.state.isJoinedGroup}
+        onJoinGame={this.handleGroupFetch}
       />
     ));
 
@@ -90,13 +89,18 @@ export default class PlayerlistView extends React.Component {
           <div className="task-items-container input-cancel-drag">
             {factionlistItems}
           </div>
+          <div>
+            {this.props.role === "soldier" && !this.state.isJoinedGroup && (
+              <CreateGroupForm
+                factionId={this.state.factions[0].factionId}
+                gameId={this.props.gameId}
+                onGroupCreated={this.handleGroupFetch}
+              />
+            )}
+          </div>
         </div>
       </Draggable>,
       document.getElementById("tasklist")
     );
   }
 }
-
-PlayerlistView.propTypes = {
-  gameId: PropTypes.string
-};

@@ -47,7 +47,7 @@ export default class ReplayMap extends React.Component {
     });
     replaydata ? this.replay() : alert("No replay data was found");
     this.setState({
-      animation: setInterval(this.animation, 2000)
+      animation: setInterval(this.animation, 2500)
     });
   }
 
@@ -64,18 +64,18 @@ export default class ReplayMap extends React.Component {
     var boxes = await document.getElementsByClassName("capturing-flagbox");
     if (boxes) {
       for (let i in boxes) {
-        if (boxes[i].style) {
-          boxes[i].style.width = "100px";
-          boxes[i].style.height = "100px";
-          boxes[i].style.marginLeft = "-47px";
-          boxes[i].style.marginTop = "-77px";
-          await this.sleep(400);
-          boxes[i].style.width = "75px";
-          boxes[i].style.height = "75px";
-          boxes[i].style.marginLeft = "-47px";
-          boxes[i].style.marginTop = "-77px";
-          await this.sleep(400);
-        }
+        if (!boxes[i] || !boxes[i].style) break;
+        boxes[i].style.width = "100px";
+        boxes[i].style.height = "100px";
+        boxes[i].style.borderRadius = "50%";
+        boxes[i].style.backgroundColor = boxes[i].title;
+        await this.sleep(400);
+        if (!boxes[i] || !boxes[i].style) break;
+        boxes[i].style.width = "75px";
+        boxes[i].style.height = "75px";
+        boxes[i].style.borderRadius = "75%";
+        boxes[i].style.backgroundColor = "rgba(0,0,0,0)";
+        await this.sleep(400);
       }
     }
   };

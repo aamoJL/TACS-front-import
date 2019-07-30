@@ -2,6 +2,11 @@ import React from "react";
 import GameList from "./GameList";
 import NewGameForm from "./NewGameForm";
 
+/*
+Component for a game selection page.
+Displays GameList and NewGameForm.
+*/
+
 import logo from "../icons/tacs-icon-neg.png";
 export default class GameSelection extends React.Component {
   state = {
@@ -9,10 +14,12 @@ export default class GameSelection extends React.Component {
     games: []
   };
 
+  // Gets games when the page loads
   componentDidMount() {
     this.getGames();
   }
 
+  // Gets games from the server and sets them to state
   getGames() {
     fetch(`${process.env.REACT_APP_API_URL}/game/listgames`)
       .then(response => response.json())
@@ -20,14 +27,13 @@ export default class GameSelection extends React.Component {
         this.setState({
           games: games
         });
-        // taking the initialized gameID to UserMap.js (GameList.js -> Header.js -> App.js -> UserMap.js)
-        //this.props.handleGameChange(games[0].id);
       })
       .catch(error => {
         console.log(error);
       });
   }
 
+  // Sends the logout callback from props
   handleLogout = e => {
     this.props.onLogout();
   };
@@ -38,7 +44,7 @@ export default class GameSelection extends React.Component {
         <div className="navbar navbar-dark shadow-sm">
           <div className="container d-flex justify-content-between">
             <img
-              className="tacs-icon-neg mr-2"
+              className="tacs-icon-neg m-2"
               src={logo}
               height="35"
               alt="tacs icon"

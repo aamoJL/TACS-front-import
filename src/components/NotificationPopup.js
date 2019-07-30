@@ -1,12 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+/*
+Component for notification popup
+*/
+
 export default class NotificationPopup extends React.Component {
   state = {
     lastNotification: null,
     visible: true
   };
 
+  // Catches incoming socket signals and changes the displayed notification to the new one.
   componentDidUpdate(prevProps, prevState) {
     if (
       prevProps.socketSignal !== null &&
