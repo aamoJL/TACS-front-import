@@ -42,15 +42,6 @@ class EditGameFormToolbar extends React.Component {
     return !this.state.editModeActive;
   }
 
-  _onCreated = e => {
-    // use DrawingFormatter to format data for database
-    let obj = {
-      gameId: this.props.gameId,
-      data: DrawingFormatter[e.layerType](e.layer)
-    };
-    this.props.pushFlagbox(obj);
-  };
-
   _onEdited = e => {
     // layers are saved in a rather curious format. they're not in an array, so need to make an array first
     let idsToEdit = [];
@@ -60,8 +51,9 @@ class EditGameFormToolbar extends React.Component {
     // use DrawingFormatter to format data for database
     let objs = idsToEdit.map(layer => {
       return {
-        gameId: this.props.gameId,
         objectivePointId: layer.options.id,
+        objectivePointDescription: layer.options.node,
+        objectivePointMultiplier: layer.options.multiplier,
         data: DrawingFormatter[layer.options.type](layer)
       };
     });
@@ -79,6 +71,7 @@ class EditGameFormToolbar extends React.Component {
       return {
         gameId: this.props.gameId,
         objectivePointId: layer.options.id,
+        objectivePointDescription: layer.options.node,
         data: DrawingFormatter[layer.options.type](layer)
       };
     });
@@ -97,7 +90,6 @@ class EditGameFormToolbar extends React.Component {
     return (
       <FeatureGroup>
         <EditControl
-          onCreated={this._onCreated}
           onEdited={this._onEdited}
           onDeleted={this._onDeleted}
           onEditStart={this._onEditDeleteStart}

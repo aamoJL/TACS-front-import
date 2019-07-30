@@ -51,27 +51,14 @@ export default class EditGameForm extends React.Component {
     this.setState({ [name]: value, saved: false });
   };
 
-  // get flagbox data from EditGameFormToolbar and push it to state array
-  // when saving changes, the whole array is sent to database
-  pushFlagbox = box => {
-    let newdata = [...this.state.objectivePoints];
-    for (let i in newdata) {
-      if (!newdata[i].data) {
-        newdata[i].data = box.data;
-        this.setState({ objectivePoints: newdata });
-        break;
-      }
-    }
-  };
   // get edited flagbox data from EditGameFormToolbar and update it in state array
   // changes are sent to db on save
   updateFlagbox = boxes => {
-    let newData = [...this.state.objectivePoints];
-    boxes.forEach(flagbox => {
-      let i = newData.findIndex(
-        x => x.objectivePointId === flagbox.objectivePointId
+    let newData = this.state.objectivePoints.map(flagbox => {
+      let i = boxes.findIndex(
+        x => x.objectivePointDescription === flagbox.objectivePointDescription
       );
-      if (i !== -1) newData[i].data = flagbox.data;
+      return i !== -1 ? boxes[i] : flagbox;
     });
     this.setState({ objectivePoints: newData });
   };
@@ -81,7 +68,7 @@ export default class EditGameForm extends React.Component {
     let newData = [...this.state.objectivePoints];
     boxes.forEach(flagbox => {
       let i = newData.findIndex(
-        x => x.objectivePointId === flagbox.objectivePointId
+        x => x.objectivePointDescription === flagbox.objectivePointDescription
       );
       if (i !== -1) newData.splice(i, 1);
     });
